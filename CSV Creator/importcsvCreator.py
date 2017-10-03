@@ -1,3 +1,13 @@
+##############################################
+#
+# Created by Grayson Cody Collins
+#
+# Please reach out to cody.collins@alfresco.com or skypeId cody.collins_3
+# with any questions, improvements, or requests.
+#
+##############################################
+
+
 #accept input
 fileName= input("Name of csv file (minus '.csv'): ")
 uCount= input("Number of users to create: ")

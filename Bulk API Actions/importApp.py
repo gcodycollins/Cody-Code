@@ -1,3 +1,14 @@
+##############################################
+#
+# Created by Grayson Cody Collins
+#
+# Please reach out to cody.collins@alfresco.com or skypeId cody.collins_3
+# with any questions, improvements, or requests.
+#
+##############################################
+
+
+
 ###IN PROGRESS, Continueing to use CURL for upload.
 import requests
 from requests.auth import HTTPBasicAuth
