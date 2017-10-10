@@ -24,25 +24,25 @@ import time
 tasks = []
 
 #loop to batch execution 
-for h in range(0,1):
+for h in range(0,5000):
 
-    #API 1 start the processes
-    for i in range(0,1000):
+    # #API 1 start the processes
+    # for i in range(0,1000):
      
-        # API 1 start process
-        url = "http://54.175.46.136:8080/activiti-app/api/enterprise/process-instances"
+        # # API 1 start process
+        # url = "http://54.175.46.136:8080/activiti-app/api/enterprise/process-instances"
 
-        headers = {
-            'content-type': "application/json"
-            }
+        # headers = {
+            # 'content-type': "application/json"
+            # }
 
-        payload = "{\r\n\"processDefinitionId\": \"histLoader:1:4\",\r\n\"businessKey\" : \"histLoader\"\r\n}"
+        # payload = "{\r\n\"processDefinitionId\": \"histLoader:1:4\",\r\n\"businessKey\" : \"histLoader\"\r\n}"
 
-        response = requests.request("POST", url, headers=headers, data=payload, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
+        # response = requests.request("POST", url, headers=headers, data=payload, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
 
-        #print(response.text)
+        # #print(response.text)
 
-        
+    # print(str(h)+" start complete")   
         
         
     # API 2 get all currently running tasks
@@ -52,7 +52,7 @@ for h in range(0,1):
         'content-type': "application/json"
         }
             
-    payload2 = "{\n\t\"appDefinitionId\":1,\n\t\"size\":\"1000\",\n\t\"state\":\"active\"\n}"
+    payload2 = "{\n\t\"appDefinitionId\":1,\n\t\"size\":\"100\",\n\t\"state\":\"active\"\n}"
             
     response2 = requests.request("POST", url2, headers=headers2, data=payload2, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
 
