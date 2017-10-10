@@ -24,7 +24,7 @@ import time
 tasks = []
 
 #loop to batch execution 
-for h in range(0,500):
+for h in range(0,1):
 
     #API 1 start the processes
     for i in range(0,1000):
@@ -40,7 +40,7 @@ for h in range(0,500):
 
         response = requests.request("POST", url, headers=headers, data=payload, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
 
-        print(response.text)
+        #print(response.text)
 
         
         
@@ -52,11 +52,11 @@ for h in range(0,500):
         'content-type': "application/json"
         }
             
-    payload2 = "{\n\t\"appDefinitionId\":1\n}"
+    payload2 = "{\n\t\"appDefinitionId\":1,\n\t\"size\":\"1000\",\n\t\"state\":\"active\"\n}"
             
     response2 = requests.request("POST", url2, headers=headers2, data=payload2, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
 
-    print(response2.text)
+    #print(response2.text)
 
     jData = json.loads(response2.content)
         
@@ -93,7 +93,7 @@ for h in range(0,500):
 
         response3 = requests.request("PUT", url3, headers=headers3, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
 
-        print(response3.text)
+        #print(response3.text)
 
     print("###########################")
     print(str(h))
