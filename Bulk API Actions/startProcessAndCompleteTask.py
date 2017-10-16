@@ -21,32 +21,36 @@ from requests.auth import HTTPBasicAuth
 import json
 import time
 
-tasks = []
+
 
 #loop to batch execution 
 for h in range(0,5000):
 
-    # #API 1 start the processes
-    # for i in range(0,1000):
+    tasks = []
+
+    #API 1 start the processes
+    for i in range(0,100):
      
-        # # API 1 start process
-        # url = "http://54.175.46.136:8080/activiti-app/api/enterprise/process-instances"
+        # API 1 start process
+        url = "http://54.175.46.136:9090/activiti-app/api/enterprise/process-instances"
 
-        # headers = {
-            # 'content-type': "application/json"
-            # }
+        headers = {
+            'content-type': "application/json"
+            }
 
-        # payload = "{\r\n\"processDefinitionId\": \"histLoader:1:4\",\r\n\"businessKey\" : \"histLoader\"\r\n}"
+        payload = "{\r\n\"processDefinitionId\": \"hist:2:8\",\r\n\"businessKey\" : \"hist\"\r\n}"
 
-        # response = requests.request("POST", url, headers=headers, data=payload, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
+        response = requests.request("POST", url, headers=headers, data=payload, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
 
-        # #print(response.text)
+        #print(response.text)
 
-    # print(str(h)+" start complete")   
+    print("###########################")
+    print(str(h)+" processes started")
+    print("###########################")   
         
         
     # API 2 get all currently running tasks
-    url2 = "http://54.175.46.136:8080/activiti-app/api/enterprise/tasks/query"
+    url2 = "http://54.175.46.136:9090/activiti-app/api/enterprise/tasks/query"
 
     headers2 = {
         'content-type': "application/json"
@@ -78,13 +82,15 @@ for h in range(0,5000):
     #print ("taskString: "+taskString)
 
 
-
+    print("###########################")
+    print(str(h)+" taskIDs loaded")
+    print("###########################")
 
     #API 3 complete the processes using
     for i in range(0,len(tasks)):
      
         # API 3 complete task
-        url3 = "http://54.175.46.136:8080/activiti-app/api/enterprise/tasks/"+tasks[i]+"/action/complete"
+        url3 = "http://54.175.46.136:9090/activiti-app/api/enterprise/tasks/"+tasks[i]+"/action/complete"
 
         headers3 = {
             'content-type': "application/json",
@@ -96,5 +102,5 @@ for h in range(0,5000):
         #print(response3.text)
 
     print("###########################")
-    print(str(h))
+    print(str(h)+" completed")
     print("###########################")
