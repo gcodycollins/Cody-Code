@@ -1,3 +1,19 @@
+##############################################
+#
+# Created by Grayson Cody Collins
+#
+# Please reach out to cody.collins@alfresco.com or skypeId cody.collins_3
+# with any questions, improvements, or requests.
+#
+##############################################
+
+##############################################
+#
+# This Pyhton script is used to change a user's password in alfresco
+#
+##############################################
+
+
 import requests
 from requests.auth import HTTPBasicAuth
 
