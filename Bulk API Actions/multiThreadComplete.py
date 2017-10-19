@@ -19,20 +19,20 @@ import requests
 from requests.auth import HTTPBasicAuth
 import json
 
-tasksT = []
+#tasksT = []
 
-for i in range(0, 2):
-
+#function for completing set of processes in thread
+def form_thread ( count):
     tasks = []
     
-    # API 2 get all currently running tasks
+    # API 1 get all currently running tasks in batches of 100. use count for pagination
     url = "http://54.167.179.17:8080/activiti-app/api/enterprise/tasks/query"
 
     headers = {
         'content-type': "application/json"
     }
             
-    payload = "{\n\"appDefinitionId\":1001,\n\"size\":\"100\",\n\"start\":"+str(i)+",\n\"state\":\"active\"\n}"
+    payload = "{\n\"appDefinitionId\":1001,\n\"size\":\"100\",\n\"start\":"+str(count)+",\n\"state\":\"active\"\n}"
             
     response = requests.request("POST", url, data=payload, headers=headers, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
 
@@ -54,7 +54,37 @@ for i in range(0, 2):
             end=True
 
             
-    tasksT.append(tasks)
-    
+    #tasksT.append(tasks)
 
-print(str(tasksT))
+    #API 2 complete the processes using the tasks list
+    for i in range(0,len(tasks)):
+     
+        # API 2 complete task
+        url2 = "http://54.167.179.17:8080/activiti-app/api/enterprise/tasks/"+tasks[i]+"/action/complete"
+
+        headers2 = {
+            'content-type': "application/json",
+
+        }
+
+        response2 = requests.request("PUT", url2, headers=headers2, auth=HTTPBasicAuth('admin@app.activiti.com','admin'))
+
+        
+        #if (i==99):
+            #print(response2.text)
+        
+        
+    print("######################")
+    print(str(count)+" thread complete")
+    print("######################")
+    
+    
+threads = []
+
+for i in range(0,2):
+    
+    t = threading.Thread(target=form_thread(i))
+    threads.append(t)
+    t.start()
+    
+    
