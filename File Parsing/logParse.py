@@ -7,6 +7,15 @@
 #
 ##############################################
 
+##############################################
+#
+# The function of this python script is to parse an activiti.log file.
+# The process uses custom execution listeners to log timestamps of when the process has started and ended
+# This script utilizes the output to get the average process execution time as well as
+# the total time from first process start to last process completion
+#
+##############################################
+
 
 #initialize vars
 logs={}
@@ -26,18 +35,24 @@ k=0
 processes=0
 
 #open log file
-with open('test2.txt') as logSample:
+with open('activiti.log') as logSample:
 
     #set each line to its own var in dictionary logs
     for line in logSample:
-        logs[i] = line
-        i+=1
+    
+        # check for [Process= in the line, ignore the line if it doesn't have this    
+        if (r'[Process=' in line):
+            logs[i] = line
+            i+=1
     
     #confim by printing each line in dictionary logs    
     #for j in range (0,len(logs)):
         #sj=str(j)
         #print ('logs'+sj+'= '+logs[j])
 
+
+    
+    
     #parse log{} and extract time to store in its own dictionary, store time in ms in its own dictionary
     for j in range (0,len(logs)):
         #sj=str(j)
@@ -58,11 +73,6 @@ with open('test2.txt') as logSample:
         timeMS[j]=totalMS
         #print ('totalMS'+sj+'= '+str(timeMS[j]))
         
-    #parse process by index, no go if greater than 4 characters
-#    for j in range (0,4):
-#        sj=str(j)
-#        process[j]=(logs[j][120:124])
-#        print ('process'+sj+'= '+process[j])
 
     #Parse each line in log{} and return whatever is between Process= and ][  , which will leave you with process id
     for j in range (0,len(logs)):
@@ -73,9 +83,9 @@ with open('test2.txt') as logSample:
         #print ('process'+sj+'= '+process[j])
     
     #blank out file first before writing.
-    f = open('pythonOutput.txt','w').close()
+    f = open('ProcessExecutionStats.txt','w').close()
     #open file to write output to
-    f = open('pythonOutput.txt','w')
+    f = open('ProcessExecutionStats.txt','w')
     
     #search the process dictionary for like values, when like values are found, subtract the times leaving you with execution time per process
     for j in range (0,len(logs)):
@@ -92,18 +102,41 @@ with open('test2.txt') as logSample:
                 execAverage+=execTime
                 
                 
+                #f.write(str(execTime)+' ms to complete Process '+process[j]+'\n')
+                
+                #print (str(execTime)+' ms to complete Process '+process[j])
+                processes+=1
+    
+    #Divide execAverage by half of the length of dictionary logs. half of length of logs{} equals to total number of processes
+    execAverage=execAverage/(len(logs)/2)
+    
+    #Calculate the total time between first start event and last end event.
+    totalExecution=timeMS[len(timeMS)-1]-timeMS[0]
+    
+    f.write('Total process execution time is '+str(totalExecution)+' ms')
+    print ('Total process execution time is '+str(totalExecution)+' ms')
+    
+    f.write('\nAverage process execution time is '+str(execAverage)+' ms')
+    print ('Average process execution time is '+str(execAverage)+' ms')
+    
+    f.write('\nTotal number of processes is: '+str(processes)+'\n\n')
+    print ('Total number of processes is: '+str(processes))
+    #print (str(len(logs)/2))
+    
+    
+    #same loop logic previously used. Simply moved output below the totatlExectuion, executionaverage and number of processes for output file
+    for j in range (0,len(logs)):
+        for k in range (0,len(logs)):
+            if (process[j]==process[k] and j<k):
+            
+                execTime=timeMS[k]-timeMS[j]
+                #add all execTimes to execAverage
+                execAverage+=execTime
+                
+               
                 f.write(str(execTime)+' ms to complete Process '+process[j]+'\n')
                 
                 print (str(execTime)+' ms to complete Process '+process[j])
                 processes+=1
-    
-    #Divide execAverage by half of the length of dictionary logs. of of length of logs equals to total number of processes
-    execAverage=execAverage/(len(logs)/2)
-    
-    f.write('Average process execution time is '+str(execAverage)+' ms')
-    print ('Average process execution time is '+str(execAverage)+' ms')
-    
-    f.write('Total number of processes is: '+str(processes))
-    print ('Total number of processes is: '+str(processes))
-    #print (str(len(logs)/2))
+            
     f.close()
