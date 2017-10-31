@@ -7,6 +7,13 @@
 #
 ##############################################
 
+##############################################
+#
+# This code is currently behind the gui counterpart. Please check gui
+# version for up to date features and functions.
+#
+##############################################
+
 
 import os, sys, shutil, fileinput, subprocess
 
