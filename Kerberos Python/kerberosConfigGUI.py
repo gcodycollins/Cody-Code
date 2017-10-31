@@ -244,7 +244,7 @@ class Application(Frame):
         pathI = self.dir.get()
         if (self.checkBoxKerberosR.get()==False):
             kerberosI=self.checkBoxKerberosI.get()
-            krb5iniI= self.checkBoxKerberosR.get()
+            krb5iniI= self.checkBoxKrb5.get()
             activeDirectoryI=self.checkBoxAD.get()
             
         elif (self.checkBoxKerberosR.get()==True):
@@ -340,9 +340,10 @@ class Application(Frame):
             ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock {setspn -a cifs/'+alfServerI+' '+cifsUserName+r'} -credential $cred')
             ps.write('\n\n') 
             
-            ps.write(r'Write-Host "Go enable delegation on the kerberos accounts, then Press any key to continue ..."')
-            ps.write('\n') 
-            ps.write(r'$x = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")')
+            #write delegation generating comamnds to powershell
+            ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock {powershell "Set-ADAccountControl -Identity '+httpUserName+r' -TrustedForDelegation 1 -TrustedToAuthForDelegation 0"} -credential $cred')
+            ps.write('\n')    
+            ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock {powershell "Set-ADAccountControl -Identity '+cifsUserName+r' -DoesNotRequirePreAuth 1 -TrustedForDelegation 1 -TrustedToAuthForDelegation 0"} -credential $cred')
             ps.write('\n\n')
             
             #write keytabs generation command to powershell file
