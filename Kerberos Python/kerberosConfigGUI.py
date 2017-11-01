@@ -1264,8 +1264,7 @@ class Application(Frame):
         if (kerberosActivitiI==True):
 
 
-            #copy the current activiti-ldap.properties file and re-write it with only needed lines
-            #todo            
+            #copy the current activiti-ldap.properties file and re-write it with only needed lines          
             activitiLdapSource=pathI+r'\tomcat\lib\activiti-ldap.properties'
             activitiLdapOriginalCopy=pathI+r'\tomcat\lib\activiti-ldap.properties.original'
 
@@ -1287,7 +1286,7 @@ class Application(Frame):
                 f0.write(r'\nldap.synchronization.differential.cronExpression=0 0/2 * 1/1 * ?\n')
                 
                 f0.write(r'\n###Connection Settings###\n')                
-                f0.write('\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
+                f0.write(r'\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
                 f0.write(r'\nldap.synchronization.java.naming.security.principal='+ldapAdmin+'@'+domainI+'')
                 f0.write(r'\nldap.synchronization.java.naming.security.credentials='+ldapAdminPass+'')                
                 f0.write(r'\nldap.synchronization.java.naming.security.authentication=simple')
@@ -1306,7 +1305,7 @@ class Application(Frame):
                 
                 f0.write(r'\n###Group Sync Settings###\n')
                 f0.write(r'\nldap.synchronization.groupSearchBase='+ldapGroupBase)
-                f0.write('\nldap.synchronization.groupQuery=(objectClass\=group)')
+                f0.write(r'\nldap.synchronization.groupQuery=(objectClass\=group)')
                 f0.write(r'\nldap.synchronization.groupDifferentialQuery=(&(objectclass\=group)(!(whenChanged<\={0})))')
                 f0.write(r'\nldap.synchronization.groupIdAttributeName=cn')
                 f0.write(r'\nldap.synchronization.groupMemberAttributeName=member')
@@ -1332,38 +1331,7 @@ class Application(Frame):
                 f0.write(r'\nsecurity.authentication.use-externalid=true')
                     
                 f0.close()
-
-
-
-
-            with open(gloPropsSource, 'a') as f0:
-                f0.write('\n\n\n\n\n###KERB###')
-                
-                f0.write('\n\nkerberos.authentication.realm='+uDomainI+'')
-                f0.write('\nkerberos.authentication.authenticateCIFS=false')
-                f0.write('\nkerberos.authentication.sso.enabled=true')
-                f0.write('\nkerberos.authentication.http.password='+httpPasswordI+'')
-                f0.write('\nkerberos.authentication.stripUsernameSuffix=true')
-                f0.write('\nkerberos.authentication.browser.ticketLogons=true')
-
-                f0.write('\n\n\n\n\n###LDAP###')
-                f0.write('\n\nauthentication.chain=kerberos1:kerberos,alfrescoNtlm1:alfrescoNtlm')
-                f0.write('\nldap.authentication.active=true')
-                f0.write('\nldap.authentication.allowGuestLogin=false')
-                f0.write('\nldap.authentication.userNameFormat=%s@'+domainI+'')
-
-
-
-
-                f0.write('\nldap.synchronization.userSearchBase='+ldapUserBase)
-                f0.write('\nsynchronization.syncOnStartup=true')
-                f0.write('\nsynchronization.allowDeletions=false')
-                f0.write('\nsynchronization.synchronizeChangesOnly=false')
-
-
-
-                
-                f0.close()              
+            
                 
                 
 
