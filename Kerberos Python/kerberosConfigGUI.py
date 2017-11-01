@@ -37,7 +37,7 @@ class Application(Frame):
         self.create_widgets()
 
         
-        
+    #main screen declaration with the 4 checkboxes, labels, and 2 buttons.    
     def create_widgets(self):
         Label(self, text = "Alfresco Content Services").grid(row = 1, column = 0, sticky = W)
         
@@ -76,9 +76,11 @@ class Application(Frame):
         self.close_button.grid(row=101, column =0, sticky =W)
 
         
-        
+    
+    #function for if the Alfresco Kerberos checkbox is checked
     def Kerberos_Configuration(self):
         
+        # If its checked, grey out other 3 main checkbox options and add more options.
         if self.checkBoxKerberosI.get():
             self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ")
             self.LabelDir.grid(row = 3, column =0, sticky = W)
@@ -140,7 +142,7 @@ class Application(Frame):
             
             
             self.checkBoxAD = BooleanVar()
-            self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs?", variable = self.checkBoxAD,command = self.Active_Directory)
+            self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for ACS?", variable = self.checkBoxAD,command = self.Active_Directory)
             self.aD.grid(row = 20, column = 0, sticky = W)
             
             
@@ -160,7 +162,8 @@ class Application(Frame):
             self.kerberosR.grid(row = 80, column = 0, sticky = W)
             
             
-            
+        
+        # if its unchecked, remove the additional alfresco kerberos options and enable the 3 other main checkboxes
         else:
             self.LabelDir.grid_forget()
             self.dir.grid_forget()
@@ -235,9 +238,11 @@ class Application(Frame):
             self.kerberosR.grid(row = 80, column = 0, sticky = W)
 
            
-            
+           
+    #this is for the active directory button wihtin the alfresco kerberos option.        
     def Active_Directory(self):
             
+        # if its checked, add additional fields    
         if self.checkBoxAD.get():
         
         
@@ -272,6 +277,7 @@ class Application(Frame):
             self.ldapPassPS.grid(row=26, column=0) 
             
             
+        #if its unchecked, remove those additional options    
         else:
         
             self.LabelHTTPUserDN.grid_forget()
@@ -293,9 +299,11 @@ class Application(Frame):
             self.ldapPassPS.grid_forget()
 
             
-        
+    
+    #this is the function for the rollback alfresco kerberos changes. It greys out the three options and adds just one checkbox.
     def Rollback_Original(self):
     
+        #if checked, grey out other options and prompt for install directory
         if self.checkBoxKerberosR.get():   
 
             self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ")
@@ -318,6 +326,7 @@ class Application(Frame):
             self.kerberosR.grid(row = 80, column = 0, sticky = W)
             
             
+        #if unchecked, hide input and enable other 3 checkboxes.    
         else:
         
             self.LabelDir.grid_forget()
@@ -340,9 +349,10 @@ class Application(Frame):
 
             
             
-            
+    # this is the function for the Activiti kerberos configuration.        
     def Kerberos_Configuration_Activiti(self):
             
+        # when checked, grey out other 3 main options and add additional inputs   
         if self.checkBoxKerberosActivitiI.get():
             
             self.LabelDir= Label(self, text="Activiti (APS) Install Directory: ")
@@ -399,8 +409,8 @@ class Application(Frame):
             
             
             
-            self.checkBoxAD = BooleanVar()
-            self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs?", variable = self.checkBoxAD,command = self.Active_Directory_Activiti)
+            self.checkBoxActivitiAD = BooleanVar()
+            self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for APS?", variable = self.checkBoxActivitiAD,command = self.Active_Directory_Activiti)
             self.aD.grid(row = 62, column = 0, sticky = W)
             
             
@@ -421,6 +431,7 @@ class Application(Frame):
             
             
             
+        # if unchecked, enable 3 main options and hide activiti kerberos options
         else:
         
             self.LabelDir.grid_forget()
@@ -457,7 +468,7 @@ class Application(Frame):
             self.aD.grid_forget()
             
             
-            if self.checkBoxAD.get():
+            if self.checkBoxActivitiAD.get():
                 self.LabelHTTPUserDN.grid_forget()
                 self.httpUserDN.grid_forget()
                 
@@ -491,9 +502,10 @@ class Application(Frame):
             self.kerberosR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti)
             self.kerberosR.grid(row = 80, column = 0, sticky = W)
             
-            
+    # checkbox for rolling back activiti changes        
     def Rollback_Original_Activiti(self):
             
+        #if checked, disable 3 main options and add input for install directory    
         if (self.checkBoxKerberosActivitiR.get()): 
 
             self.LabelDir= Label(self, text="Activiti (APS) Install Directory: ")
@@ -516,7 +528,8 @@ class Application(Frame):
             self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original, state=DISABLED)
             self.kerberosR.grid(row = 30, column = 0, sticky = W)
             
-            
+         
+        #if unchecked, enable 3 main options and hide install directory  
         else:
         
             self.LabelDir.grid_forget()
@@ -539,9 +552,11 @@ class Application(Frame):
 
 
 
+    # this is for active directory options in the activiti kerberos configuration        
     def Active_Directory_Activiti(self):
             
-        if self.checkBoxAD.get():
+        # if checked, add more options
+        if self.checkBoxActivitiAD.get():
         
         
             self.LabelHTTPUserDN= Label(self, text="HTTP User DistinguishedName: ")
@@ -565,6 +580,7 @@ class Application(Frame):
             self.ldapPassPS.grid(row=66, column=0) 
             
             
+        #if unchecked, remove additional options
         else:
         
             self.LabelHTTPUserDN.grid_forget()
@@ -580,24 +596,41 @@ class Application(Frame):
             self.ldapPassPS.grid_forget()
             
             
-            
+    
+    #the function for when run button is clicked
     def run(self):       
         
-        
-        
+    #############################################################################################
+    #All below code is for when one of the two Alfresco options are selected when run is clicked#
+    #############################################################################################
+    
         #take the input and store it as variables
+        #get set path
         pathI = self.dir.get()
-        if (self.checkBoxKerberosR.get()==False):
-            kerberosI=self.checkBoxKerberosI.get()
+        
+        #if for if the Alfresco Kerberos checkbox is true, get values of other checkboxes within this section
+        if (self.checkBoxKerberosI.get()==True):
+            kerberosI=True
+            kerberosR=False
             krb5iniI= self.checkBoxKrb5.get()
             activeDirectoryI=self.checkBoxAD.get()
             
+            #set two APS options to false
+            kerberosActivitiI=False
+            activeDirectoryActivitiI=False
+            
+        # if alfresco kerberos rollback is selected, set everything else to false
         elif (self.checkBoxKerberosR.get()==True):
-        
+            kerberosR=True
             kerberosI=False
             krb5iniI=False
             activeDirectoryI=False
+            
+            #set two APS options to false
+            kerberosActivitiI=False
+            activeDirectoryActivitiI=False
 
+        #for if the kerberos alfresco checkbox is checked, pull label values into variables
         if (kerberosI==True):
             alfServerI = self.serverName.get()
             ldapFQDN=self.ldapFqdn.get()
@@ -621,7 +654,7 @@ class Application(Frame):
 
 
 
-
+        #for if the kerberos alfresco active directory checkbox is checked, pull label values into variables
         if (activeDirectoryI==True):
 
             httpUserDN=self.httpUserDN.get()
@@ -714,57 +747,6 @@ class Application(Frame):
             p.communicate()
             
 
-
-
-
-        #create krb5.ini
-        if (krb5iniI==True):
-
-            krb5iniPath=r'C:\Windows'
-            krb5iniFile=r'krb5.ini'
-
-            with open(os.path.join(krb5iniPath, krb5iniFile), 'w') as k5:
-            
-            
-                k5.write(r'[logging]')
-                k5.write('\n')
-                k5.write(r' default = FILE:C:\Windows\krb5libs.log')
-                k5.write('\n')        
-                k5.write(r' kdc = FILE:C:\Windows\krb5kdc.log')
-                k5.write('\n')        
-                k5.write(r' admin_server = FILE:C:\Windows\kadmind.log')
-                k5.write('\n\n')
-                
-                k5.write(r'[libdefaults]')
-                k5.write('\n')        
-                k5.write(r' default_realm = '+uDomainI+'')
-                k5.write('\n')        
-                k5.write(r' dns_lookup_realm = true')
-                k5.write('\n')        
-                k5.write(r' dns_lookup_kdc = true')
-                k5.write('\n') 
-                k5.write(r' ticket_lifetime = 24h')
-                k5.write('\n') 
-                k5.write(r' renew_lifetime = 7d')
-                k5.write('\n') 
-                k5.write(r' forwardable = true')
-                k5.write('\n') 
-                k5.write(r' default_tkt_enctypes = rc4-hmac')
-                k5.write('\n') 
-                k5.write(r' default_tgs_enctypes = rc4-hmac')
-                k5.write('\n\n') 
-
-                k5.write(r'[realms]')
-                k5.write('\n') 
-                k5.write(r' '+uDomainI+r' = {')
-                k5.write('\n') 
-                k5.write(r'  kdc = '+ldapFQDN)
-                k5.write('\n') 
-                k5.write(r'  admin_server = '+ldapFQDN)
-                k5.write('\n') 
-                k5.write(r' }')
-         
-                k5.close()
 
             
             
@@ -1097,7 +1079,7 @@ class Application(Frame):
                 
                 
                 
-        elif (kerberosI==False):
+        elif (kerberosR==True):
 
             gloPropsCurrent=pathI+r'\tomcat\shared\classes\alfresco-global.properties'
             gloPropsOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco-global.properties.original'
@@ -1131,6 +1113,72 @@ class Application(Frame):
             javaLoginConfigPath=pathI+r'\java\lib\security\java.login.config'
             
             os.remove(javaLoginConfigPath)
+            
+    ####################################
+    #End Alfresco Kerberos run function#
+    ####################################
+    
+    
+    
+        #KRB5 is common between APS and ACS which is why it is inbetween the ACS and APS blocks
+    
+        #create krb5.ini
+        if (krb5iniI==True):
+
+            krb5iniPath=r'C:\Windows'
+            krb5iniFile=r'krb5.ini'
+
+            #simply create the file line by line adding the pulled varaibles from earlier.
+            with open(os.path.join(krb5iniPath, krb5iniFile), 'w') as k5:
+            
+            
+                k5.write(r'[logging]')
+                k5.write('\n')
+                k5.write(r' default = FILE:C:\Windows\krb5libs.log')
+                k5.write('\n')        
+                k5.write(r' kdc = FILE:C:\Windows\krb5kdc.log')
+                k5.write('\n')        
+                k5.write(r' admin_server = FILE:C:\Windows\kadmind.log')
+                k5.write('\n\n')
+                
+                k5.write(r'[libdefaults]')
+                k5.write('\n')        
+                k5.write(r' default_realm = '+uDomainI+'')
+                k5.write('\n')        
+                k5.write(r' dns_lookup_realm = true')
+                k5.write('\n')        
+                k5.write(r' dns_lookup_kdc = true')
+                k5.write('\n') 
+                k5.write(r' ticket_lifetime = 24h')
+                k5.write('\n') 
+                k5.write(r' renew_lifetime = 7d')
+                k5.write('\n') 
+                k5.write(r' forwardable = true')
+                k5.write('\n') 
+                k5.write(r' default_tkt_enctypes = rc4-hmac')
+                k5.write('\n') 
+                k5.write(r' default_tgs_enctypes = rc4-hmac')
+                k5.write('\n\n') 
+
+                k5.write(r'[realms]')
+                k5.write('\n') 
+                k5.write(r' '+uDomainI+r' = {')
+                k5.write('\n') 
+                k5.write(r'  kdc = '+ldapFQDN)
+                k5.write('\n') 
+                k5.write(r'  admin_server = '+ldapFQDN)
+                k5.write('\n') 
+                k5.write(r' }')
+         
+                k5.close()
+    
+    
+    
+    
+    
+    #############################################################################################
+    #All below code is for when one of the two Activiti options are selected when run is clicked#
+    #############################################################################################
       
 
 root = Tk()
