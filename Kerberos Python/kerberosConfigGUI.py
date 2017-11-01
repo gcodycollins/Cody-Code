@@ -617,7 +617,7 @@ class Application(Frame):
             
             #set two APS options to false
             kerberosActivitiI=False
-            activeDirectoryActivitiI=False
+            KerberosActivitiR=False
             
         # if alfresco kerberos rollback is selected, set everything else to false
         elif (self.checkBoxKerberosR.get()==True):
@@ -628,7 +628,7 @@ class Application(Frame):
             
             #set two APS options to false
             kerberosActivitiI=False
-            activeDirectoryActivitiI=False
+            KerberosActivitiR=False
 
         #for if the kerberos alfresco checkbox is checked, pull label values into variables
         if (kerberosI==True):
@@ -1118,9 +1118,356 @@ class Application(Frame):
     #End Alfresco Kerberos run function#
     ####################################
     
+
     
     
-        #KRB5 is common between APS and ACS which is why it is inbetween the ACS and APS blocks
+    
+    
+    
+    #############################################################################################
+    #All below code is for when one of the two Activiti options are selected when run is clicked#
+    #############################################################################################
+    
+    
+    
+    
+        #take the input and store it as variables
+        #get set path
+        pathI = self.dir.get()
+        
+        #if for if the activiti Kerberos checkbox is true, get values of other checkboxes within this section
+        if (self.checkBoxKerberosActivitiI.get()==True):
+            kerberosActivitiI=True
+            KerberosActivitiR=False
+
+            krb5iniI= self.checkBoxKrb5.get()
+            activeDirectoryActivitiI=self.checkBoxAD.get()
+            
+            #set two ACS options to False            
+            kerberosI=False
+            kerberosR=False
+            
+        # if activiti kerberos rollback is selected, set everything else to false
+        elif (self.checkBoxKerberosR.get()==True):
+            kerberosActivitiI=False
+            KerberosActivitiR=True
+            krb5iniI=False
+            activeDirectoryI=False
+            
+            #set two ACS options to False            
+            kerberosI=False
+            kerberosR=False
+
+        #for if the kerberos activiti checkbox is checked, pull label values into variables
+        if (kerberosActivitiI==True):
+            alfServerI = self.serverName.get()
+            ldapFQDN=self.ldapFqdn.get()
+            ldapAdmin=self.adminName.get()
+            ldapAdminPass=self.adminPass.get()
+            ldapGroupBase=self.groupBase.get()
+            ldapUserBase=self.userBase.get()
+            keytabPath=self.keytabPath.get()
+            httpKeytabName=self.httpKeytab.get()
+
+
+            #strip domain from ldapFQDN
+            start=ldapFQDN.find('.')+1
+            domainI = ldapFQDN[start:]
+            #domain I to uppercase for realm
+            uDomainI = domainI.upper()
+            #string text after period in domain for domainnetbios
+            end=uDomainI.find('.')
+            realm=uDomainI[0:end]
+
+
+
+        #for if the kerberos activiti active directory checkbox is checked, pull label values into variables
+        if (activeDirectoryActivitiI==True):
+
+            httpUserDN=self.httpUserDN.get()
+            httpPasswordI=self.httpUserPass.get()
+            psAdmin = self.ldapAdminPS.get()
+            psPass = self.ldapPassPS.get()
+            
+
+            #Strip the http username from the full httpUserDN
+            start=httpUserDN.find('=')+1
+            end=httpUserDN.find(',')
+            httpUserName=httpUserDN[start:end]
+
+
+            #blank out file first before writing.
+            ps = open('powershellAD.ps1','w').close()
+
+            #open file to write output to
+            ps = open('powershellAD.ps1','a')
+
+            #write to the powershell file the admin username and password
+            ps.write(r"#pass the domain admin and username to credentials to be used for subsequent calls.")
+            ps.write('\n')
+            ps.write(r'$User = "'+psAdmin+'"')
+            ps.write('\n')
+
+
+            ps.write(r'$PWord = ConvertTo-SecureString -String "'+psPass+'" -AsPlainText -Force')
+            ps.write('\n')
+
+            
+            ps.write(r'$cred = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User, $PWord')
+            ps.write('\n\n')
+
+
+            #write service account creation powershell comamnds to powershell file
+
+            ps.write(r'#create the service accounts')
+            ps.write('\n')
+            ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock { dsadd user "'+httpUserDN+r'" -samid '+httpUserName+r' -upn '+httpUserName+r'@'+domainI+r' -fn '+httpUserName+r' -display '+httpUserName+r' -pwd '+httpPasswordI+r' -mustchpwd no -canchpwd no -pwdneverexpires yes} -credential $cred')
+            ps.write('\n\n')
+
+            #write SPN setting commands to powershell file
+            ps.write(r'#set the spns on the created service accounts')
+            ps.write('\n')
+            ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock {setspn -a HTTP/'+alfServerI+'.'+domainI+' '+httpUserName+r'} -credential $cred')
+            ps.write('\n')
+            ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock {setspn -a HTTP/'+alfServerI+' '+httpUserName+r'} -credential $cred')
+            ps.write('\n\n')
+                       
+            #write delegation generating comamnds to powershell
+            ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock {powershell "Set-ADAccountControl -Identity '+httpUserName+r' -TrustedForDelegation 1 -TrustedToAuthForDelegation 0"} -credential $cred')
+            ps.write('\n\n')
+            
+            #write keytabs generation command to powershell file
+            ps.write(r'#generate the keytabs and pull them back to the Alfresco server')
+            ps.write('\n')
+            ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock { md '+keytabPath+r'} -credential $cred')
+            ps.write('\n\n')
+            ps.write(r'Invoke-Command -ComputerName '+ldapFQDN+r' -ScriptBlock { ktpass -princ HTTP/'+alfServerI+r'@'+uDomainI+r' -pass '+httpPasswordI+' -mapuser '+realm+'\\'+httpUserName+r' -crypto RC4-HMAC-NT -ptype KRB5_NT_PRINCIPAL -out '+keytabPath+'\\'+httpKeytabName+r' -kvno 0} -credential $cred')
+            ps.write('\n\n')
+            ps.write(r'$SourceSession = New-PSSession -ComputerName '+ldapFQDN+r' -credential $cred')
+            ps.write('\n\n')
+            ps.write(r'Copy-Item -FromSession $SourceSession -Path "'+keytabPath+r'" -Destination "C:\" -Recurse')
+
+            ps.close()
+            
+            # get the current working directory to find the powershell file
+            cwd = os.getcwd()
+            
+
+            p = subprocess.Popen(["powershell.exe", cwd+r"\powershellAD.ps1"], stdout=sys.stdout)
+            p.communicate()
+            
+
+
+            
+            
+
+        if (kerberosActivitiI==True):
+
+
+            #copy the current activiti-ldap.properties file and re-write it with only needed lines
+            #todo            
+            activitiLdapSource=pathI+r'\tomcat\lib\activiti-ldap.properties'
+            activitiLdapOriginalCopy=pathI+r'\tomcat\lib\activiti-ldap.properties.original'
+
+            shutil.copy(activitiLdapSource, activitiLdapOriginalCopy)
+
+
+
+            with open(activitiLdapSource, 'w') as f0:
+
+                f0.write(r'###Enable LDAP###\n')
+                f0.write(r'\nldap.authentication.enabled=true')
+                f0.write(r'\nldap.authentication.casesensitive=false')
+                f0.wirte(r'\nldap.allow.database.authenticaion.fallback=true\n')
+                
+                f0.write(r'\n###Enable Synchronization###\n')
+                f0.write(r'\nldap.synchronization.full.enabled=true')
+                f0.write(r'\nldap.synchronization.full.cronExpression=0 0/3 * 1/1 * ?')
+                f0.write(r'\nldap.synchronization.differential.enabled=false')
+                f0.write(r'\nldap.synchronization.differential.cronExpression=0 0/2 * 1/1 * ?\n')
+                
+                f0.write(r'\n###Connection Settings###\n')                
+                f0.write('\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
+                f0.write(r'\nldap.synchronization.java.naming.security.principal='+ldapAdmin+'@'+domainI+'')
+                f0.write(r'\nldap.synchronization.java.naming.security.credentials='+ldapAdminPass+'')                
+                f0.write(r'\nldap.synchronization.java.naming.security.authentication=simple')
+                f0.write(r'\nldap.authentication.java.naming.factory.initial=com.sun.jndi.ldap.LdapCtxFactory')
+                f0.write(r'\nldap.synchronization.java.naming.referral=follow\n')
+                
+                f0.write(r'\n###User Sync Settings###\n')                
+                f0.write(r'\nldap.synchronization.userSearchBase='+ldapUserBase)
+                f0.write(r'\nldap.synchronization.personQuery=(objectClass\=user)')   
+                f0.write(r'\nldap.synchronization.personDifferentialQuery=(&(objectclass\=user)(!(whenChanged<\={0})))')
+                f0.write(r'\nldap.synchronization.userIdAttributeName=sAMAccountName')
+                f0.write(r'\nldap.synchronization.userFirstNameAttributeName=givenName')
+                f0.write(r'\nldap.synchronization.userLastNameAttributeName=sn')
+                f0.write(r'\nldap.synchronization.userEmailAttributeName=mail')
+                f0.write(r'\nldap.synchronization.userType=user\n')
+                
+                f0.write(r'\n###Group Sync Settings###\n')
+                f0.write(r'\nldap.synchronization.groupSearchBase='+ldapGroupBase)
+                f0.write('\nldap.synchronization.groupQuery=(objectClass\=group)')
+                f0.write(r'\nldap.synchronization.groupDifferentialQuery=(&(objectclass\=group)(!(whenChanged<\={0})))')
+                f0.write(r'\nldap.synchronization.groupIdAttributeName=cn')
+                f0.write(r'\nldap.synchronization.groupMemberAttributeName=member')
+                f0.write(r'\nldap.synchronization.groupType=group\n')
+                
+                f0.write(r'\n###Generic Attribut Settings###\n')
+                f0.write(r'\nldap.synchronization.distinguishedNameAttributeName=dn')
+                f0.write(r'\nldap.synchronization.modifyTimestampAttributeName=whenChanged')
+                f0.write(r'\nldap.synchronization.createTimestampAttributeName=whenCreated')
+                f0.write(r'\nldap.synchronization.timestampFormat=yyyyMMddHHmmss\'.0Z\'')
+                f0.write(r'\nldap.synchronization.timestampFormat.locale.language=en')
+                f0.write(r'\nldap.synchronization.timestampFormat.locale.country=US')
+                f0.write(r'\nldap.synchronization.timestampFormat.timezone=GMT\n')
+                
+                f0.write(r'\n###Kerberos Settings###\n')
+                f0.write(r'\nkerberos.authentication.enabled=true')
+                f0.write(r'\nkerberos.authentication.principal=HTTP/'+alfServerI+'@'+uDomainI+')
+                f0.write(r'kerberos.authentication.keytab='+keytabPath+'\\'+httpKeytabName+r'"')
+                f0.write(r'\nkerberos.authentication.krb5.conf=C:/Windows/krb5.ini')
+                f0.write(r'\nkerberos.allow.ldap.authentication.fallback=true')
+                f0.write(r'\nkerberos.allow.database.authentication.fallback=true')
+                f0.write(r'\nkerberos.allow.samAccountName.authentication=true')
+                f0.write(r'\nsecurity.authentication.use-externalid=true')
+                    
+                f0.close()
+
+
+
+
+            with open(gloPropsSource, 'a') as f0:
+                f0.write('\n\n\n\n\n###KERB###')
+                
+                f0.write('\n\nkerberos.authentication.realm='+uDomainI+'')
+                f0.write('\nkerberos.authentication.authenticateCIFS=false')
+                f0.write('\nkerberos.authentication.sso.enabled=true')
+                f0.write('\nkerberos.authentication.http.password='+httpPasswordI+'')
+                f0.write('\nkerberos.authentication.stripUsernameSuffix=true')
+                f0.write('\nkerberos.authentication.browser.ticketLogons=true')
+
+                f0.write('\n\n\n\n\n###LDAP###')
+                f0.write('\n\nauthentication.chain=kerberos1:kerberos,alfrescoNtlm1:alfrescoNtlm')
+                f0.write('\nldap.authentication.active=true')
+                f0.write('\nldap.authentication.allowGuestLogin=false')
+                f0.write('\nldap.authentication.userNameFormat=%s@'+domainI+'')
+
+
+
+
+                f0.write('\nldap.synchronization.userSearchBase='+ldapUserBase)
+                f0.write('\nsynchronization.syncOnStartup=true')
+                f0.write('\nsynchronization.allowDeletions=false')
+                f0.write('\nsynchronization.synchronizeChangesOnly=false')
+
+
+
+                
+                f0.close()              
+                
+                
+
+            #modify the java.security to point to the java.login.config
+
+
+            originalLoginConfigUrl=r'#login.config.url.1=file:${user.home}/.java.login.config'
+            updatedLoginConfigUrl=r'login.config.url.1=file:${java.home}/lib/security/java.login.config'
+
+
+            javaSecuritySource=pathI+r'\java\lib\security\java.security'
+            javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
+
+            shutil.copy(javaSecuritySource, javaSecurityOriginalCopy)
+
+
+            with open(javaSecurityOriginalCopy) as inF2, open(javaSecuritySource, 'w') as outF2:
+                for line in inF2:
+                
+                    if (r'login.config.url.1' in line):
+                        line = updatedLoginConfigUrl
+                        outF2.write(line)
+                        
+                    else:
+                        outF2.write(line)
+                    
+                inF2.close()
+                outF2.close()
+                
+                
+                
+                
+                
+            #Create the java.login.config and populate
+
+            javaLoginConfigPath=pathI+r'\java\lib\security'
+            javaLoginConfigFile=r'java.login.config'
+
+            with open(os.path.join(javaLoginConfigPath, javaLoginConfigFile), 'w') as f3:
+                
+                f3.write('Alfresco {')
+                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+                f3.write('\n};')
+
+                f3.write('\n\nAlfrescoHTTP {')
+                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
+                f3.write('\nstoreKey=true')
+                f3.write('\nuseKeyTab=true\n')
+                f3.write(r'keyTab="'+keytabPath+'\\'+httpKeytabName+r'"')
+                f3.write('\nprincipal="HTTP/'+alfServerI+'@'+uDomainI+'";')
+                f3.write('\n};')
+
+                f3.write('\n\ncom.sun.net.ssl.client {')
+                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+                f3.write('\n};')
+
+                f3.write('\n\nother {')
+                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+                f3.write('\n};')
+                
+                
+                f3.close()
+                
+                
+                
+                
+        elif (kerberosActivitiR==True):
+
+            activitiLdapCurrent=pathI+r'\tomcat\lib\activiti-ldap.properties'
+            activitiLdapOriginalCopy=pathI+r'\tomcat\lib\activiti-ldap.properties.original'
+
+            
+            shutil.copy(activitiLdapOriginalCopy, activitiLdapCurrent)
+            
+            os.remove(activitiLdapOriginalCopy)
+            
+            
+
+            javaSecurityCurrent=pathI+r'\java\lib\security\java.security'
+            javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
+            
+            shutil.copy(javaSecurityOriginalCopy, javaSecurityCurrent)
+            
+            os.remove(javaSecurityOriginalCopy)
+            
+            
+            
+            javaLoginConfigPath=pathI+r'\java\lib\security\java.login.config'
+            
+            os.remove(javaLoginConfigPath)
+            
+    ####################################
+    #End Activiti Kerberos run function#
+    ####################################
+    
+    
+    
+    
+    
+    
+    
+        
+    
+        #KRB5 is common between APS and ACS which is why it is at the end of the file
     
         #create krb5.ini
         if (krb5iniI==True):
@@ -1171,14 +1518,8 @@ class Application(Frame):
                 k5.write(r' }')
          
                 k5.close()
-    
-    
-    
-    
-    
-    #############################################################################################
-    #All below code is for when one of the two Activiti options are selected when run is clicked#
-    #############################################################################################
+                
+                
       
 
 root = Tk()
