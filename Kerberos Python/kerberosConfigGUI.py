@@ -87,7 +87,7 @@ class Application(Frame):
             self.dir = Entry(self)
             self.dir.grid(row=3, column=0)
             
-            self.LabelServerName= Label(self, text="Alfreco Server Name: ")
+            self.LabelServerName= Label(self, text="Alfresco Server Name: ")
             self.LabelServerName.grid(row = 4, column =0, sticky = W)
             self.serverName = Entry(self)
             self.serverName.grid(row=4, column=0)
@@ -360,7 +360,7 @@ class Application(Frame):
             self.dir = Entry(self)
             self.dir.grid(row=52, column=0)
             
-            self.LabelServerName= Label(self, text="Alfreco Server Name: ")
+            self.LabelServerName= Label(self, text="Activiti Server Name: ")
             self.LabelServerName.grid(row = 53, column =0, sticky = W)
             self.serverName = Entry(self)
             self.serverName.grid(row=53, column=0)
@@ -553,7 +553,7 @@ class Application(Frame):
 
 
     # this is for active directory options in the activiti kerberos configuration        
-    def Active_Directory_Activiti(self):
+    def Active_Directory_Activiti(self):    
             
         # if checked, add more options
         if self.checkBoxActivitiAD.get():
@@ -598,7 +598,16 @@ class Application(Frame):
             
     
     #the function for when run button is clicked
-    def run(self):       
+    def run(self):
+
+        #Declare initial checkbox values
+        kerberosI=False
+        kerberosR=False
+        kerberosActivitiI=False
+        kerberosActivitiR=False
+        activeDirectoryI=False
+        activeDirectoryActivitiI=False
+        
         
     #############################################################################################
     #All below code is for when one of the two Alfresco options are selected when run is clicked#
@@ -1141,7 +1150,7 @@ class Application(Frame):
             KerberosActivitiR=False
 
             krb5iniI= self.checkBoxKrb5.get()
-            activeDirectoryActivitiI=self.checkBoxAD.get()
+            activeDirectoryActivitiI=self.checkBoxActivitiAD.get()
             
             #set two ACS options to False            
             kerberosI=False
@@ -1277,7 +1286,7 @@ class Application(Frame):
                 f0.write(r'###Enable LDAP###\n')
                 f0.write(r'\nldap.authentication.enabled=true')
                 f0.write(r'\nldap.authentication.casesensitive=false')
-                f0.wirte(r'\nldap.allow.database.authenticaion.fallback=true\n')
+                f0.write(r'\nldap.allow.database.authenticaion.fallback=true\n')
                 
                 f0.write(r'\n###Enable Synchronization###\n')
                 f0.write(r'\nldap.synchronization.full.enabled=true')
@@ -1322,7 +1331,7 @@ class Application(Frame):
                 
                 f0.write(r'\n###Kerberos Settings###\n')
                 f0.write(r'\nkerberos.authentication.enabled=true')
-                f0.write(r'\nkerberos.authentication.principal=HTTP/'+alfServerI+'@'+uDomainI+')
+                f0.write(r'\nkerberos.authentication.principal=HTTP/'+alfServerI+'@'+uDomainI)
                 f0.write(r'kerberos.authentication.keytab='+keytabPath+'\\'+httpKeytabName+r'"')
                 f0.write(r'\nkerberos.authentication.krb5.conf=C:/Windows/krb5.ini')
                 f0.write(r'\nkerberos.allow.ldap.authentication.fallback=true')
