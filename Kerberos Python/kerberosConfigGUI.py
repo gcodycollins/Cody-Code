@@ -1,3 +1,29 @@
+##############################################
+#
+# Created by Grayson Cody Collins
+#
+# Please reach out to cody.collins@alfresco.com or skypeId cody.collins_3
+# with any questions, improvements, or requests.
+#
+##############################################
+
+##############################################
+#
+# The function of this code is to provide a GUI tool that can be used to configure
+# Kerberos settings in both an APS and ACS directory. Currently, this is only supported
+# on a Windows Applicaiton server and Windows Active Directory system.
+#
+# Some assumptions include that the APC and ACS environment this is run against is an 
+# installer created environment. This is because hardcoded paths to the configuration files are used
+# and those hardcoded paths are based off of an environment created by the installer.
+#
+# This code also assumes that you have configured the correct DNS for the Kerberos environment.
+# This code also assumes that you have correctly implemented the client level configuration on
+# the end user client machine.
+#
+##############################################
+
+
 from tkinter import *
 import os, sys, shutil, fileinput, subprocess
 
