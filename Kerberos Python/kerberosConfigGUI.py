@@ -1157,15 +1157,16 @@ class Application(Frame):
             kerberosR=False
             
         # if activiti kerberos rollback is selected, set everything else to false
-        elif (self.checkBoxKerberosR.get()==True):
+        elif (self.checkBoxKerberosActivitiR.get()==True):
+            kerberosActivitiR=True
             kerberosActivitiI=False
-            KerberosActivitiR=True
             krb5iniI=False
             activeDirectoryI=False
             
             #set two ACS options to False            
             kerberosI=False
             kerberosR=False
+            
 
         #for if the kerberos activiti checkbox is checked, pull label values into variables
         if (kerberosActivitiI==True):
@@ -1272,6 +1273,10 @@ class Application(Frame):
 
         if (kerberosActivitiI==True):
 
+        
+            #function to replace back slash ( \ ) with forward slash ( / ) in keytab path. Activiti Kerberos will not work with
+            #backslashes in the kerberos.authenticaiton.keytab property when activiti is on windows        
+            keytabPathSlash = keytabPath.replace("\\", "/")
 
             #copy the current activiti-ldap.properties file and re-write it with only needed lines          
             activitiLdapSource=pathI+r'\tomcat\lib\activiti-ldap.properties'
@@ -1283,61 +1288,62 @@ class Application(Frame):
 
             with open(activitiLdapSource, 'w') as f0:
 
-                f0.write(r'###Enable LDAP###\n')
-                f0.write(r'\nldap.authentication.enabled=true')
-                f0.write(r'\nldap.authentication.casesensitive=false')
-                f0.write(r'\nldap.allow.database.authenticaion.fallback=true\n')
+                f0.write('###Enable LDAP###')
+                f0.write('\nldap.authentication.enabled=true')
+                f0.write('\nldap.authentication.casesensitive=false')
+                f0.write('\nldap.allow.database.authenticaion.fallback=true\n')
                 
-                f0.write(r'\n###Enable Synchronization###\n')
-                f0.write(r'\nldap.synchronization.full.enabled=true')
-                f0.write(r'\nldap.synchronization.full.cronExpression=0 0/3 * 1/1 * ?')
-                f0.write(r'\nldap.synchronization.differential.enabled=false')
-                f0.write(r'\nldap.synchronization.differential.cronExpression=0 0/2 * 1/1 * ?\n')
+                f0.write('\n###Enable Synchronization###')
+                f0.write('\nldap.synchronization.full.enabled=true')
+                f0.write('\nldap.synchronization.full.cronExpression=0 0/3 * 1/1 * ?')
+                f0.write('\nldap.synchronization.differential.enabled=false')
+                f0.write('\nldap.synchronization.differential.cronExpression=0 0/2 * 1/1 * ?\n')
                 
-                f0.write(r'\n###Connection Settings###\n')                
-                f0.write(r'\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
-                f0.write(r'\nldap.synchronization.java.naming.security.principal='+ldapAdmin+'@'+domainI+'')
-                f0.write(r'\nldap.synchronization.java.naming.security.credentials='+ldapAdminPass+'')                
-                f0.write(r'\nldap.synchronization.java.naming.security.authentication=simple')
-                f0.write(r'\nldap.authentication.java.naming.factory.initial=com.sun.jndi.ldap.LdapCtxFactory')
-                f0.write(r'\nldap.synchronization.java.naming.referral=follow\n')
+                f0.write('\n###Connection Settings###')                
+                f0.write('\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
+                f0.write('\nldap.synchronization.java.naming.security.principal='+ldapAdmin+'@'+domainI+'')
+                f0.write('\nldap.synchronization.java.naming.security.credentials='+ldapAdminPass)                
+                f0.write('\nldap.synchronization.java.naming.security.authentication=simple')
+                f0.write('\nldap.authentication.java.naming.factory.initial=com.sun.jndi.ldap.LdapCtxFactory')
+                f0.write('\nldap.synchronization.java.naming.referral=follow\n')
                 
-                f0.write(r'\n###User Sync Settings###\n')                
-                f0.write(r'\nldap.synchronization.userSearchBase='+ldapUserBase)
-                f0.write(r'\nldap.synchronization.personQuery=(objectClass\=user)')   
-                f0.write(r'\nldap.synchronization.personDifferentialQuery=(&(objectclass\=user)(!(whenChanged<\={0})))')
-                f0.write(r'\nldap.synchronization.userIdAttributeName=sAMAccountName')
-                f0.write(r'\nldap.synchronization.userFirstNameAttributeName=givenName')
-                f0.write(r'\nldap.synchronization.userLastNameAttributeName=sn')
-                f0.write(r'\nldap.synchronization.userEmailAttributeName=mail')
-                f0.write(r'\nldap.synchronization.userType=user\n')
+                f0.write('\n###User Sync Settings###')                
+                f0.write('\nldap.synchronization.userSearchBase='+ldapUserBase)
+                f0.write('\nldap.synchronization.personQuery=(objectClass\=user)')   
+                f0.write('\nldap.synchronization.personDifferentialQuery=(&(objectclass\=user)(!(whenChanged<\={0})))')
+                f0.write('\nldap.synchronization.userIdAttributeName=sAMAccountName')
+                f0.write('\nldap.synchronization.userFirstNameAttributeName=givenName')
+                f0.write('\nldap.synchronization.userLastNameAttributeName=sn')
+                f0.write('\nldap.synchronization.userEmailAttributeName=mail')
+                f0.write('\nldap.synchronization.userType=user\n')
                 
-                f0.write(r'\n###Group Sync Settings###\n')
-                f0.write(r'\nldap.synchronization.groupSearchBase='+ldapGroupBase)
-                f0.write(r'\nldap.synchronization.groupQuery=(objectClass\=group)')
-                f0.write(r'\nldap.synchronization.groupDifferentialQuery=(&(objectclass\=group)(!(whenChanged<\={0})))')
-                f0.write(r'\nldap.synchronization.groupIdAttributeName=cn')
-                f0.write(r'\nldap.synchronization.groupMemberAttributeName=member')
-                f0.write(r'\nldap.synchronization.groupType=group\n')
+                f0.write('\n###Group Sync Settings###')
+                f0.write('\nldap.synchronization.groupSearchBase='+ldapGroupBase)
+                f0.write('\nldap.synchronization.groupQuery=(objectClass\=group)')
+                f0.write('\nldap.synchronization.groupDifferentialQuery=(&(objectclass\=group)(!(whenChanged<\={0})))')
+                f0.write('\nldap.synchronization.groupIdAttributeName=cn')
+                f0.write('\nldap.synchronization.groupMemberAttributeName=member')
+                f0.write('\nldap.synchronization.groupType=group\n')
                 
-                f0.write(r'\n###Generic Attribut Settings###\n')
-                f0.write(r'\nldap.synchronization.distinguishedNameAttributeName=dn')
-                f0.write(r'\nldap.synchronization.modifyTimestampAttributeName=whenChanged')
-                f0.write(r'\nldap.synchronization.createTimestampAttributeName=whenCreated')
-                f0.write(r'\nldap.synchronization.timestampFormat=yyyyMMddHHmmss\'.0Z\'')
-                f0.write(r'\nldap.synchronization.timestampFormat.locale.language=en')
-                f0.write(r'\nldap.synchronization.timestampFormat.locale.country=US')
-                f0.write(r'\nldap.synchronization.timestampFormat.timezone=GMT\n')
+                f0.write('\n###Generic Attribut Settings###')
+                f0.write('\nldap.synchronization.distinguishedNameAttributeName=dn')
+                f0.write('\nldap.synchronization.modifyTimestampAttributeName=whenChanged')
+                f0.write('\nldap.synchronization.createTimestampAttributeName=whenCreated')
+                f0.write('\nldap.synchronization.timestampFormat=yyyyMMddHHmmss\'.0Z\'')
+                f0.write('\nldap.synchronization.timestampFormat.locale.language=en')
+                f0.write('\nldap.synchronization.timestampFormat.locale.country=US')
+                f0.write('\nldap.synchronization.timestampFormat.timezone=GMT\n')
                 
-                f0.write(r'\n###Kerberos Settings###\n')
-                f0.write(r'\nkerberos.authentication.enabled=true')
-                f0.write(r'\nkerberos.authentication.principal=HTTP/'+alfServerI+'@'+uDomainI)
-                f0.write(r'kerberos.authentication.keytab='+keytabPath+'\\'+httpKeytabName+r'"')
-                f0.write(r'\nkerberos.authentication.krb5.conf=C:/Windows/krb5.ini')
-                f0.write(r'\nkerberos.allow.ldap.authentication.fallback=true')
-                f0.write(r'\nkerberos.allow.database.authentication.fallback=true')
-                f0.write(r'\nkerberos.allow.samAccountName.authentication=true')
-                f0.write(r'\nsecurity.authentication.use-externalid=true')
+                f0.write('\n###Kerberos Settings###')
+                f0.write('\nkerberos.authentication.enabled=true')
+                f0.write('\nkerberos.authentication.principal=HTTP/'+alfServerI+'@'+uDomainI)
+                f0.write('\nkerberos.authentication.keytab='+keytabPathSlash+'/'+httpKeytabName)
+                f0.write('\n')
+                f0.write(r'kerberos.authentication.krb5.conf=C:/Windows/krb5.ini')
+                f0.write('\nkerberos.allow.ldap.authentication.fallback=true')
+                f0.write('\nkerberos.allow.database.authentication.fallback=true')
+                f0.write('\nkerberos.allow.samAccountName.authentication=true')
+                f0.write('\nsecurity.authentication.use-externalid=true')
                     
                 f0.close()
             
@@ -1405,8 +1411,7 @@ class Application(Frame):
                 f3.close()
                 
                 
-                
-                
+        
         elif (kerberosActivitiR==True):
 
             activitiLdapCurrent=pathI+r'\tomcat\lib\activiti-ldap.properties'
