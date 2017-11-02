@@ -130,13 +130,18 @@ class Application(Frame):
             self.LabelCifsKeytab= Label(self, text="cifs Keytab Name: ")
             self.LabelCifsKeytab.grid(row = 12, column =0, sticky = W)
             self.cifsKeytab = Entry(self)
-            self.cifsKeytab.grid(row=12, column=0)                
+            self.cifsKeytab.grid(row=12, column=0)  
+
+            self.LabelHTTPUserPass= Label(self, text="HTTP User Password: ")
+            self.LabelHTTPUserPass.grid(row = 13, column =0, sticky = W)
+            self.httpUserPass = Entry(self)
+            self.httpUserPass.grid(row=13, column=0)            
             
             
             
             self.checkBoxKrb5 = BooleanVar()
             self.krb5 = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5)
-            self.krb5.grid(row = 13, column = 0, sticky = W)
+            self.krb5.grid(row = 19, column = 0, sticky = W)
             
             
             
@@ -194,7 +199,9 @@ class Application(Frame):
             
             self.LabelCifsKeytab.grid_forget()
             self.cifsKeytab.grid_forget()
-
+            
+            self.LabelHTTPUserPass.grid_forget()
+            self.httpUserPass.grid_forget()
 
 
             self.krb5.grid_forget()
@@ -205,9 +212,6 @@ class Application(Frame):
             if self.checkBoxAD.get():
                 self.LabelHTTPUserDN.grid_forget()
                 self.httpUserDN.grid_forget()
-                
-                self.LabelHTTPUserPass.grid_forget()
-                self.httpUserPass.grid_forget()
                 
                 self.LabelcifsUserDN.grid_forget()
                 self.cifsUserDN.grid_forget()
@@ -251,30 +255,27 @@ class Application(Frame):
             self.httpUserDN = Entry(self)
             self.httpUserDN.grid(row=21, column=0)
             
-            self.LabelHTTPUserPass= Label(self, text="HTTP User Password: ")
-            self.LabelHTTPUserPass.grid(row = 22, column =0, sticky = W)
-            self.httpUserPass = Entry(self)
-            self.httpUserPass.grid(row=22, column=0)
+
             
             self.LabelcifsUserDN= Label(self, text="cifs User DistinguishedName: ")
-            self.LabelcifsUserDN.grid(row = 23, column =0, sticky = W)
+            self.LabelcifsUserDN.grid(row = 22, column =0, sticky = W)
             self.cifsUserDN = Entry(self)
-            self.cifsUserDN.grid(row=23, column=0)      
+            self.cifsUserDN.grid(row=22, column=0)      
 
             self.LabelCifsUserPass= Label(self, text="cifs User Password: ")
-            self.LabelCifsUserPass.grid(row = 24, column =0, sticky = W)
+            self.LabelCifsUserPass.grid(row = 23, column =0, sticky = W)
             self.cifsUserPass = Entry(self)
-            self.cifsUserPass.grid(row=24, column=0) 
+            self.cifsUserPass.grid(row=23, column=0) 
             
             self.LabelLdapAdminPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ")
-            self.LabelLdapAdminPS.grid(row = 25, column =0, sticky = W)
+            self.LabelLdapAdminPS.grid(row = 24, column =0, sticky = W)
             self.ldapAdminPS = Entry(self)
-            self.ldapAdminPS.grid(row=25, column=0)      
+            self.ldapAdminPS.grid(row=24, column=0)      
 
             self.LabelLdapPassPS= Label(self, text="Enter LDAP Administrator Password: ")
-            self.LabelLdapPassPS.grid(row = 26, column =0, sticky = W)
+            self.LabelLdapPassPS.grid(row = 25, column =0, sticky = W)
             self.ldapPassPS = Entry(self)
-            self.ldapPassPS.grid(row=26, column=0) 
+            self.ldapPassPS.grid(row=25, column=0) 
             
             
         #if its unchecked, remove those additional options    
@@ -282,9 +283,6 @@ class Application(Frame):
         
             self.LabelHTTPUserDN.grid_forget()
             self.httpUserDN.grid_forget()
-            
-            self.LabelHTTPUserPass.grid_forget()
-            self.httpUserPass.grid_forget()
             
             self.LabelcifsUserDN.grid_forget()
             self.cifsUserDN.grid_forget()
@@ -650,6 +648,7 @@ class Application(Frame):
             keytabPath=self.keytabPath.get()
             httpKeytabName=self.httpKeytab.get()
             cifsKeytabName=self.cifsKeytab.get()
+            httpPasswordI=self.httpUserPass.get()
 
 
             #strip domain from ldapFQDN
@@ -667,7 +666,6 @@ class Application(Frame):
         if (activeDirectoryI==True):
 
             httpUserDN=self.httpUserDN.get()
-            httpPasswordI=self.httpUserPass.get()
             cifsUserDN=self.cifsUserDN.get()
             cifsPasswordI=self.cifsUserPass.get()
             psAdmin = self.ldapAdminPS.get()
