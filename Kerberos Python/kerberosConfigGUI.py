@@ -27,7 +27,7 @@
 #
 #Wishlist/future feature tracker for my own personal memory:
 #
-# Noticiations in Python Gui when action is complete
+# Noticiations in Python Gui when action is complete.
 # Changing rollbacks from checkbox to its own separate button.
 #  - this is to avoid losing all typed in data if you need to revert
 # Data persistence in the label fields if items are unchecked and later checked again.
