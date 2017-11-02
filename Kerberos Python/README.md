@@ -6,7 +6,7 @@ Placeholder document for Kerberos Configurer manual.
 
 Implement Kerberos Configurations in the Alfresco (ACS) Directory? 
 
-Alfresco (ACS) Install Directory:
+Alfresco (ACS) Install Directory:  
 C:\Alfresco521Directory
 
 AlfrescoServerName: 
