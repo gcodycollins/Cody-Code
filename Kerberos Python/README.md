@@ -2,7 +2,7 @@
 
 Placeholder document for Kerberos Configurer manual.
 
-![Kerberos Python GUI](/Cody-Code/Assets/Images/KerberosPythonGui.PNG "Kerberos Python GUI")
+![Kerberos Python GUI](/Assets/Images/KerberosPythonGui.PNG "Kerberos Python GUI")
 
 ## Sample Input Format:
 
