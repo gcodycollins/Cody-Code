@@ -1,12 +1,16 @@
 # Kerberos Configurer
 
+## Usage Manual
+
 Placeholder document for Kerberos Configurer manual.
+
+## Screenshots
 
 ![Kerberos Python GUI](/Assets/Images/KerberosPythonGui.PNG "Kerberos Python GUI")
 
 ## Sample Input Format:
 
-Implement Kerberos Configurations in the Alfresco (ACS) Directory? 
+### Implement Kerberos Configurations in the Alfresco (ACS) Directory? 
 
 Alfresco (ACS) Install Directory:  
 C:\Alfresco521Directory
@@ -44,7 +48,7 @@ servic3AccountP@ssword
 
 
 
-Create Service Accounts, set SPNs, and Generate Keytabs for ACS?
+### Create Service Accounts, set SPNs, and Generate Keytabs for ACS?
 
 HTTP User DistinguishedName:  
 cn=HTTPServiceAccount,cn=users,dc=domain,dc=com
