@@ -32,7 +32,7 @@
 #  - this is to avoid losing all typed in data if you need to revert
 # Data persistence in the label fields if items are unchecked and later checked again.
 # Modifying GUI to show all data. Currently it cuts off text from long input
-# Automated kinit keytab checker. It it doesn't get a ticket, let the UI know.
+# Automated kinit keytab checker. If it doesn't get a ticket, let the UI know.
 #
 ##############################################
 
