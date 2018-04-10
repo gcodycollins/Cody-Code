@@ -7,6 +7,11 @@
 #
 ##############################################
 
+##############################################
+#
+# Used to create a .csv file for import of NTLM users directly to Alfresco 
+#
+##############################################
 
 #accept input
 fileName= input("Name of csv file (minus '.csv'): ")
