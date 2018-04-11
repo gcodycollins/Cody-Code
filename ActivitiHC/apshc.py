@@ -8,8 +8,10 @@ Purpose:
 
 Wishlist/future feature tracker for my own personal memory:
  -SQL code execution against configured DB, DB vendor specific SQL based on pulled properties.
+ -When pulling certain properties, logic to go and get other files to get related configs.
  -Logic to pre-emptively inform customer for recommendation? Or do all of that on our end?
  -Logic to handle if the DB url contains variables like ${dbName}. Retrieve those variables too.
+ -Handle multiple of the same properties, only read the last logged one just like in spring.
  
 Assumptions/Other:
  This code was developed using Python 3 branch.
@@ -64,6 +66,12 @@ def get_drives():
         list1.append(line)
     return list1
     
+    
+    
+
+    
+#New Def
+    
 #######################   
 ### End Definitions ###
 #######################
@@ -84,6 +92,7 @@ if os.name =='nt':
 #Execute if Windows    
 if windows:
 
+    #get all drive letters
     drives= get_drives()
 
     results=[]
@@ -111,7 +120,50 @@ if windows:
     
         actAppProp=results[0]
         
-    print(actAppProp)
+
+
+
+        
+    #Declare default values for properties
+    datasourceDriver="datasource.driver="
+    datasourceUrl="datasource.url="
+    datasourceUsername="datasource.username="
+    datasourcePassword="datasource.password="
+    hibernateDialect="hibernate.dialect="
+        
+    #Open the found activiti-app.properties file
+    with open(actAppProp) as appProp:
+    
+        print("Reading File: "+actAppProp)
+    
+        #parse the file line by line. This also ensures that when the same property is uncommented, it will always pick up the 
+        #last uncommented property just like spring does
+        for line in appProp:
+        
+            #Pull DB Properties.          
+            if (r'datasource.driver=' in line and not "#" in line):
+                #HC.write(line+'\n')
+                datasourceDriver=line
+                
+            elif(r'datasource.url=' in line and not "#" in line):
+                #HC.write(line+'\n')
+                datasourceUrl=line
+                
+            elif(r'datasource.username=' in line and not "#" in line):
+                #HC.write(line+'\n')
+                datasourceUsername=line
+                
+            elif(r'datasource.password=' in line and not "#" in line):
+                #HC.write(line+'\n')
+                datasourcePassword=line
+                
+            elif(r'hibernate.dialect=' in line and not "#" in line):
+                #HC.write(line+'\n')
+                hibernateDialect=line
+                
+                
+                
+    
     
     #Open file to begin writing all useful HC information to
     #blank out file first before writing.
@@ -119,12 +171,12 @@ if windows:
     #open file to write output to
     HC = open('HCInfo.txt','w')
     
-    j=0
-    #Open the found activiti-app.properties file
-    with open(actAppProp) as appProp:
+    print("Writing File: HCInfo.txt")
     
-        #parse the file line by line
-        for line in appProp:
-        
-            j+=1
-            print (j)
+    #Write HC file with pre filled properties to account for when multiple are found.
+    HC.write('###########################\n### Database Properties ###\n###########################\n')
+    HC.write(datasourceDriver+'\n')
+    HC.write(datasourceUrl+'\n')
+    HC.write(datasourceUsername+'\n')
+    HC.write(datasourcePassword+'\n')
+    HC.write(hibernateDialect+'\n')

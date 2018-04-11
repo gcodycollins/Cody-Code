@@ -1,0 +1,12 @@
+###########################
+### Database Properties ###
+###########################
+datasource.driver=oracle.jdbc.driver.OracleDriver
+
+datasource.url=jdbc:oracle:thin:@34.224.31.32:1521:orcl
+
+datasource.username=APSHC
+
+datasource.password=apshc
+
+hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
