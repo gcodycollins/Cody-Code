@@ -14,13 +14,15 @@ Wishlist/future feature tracker for my own personal memory:
  -Handle multiple of the same properties, only read the last logged one just like in spring.
  
 Assumptions/Other:
- This code was developed using Python 3 branch.
+ -This code was developed and tested using Python 3 branch.
+ -For DB vendors, ensure that necessary steps for each version are followed.
+  -Oracle: Download cx_Oracle Package from https://oracle.github.io/python-cx_Oracle/
 
 '''
 #Imports
 import os
-import fnmatch
 import glob
+import cx_Oracle
 
 from datetime import datetime
     
@@ -142,25 +144,22 @@ if windows:
         
             #Pull DB Properties.          
             if (r'datasource.driver=' in line and not "#" in line):
-                #HC.write(line+'\n')
                 datasourceDriver=line
                 
             elif(r'datasource.url=' in line and not "#" in line):
-                #HC.write(line+'\n')
                 datasourceUrl=line
                 
             elif(r'datasource.username=' in line and not "#" in line):
-                #HC.write(line+'\n')
                 datasourceUsername=line
                 
             elif(r'datasource.password=' in line and not "#" in line):
-                #HC.write(line+'\n')
                 datasourcePassword=line
                 
             elif(r'hibernate.dialect=' in line and not "#" in line):
-                #HC.write(line+'\n')
                 hibernateDialect=line
                 
+        appProp.close()
+        print("Read Complete\n")
                 
                 
     
@@ -174,9 +173,205 @@ if windows:
     print("Writing File: HCInfo.txt")
     
     #Write HC file with pre filled properties to account for when multiple are found.
-    HC.write('###########################\n### Database Properties ###\n###########################\n')
-    HC.write(datasourceDriver+'\n')
-    HC.write(datasourceUrl+'\n')
-    HC.write(datasourceUsername+'\n')
-    HC.write(datasourcePassword+'\n')
-    HC.write(hibernateDialect+'\n')
+    HC.write('###########################\n### Database Properties ###\n###########################\n\n')
+    HC.write(datasourceDriver)
+    HC.write(datasourceUrl)
+    HC.write(datasourceUsername)
+    #TODO change this so it doesn't print out plain text DB password
+    HC.write(datasourcePassword)
+    HC.write(hibernateDialect)
+    
+    print("Write Complete\n")
+    
+    print("Executing Database Queries:")
+    
+    HC.write('\n\n############################\n### Database Table Count ###\n############################\n\n')
+    
+    #Make Database Connection using previously gathered connection
+    
+    #Strip the property names from each string variable
+    databaseUsername=datasourceUsername.replace("datasource.username=","")
+    databaseUsername= databaseUsername.replace("\n","")
+    databasePassword=datasourcePassword.replace("datasource.password=","")
+    databasePassword=databasePassword.replace("\n","")
+    
+    #get db port, url, and name by splitting datasourceUrl
+    dbConnection=datasourceUrl.split(":")
+    
+    databaseURL=dbConnection[3]
+    databaseURL=databaseURL.replace("@","")
+    databasePort=dbConnection[4]
+    databaseName=dbConnection[5]
+    databaseName=databaseName.replace("\n","")
+    
+    dbURL=databaseURL+":"+databasePort+"/"+databaseName
+    
+    #Sources: http://cx-oracle.readthedocs.io/en/latest/installation.html , https://support.esri.com/en/technical-article/000011659
+    #Check for DB vendor
+    
+    #if Oracle DB
+    if (hibernateDialect=='hibernate.dialect=org.hibernate.dialect.Oracle10gDialect'):
+        
+        
+        
+        #for ACT_EVT_LOG
+        print("--Executing Query: SELECT count(*) FROM "+databaseUsername+".ACT_EVT_LOG;")
+        
+        #DB connection and query
+        connection = cx_Oracle.connect(databaseUsername, databasePassword, dbURL)
+        cursor=connection.cursor()
+        cursor.execute("""
+            SELECT count(*)
+            FROM """+databaseUsername+""".ACT_EVT_LOG""")
+            
+        #get Count from query
+        response=""
+        for result in cursor:
+            response+=str(result)
+        
+        response=response.replace("(","").replace(",","").replace(")","")
+        print("--Query Execution Complete\n")
+        
+        HC.write("ACT_EVT_LOG:\r")
+        HC.write("Count= "+response+"\n\n")
+        
+        
+        
+        #for PROCESSED_ACTIVITI_EVENTS
+        print("--Executing Query: SELECT count(*) FROM "+databaseUsername+".PROCESSED_ACTIVITI_EVENTS;")
+        
+        #DB connection and query
+        connection = cx_Oracle.connect(databaseUsername, databasePassword, dbURL)
+        cursor=connection.cursor()
+        cursor.execute("""
+            SELECT count(*)
+            FROM """+databaseUsername+""".PROCESSED_ACTIVITI_EVENTS""")
+            
+        #get Count from query
+        response=""
+        for result in cursor:
+            response+=str(result)
+        
+        response=response.replace("(","").replace(",","").replace(")","")
+        print("--Query Execution Complete\n")
+        
+        HC.write("PROCESSED_ACTIVITI_EVENTS:\r")
+        HC.write("Count= "+response+"\n\n")
+        
+        
+        
+        #for ACT_HI_PROCINST
+        print("--Executing Query: SELECT count(*) FROM "+databaseUsername+".ACT_HI_PROCINST;")
+        
+        #DB connection and query
+        connection = cx_Oracle.connect(databaseUsername, databasePassword, dbURL)
+        cursor=connection.cursor()
+        cursor.execute("""
+            SELECT count(*)
+            FROM """+databaseUsername+""".ACT_HI_PROCINST""")
+            
+        #get Count from query
+        response=""
+        for result in cursor:
+            response+=str(result)
+        
+        response=response.replace("(","").replace(",","").replace(")","")
+        print("--Query Execution Complete\n")
+        
+        HC.write("ACT_HI_PROCINST:\r")
+        HC.write("Count= "+response+"\n\n")
+        
+        
+        
+        #for ACT_HI_TASKINST
+        print("--Executing Query: SELECT count(*) FROM "+databaseUsername+".ACT_HI_TASKINST;")
+        
+        #DB connection and query
+        connection = cx_Oracle.connect(databaseUsername, databasePassword, dbURL)
+        cursor=connection.cursor()
+        cursor.execute("""
+            SELECT count(*)
+            FROM """+databaseUsername+""".ACT_HI_TASKINST""")
+            
+        #get Count from query
+        response=""
+        for result in cursor:
+            response+=str(result)
+        
+        response=response.replace("(","").replace(",","").replace(")","")
+        print("--Query Execution Complete\n")
+        
+        HC.write("ACT_HI_TASKINST:\r")
+        HC.write("Count= "+response+"\n\n")
+        
+        
+        
+        #for ACT_HI_VARINST
+        print("--Executing Query: SELECT count(*) FROM "+databaseUsername+".ACT_HI_VARINST;")
+        
+        #DB connection and query
+        connection = cx_Oracle.connect(databaseUsername, databasePassword, dbURL)
+        cursor=connection.cursor()
+        cursor.execute("""
+            SELECT count(*)
+            FROM """+databaseUsername+""".ACT_HI_VARINST""")
+            
+        #get Count from query
+        response=""
+        for result in cursor:
+            response+=str(result)
+        
+        response=response.replace("(","").replace(",","").replace(")","")
+        print("--Query Execution Complete\n")
+        
+        HC.write("ACT_HI_VARINST:\r")
+        HC.write("Count= "+response+"\n\n")
+        
+        
+        
+        #for ACT_RU_TASK
+        print("--Executing Query: SELECT count(*) FROM "+databaseUsername+".ACT_RU_TASK;")
+        
+        #DB connection and query
+        connection = cx_Oracle.connect(databaseUsername, databasePassword, dbURL)
+        cursor=connection.cursor()
+        cursor.execute("""
+            SELECT count(*)
+            FROM """+databaseUsername+""".ACT_RU_TASK""")
+            
+        #get Count from query
+        response=""
+        for result in cursor:
+            response+=str(result)
+        
+        response=response.replace("(","").replace(",","").replace(")","")
+        print("--Query Execution Complete\n")
+        
+        HC.write("ACT_RU_TASK:\r")
+        HC.write("Count= "+response+"\n\n")
+        
+        
+        
+        #for ACT_RU_VARIABLE
+        print("--Executing Query: SELECT count(*) FROM "+databaseUsername+".ACT_RU_VARIABLE;")
+        
+        #DB connection and query
+        connection = cx_Oracle.connect(databaseUsername, databasePassword, dbURL)
+        cursor=connection.cursor()
+        cursor.execute("""
+            SELECT count(*)
+            FROM """+databaseUsername+""".ACT_RU_VARIABLE""")
+            
+        #get Count from query
+        response=""
+        for result in cursor:
+            response+=str(result)
+        
+        response=response.replace("(","").replace(",","").replace(")","")
+        print("--Query Execution Complete\n")
+        
+        HC.write("ACT_RU_VARIABLE:\r")
+        HC.write("Count= "+response+"\n\n")
+        
+        
+        print("Database Queries Complete")

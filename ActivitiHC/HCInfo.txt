@@ -1,12 +1,28 @@
 ###########################
 ### Database Properties ###
 ###########################
+
 datasource.driver=oracle.jdbc.driver.OracleDriver
-
 datasource.url=jdbc:oracle:thin:@34.224.31.32:1521:orcl
-
 datasource.username=APSHC
-
 datasource.password=apshc
-
 hibernate.dialect=org.hibernate.dialect.Oracle10gDialect
+
+############################
+### Database Table Count ###
+############################
+
+ACT_EVT_LOG:Count= 0
+
+PROCESSED_ACTIVITI_EVENTS:Count= 0
+
+ACT_HI_PROCINST:Count= 0
+
+ACT_HI_TASKINST:Count= 0
+
+ACT_HI_VARINST:Count= 0
+
+ACT_RU_TASK:Count= 0
+
+ACT_RU_VARIABLE:Count= 0
+
