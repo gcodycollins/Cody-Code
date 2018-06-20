@@ -49,23 +49,126 @@ import os, sys, shutil, fileinput, subprocess
 
 class Application(Frame):
 
-
-
     def __init__(self, master):
         Frame.__init__(self, master)
         self.grid()
         self.create_widgets()
 
         
-    #main screen declaration with the 4 checkboxes, labels, and 2 buttons.    
+        
+        
+        
+        
+        
+        
+        
+        
+    #main screen declaration with all options enabled    
     def create_widgets(self):
+    
+        #Alfresco Content Services Implement
         Label(self, text = "Alfresco Content Services").grid(row = 1, column = 0, sticky = W)
         
         self.checkBoxKerberosI = BooleanVar()
         self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI,command = self.Kerberos_Configuration)
         self.kerberosI.grid(row = 2, column = 0, sticky = W)
+        
+        self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ", state=DISABLED)
+        self.LabelDir.grid(row = 3, column =0, sticky = W)
+        self.dir = Entry(self, state=DISABLED)
+        self.dir.grid(row=3, column=0)
+            
+        self.LabelServerName= Label(self, text="Alfresco Server Name: ", state=DISABLED)
+        self.LabelServerName.grid(row = 4, column =0, sticky = W)
+        self.serverName = Entry(self, state=DISABLED)
+        self.serverName.grid(row=4, column=0)
+            
+        self.LabelLdapFqdn= Label(self, text="LDAP Fully Qualified Domain Name: ", state=DISABLED)
+        self.LabelLdapFqdn.grid(row = 5, column =0, sticky = W)
+        self.ldapFqdn = Entry(self, state=DISABLED)
+        self.ldapFqdn.grid(row=5, column=0)
+            
+        self.LabelAdminName= Label(self, text="LDAP Admin Name: ", state=DISABLED)
+        self.LabelAdminName.grid(row = 6, column =0, sticky = W)
+        self.adminName = Entry(self, state=DISABLED)
+        self.adminName.grid(row=6, column=0)
+            
+        self.LabelAdminPass= Label(self, text="LDAP Admin Password: ", state=DISABLED)
+        self.LabelAdminPass.grid(row = 7, column =0, sticky = W)
+        self.adminPass = Entry(self, state=DISABLED)
+        self.adminPass.grid(row=7, column=0)
+            
+        self.LabelGroupBase= Label(self, text="LDAP Group Search Base: ", state=DISABLED)
+        self.LabelGroupBase.grid(row = 8, column =0, sticky = W)
+        self.groupBase = Entry(self, state=DISABLED)
+        self.groupBase.grid(row=8, column=0)
+            
+        self.LabelUserBase= Label(self, text="LDAP User Search Base: ", state=DISABLED)
+        self.LabelUserBase.grid(row = 9, column =0, sticky = W)
+        self.userBase = Entry(self, state=DISABLED)
+        self.userBase.grid(row=9, column=0)
+            
+        self.LabelKeytabPath= Label(self, text="Keytab Path: ", state=DISABLED)
+        self.LabelKeytabPath.grid(row = 10, column =0, sticky = W)
+        self.keytabPath = Entry(self, state=DISABLED)
+        self.keytabPath.grid(row=10, column=0)
+           
+        self.LabelHTTPKeytab= Label(self, text="HTTP Keytab Name: ", state=DISABLED)
+        self.LabelHTTPKeytab.grid(row = 11, column =0, sticky = W)
+        self.httpKeytab = Entry(self, state=DISABLED)
+        self.httpKeytab.grid(row=11, column=0)       
+
+        self.LabelCifsKeytab= Label(self, text="cifs Keytab Name: ", state=DISABLED)
+        self.LabelCifsKeytab.grid(row = 12, column =0, sticky = W)
+        self.cifsKeytab = Entry(self, state=DISABLED)
+        self.cifsKeytab.grid(row=12, column=0)  
+
+        self.LabelHTTPUserPass= Label(self, text="HTTP User Password: ", state=DISABLED)
+        self.LabelHTTPUserPass.grid(row = 13, column =0, sticky = W)
+        self.httpUserPass = Entry(self, state=DISABLED)
+        self.httpUserPass.grid(row=13, column=0)            
+            
+            
+            
+        self.checkBoxKrb5 = BooleanVar()
+        self.krb5 = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5, state=DISABLED)
+        self.krb5.grid(row = 19, column = 0, sticky = W)
+            
+                        
+        self.checkBoxAD = BooleanVar()
+        self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for ACS?", variable = self.checkBoxAD,command = self.Active_Directory, state=DISABLED)
+        self.aD.grid(row = 20, column = 0, sticky = W)
+        
+        #Create ACS AD Stuff Options  
+        self.LabelHTTPUserDN= Label(self, text="HTTP User DistinguishedName: ", state=DISABLED)
+        self.LabelHTTPUserDN.grid(row = 21, column =0, sticky = W)
+        self.httpUserDN = Entry(self, state=DISABLED)
+        self.httpUserDN.grid(row=21, column=0)
+            
+        self.LabelcifsUserDN= Label(self, text="cifs User DistinguishedName: ", state=DISABLED)
+        self.LabelcifsUserDN.grid(row = 22, column =0, sticky = W)
+        self.cifsUserDN = Entry(self, state=DISABLED)
+        self.cifsUserDN.grid(row=22, column=0)      
+
+        self.LabelCifsUserPass= Label(self, text="cifs User Password: ", state=DISABLED)
+        self.LabelCifsUserPass.grid(row = 23, column =0, sticky = W)
+        self.cifsUserPass = Entry(self, state=DISABLED)
+        self.cifsUserPass.grid(row=23, column=0) 
+            
+        self.LabelLdapAdminPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ", state=DISABLED)
+        self.LabelLdapAdminPS.grid(row = 24, column =0, sticky = W)
+        self.ldapAdminPS = Entry(self, state=DISABLED)
+        self.ldapAdminPS.grid(row=24, column=0)      
+
+        self.LabelLdapPassPS= Label(self, text="Enter LDAP Administrator Password: ", state=DISABLED)
+        self.LabelLdapPassPS.grid(row = 25, column =0, sticky = W)
+        self.ldapPassPS = Entry(self, state=DISABLED)
+        self.ldapPassPS.grid(row=25, column=0) 
 
 
+        
+        
+        
         self.checkBoxKerberosR = BooleanVar()
         self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original)
         self.kerberosR.grid(row = 30, column = 0, sticky = W)
@@ -78,13 +181,94 @@ class Application(Frame):
         Label(self, text = "Alfresco Process Services").grid(row = 50, column = 0, sticky = W)
         
         self.checkBoxKerberosActivitiI = BooleanVar()
-        self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti)
-        self.kerberosI.grid(row = 51, column = 0, sticky = W)
+        self.kerberosAI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti)
+        self.kerberosAI.grid(row = 51, column = 0, sticky = W)
+        
+        
+        #Alfresco Process Services Implement
+        self.LabelDirAPS= Label(self, text="Activiti (APS) Install Directory: ", state=DISABLED)
+        self.LabelDirAPS.grid(row = 52, column =0, sticky = W)
+        self.dirAPS = Entry(self, state=DISABLED)
+        self.dirAPS.grid(row=52, column=0)
+            
+        self.LabelServerNameAPS= Label(self, text="Activiti Server Name: ", state=DISABLED)
+        self.LabelServerNameAPS.grid(row = 53, column =0, sticky = W)
+        self.serverNameAPS = Entry(self, state=DISABLED)
+        self.serverNameAPS.grid(row=53, column=0)
+            
+        self.LabelLdapFqdnAPS= Label(self, text="LDAP Fully Qualified Domain Name: ", state=DISABLED)
+        self.LabelLdapFqdnAPS.grid(row = 54, column =0, sticky = W)
+        self.ldapFqdnAPS = Entry(self, state=DISABLED)
+        self.ldapFqdnAPS.grid(row=54, column=0)
+            
+        self.LabelAdminNameAPS= Label(self, text="LDAP Admin Name: ", state=DISABLED)
+        self.LabelAdminNameAPS.grid(row =55, column =0, sticky = W)
+        self.adminNameAPS = Entry(self, state=DISABLED)
+        self.adminNameAPS.grid(row=55, column=0)
+            
+        self.LabelAdminPassAPS= Label(self, text="LDAP Admin Password: ", state=DISABLED)
+        self.LabelAdminPassAPS.grid(row = 56, column =0, sticky = W)
+        self.adminPassAPS = Entry(self, state=DISABLED)
+        self.adminPassAPS.grid(row=56, column=0)
+            
+        self.LabelGroupBaseAPS= Label(self, text="LDAP Group Search Base: ", state=DISABLED)
+        self.LabelGroupBaseAPS.grid(row = 57, column =0, sticky = W)
+        self.groupBaseAPS = Entry(self, state=DISABLED)
+        self.groupBaseAPS.grid(row=57, column=0)
+            
+        self.LabelUserBaseAPS= Label(self, text="LDAP User Search Base: ", state=DISABLED)
+        self.LabelUserBaseAPS.grid(row = 58, column =0, sticky = W)
+        self.userBaseAPS = Entry(self, state=DISABLED)
+        self.userBaseAPS.grid(row=58, column=0)
+            
+        self.LabelKeytabPathAPS= Label(self, text="Keytab Path: ", state=DISABLED)
+        self.LabelKeytabPathAPS.grid(row = 59, column =0, sticky = W)
+        self.keytabPathAPS = Entry(self, state=DISABLED)
+        self.keytabPathAPS.grid(row=59, column=0)
+            
+        self.LabelHTTPKeytabAPS= Label(self, text="HTTP Keytab Name: ", state=DISABLED)
+        self.LabelHTTPKeytabAPS.grid(row = 60, column =0, sticky = W)
+        self.httpKeytabAPS = Entry(self, state=DISABLED)
+        self.httpKeytabAPS.grid(row=60, column=0)                     
+            
+            
+            
+        self.checkBoxKrb5APS = BooleanVar()
+        self.krb5APS = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5, state=DISABLED)
+        self.krb5APS.grid(row = 61, column = 0, sticky = W)
+            
+            
+            
+            
+        self.checkBoxActivitiAD = BooleanVar()
+        self.aDAPS = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for APS?", variable = self.checkBoxActivitiAD,command = self.Active_Directory_Activiti, state=DISABLED)
+        self.aDAPS.grid(row = 62, column = 0, sticky = W)
+        
+        # APS AD options        
+        self.LabelHTTPUserDNAPS= Label(self, text="HTTP User DistinguishedName: ", state=DISABLED)
+        self.LabelHTTPUserDNAPS.grid(row = 63, column =0, sticky = W)
+        self.httpUserDNAPS = Entry(self, state=DISABLED)
+        self.httpUserDNAPS.grid(row=63, column=0)
+            
+        self.LabelHTTPUserPassAPS= Label(self, text="HTTP User Password: ", state=DISABLED)
+        self.LabelHTTPUserPassAPS.grid(row = 64, column =0, sticky = W)
+        self.httpUserPassAPS = Entry(self, state=DISABLED)
+        self.httpUserPassAPS.grid(row=64, column=0)
+            
+        self.LabelLdapAdminPSAPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ", state=DISABLED)
+        self.LabelLdapAdminPSAPS.grid(row = 65, column =0, sticky = W)
+        self.ldapAdminPSAPS = Entry(self, state=DISABLED)
+        self.ldapAdminPSAPS.grid(row=65, column=0)      
+
+        self.LabelLdapPassPSAPS= Label(self, text="Enter LDAP Administrator Password: ", state=DISABLED)
+        self.LabelLdapPassPSAPS.grid(row = 66, column =0, sticky = W)
+        self.ldapPassPSAPS = Entry(self, state=DISABLED)
+        self.ldapPassPSAPS.grid(row=66, column=0) 
 
 
         self.checkBoxKerberosActivitiR = BooleanVar()
-        self.kerberosR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti)
-        self.kerberosR.grid(row = 80, column = 0, sticky = W)
+        self.kerberosAR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti)
+        self.kerberosAR.grid(row = 80, column = 0, sticky = W)
         
         
         self.close_button = Button(self, text="Run", command=self.run)
@@ -96,228 +280,192 @@ class Application(Frame):
         self.close_button.grid(row=101, column =0, sticky =W)
 
         
-    
+
+
+
+
+
+
+
+        
     #function for if the Alfresco Kerberos checkbox is checked
     def Kerberos_Configuration(self):
         
         # If its checked, grey out other 3 main checkbox options and add more options.
         if self.checkBoxKerberosI.get():
-            self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ")
-            self.LabelDir.grid(row = 3, column =0, sticky = W)
-            self.dir = Entry(self)
-            self.dir.grid(row=3, column=0)
+        
+            self.LabelDir.configure(state="normal")
+            self.dir.configure(state="normal")
             
-            self.LabelServerName= Label(self, text="Alfresco Server Name: ")
-            self.LabelServerName.grid(row = 4, column =0, sticky = W)
-            self.serverName = Entry(self)
-            self.serverName.grid(row=4, column=0)
+            self.LabelServerName.configure(state="normal")
+            self.serverName.configure(state="normal")
             
-            self.LabelLdapFqdn= Label(self, text="LDAP Fully Qualified Domain Name: ")
-            self.LabelLdapFqdn.grid(row = 5, column =0, sticky = W)
-            self.ldapFqdn = Entry(self)
-            self.ldapFqdn.grid(row=5, column=0)
+            self.LabelLdapFqdn.configure(state="normal")
+            self.ldapFqdn.configure(state="normal")
             
-            self.LabelAdminName= Label(self, text="LDAP Admin Name: ")
-            self.LabelAdminName.grid(row = 6, column =0, sticky = W)
-            self.adminName = Entry(self)
-            self.adminName.grid(row=6, column=0)
+            self.LabelAdminName.configure(state="normal")
+            self.adminName.configure(state="normal")
             
-            self.LabelAdminPass= Label(self, text="LDAP Admin Password: ")
-            self.LabelAdminPass.grid(row = 7, column =0, sticky = W)
-            self.adminPass = Entry(self)
-            self.adminPass.grid(row=7, column=0)
+            self.LabelAdminPass.configure(state="normal")
+            self.adminPass.configure(state="normal")
             
-            self.LabelGroupBase= Label(self, text="LDAP Group Search Base: ")
-            self.LabelGroupBase.grid(row = 8, column =0, sticky = W)
-            self.groupBase = Entry(self)
-            self.groupBase.grid(row=8, column=0)
+            self.LabelGroupBase.configure(state="normal")
+            self.groupBase.configure(state="normal")
             
-            self.LabelUserBase= Label(self, text="LDAP User Search Base: ")
-            self.LabelUserBase.grid(row = 9, column =0, sticky = W)
-            self.userBase = Entry(self)
-            self.userBase.grid(row=9, column=0)
+            self.LabelUserBase.configure(state="normal")
+            self.userBase.configure(state="normal")
             
-            self.LabelKeytabPath= Label(self, text="Keytab Path: ")
-            self.LabelKeytabPath.grid(row = 10, column =0, sticky = W)
-            self.keytabPath = Entry(self)
-            self.keytabPath.grid(row=10, column=0)
+            self.LabelKeytabPath.configure(state="normal")
+            self.keytabPath.configure(state="normal")
             
-            self.LabelHTTPKeytab= Label(self, text="HTTP Keytab Name: ")
-            self.LabelHTTPKeytab.grid(row = 11, column =0, sticky = W)
-            self.httpKeytab = Entry(self)
-            self.httpKeytab.grid(row=11, column=0)       
+            self.LabelHTTPKeytab.configure(state="normal")
+            self.httpKeytab.configure(state="normal")
+            
+            self.LabelCifsKeytab.configure(state="normal")
+            self.cifsKeytab.configure(state="normal")
+            
+            self.LabelHTTPUserPass.configure(state="normal")
+            self.httpUserPass.configure(state="normal")
+            
+            
+            
+            self.krb5.configure(state="normal")
+            self.aD.configure(state="normal")
+            
 
-            self.LabelCifsKeytab= Label(self, text="cifs Keytab Name: ")
-            self.LabelCifsKeytab.grid(row = 12, column =0, sticky = W)
-            self.cifsKeytab = Entry(self)
-            self.cifsKeytab.grid(row=12, column=0)  
-
-            self.LabelHTTPUserPass= Label(self, text="HTTP User Password: ")
-            self.LabelHTTPUserPass.grid(row = 13, column =0, sticky = W)
-            self.httpUserPass = Entry(self)
-            self.httpUserPass.grid(row=13, column=0)            
             
-            
-            
-            self.checkBoxKrb5 = BooleanVar()
-            self.krb5 = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5)
-            self.krb5.grid(row = 19, column = 0, sticky = W)
-            
-            
-            
-            
-            self.checkBoxAD = BooleanVar()
-            self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for ACS?", variable = self.checkBoxAD,command = self.Active_Directory)
-            self.aD.grid(row = 20, column = 0, sticky = W)
-            
-            
-            
-            self.checkBoxKerberosR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original, state=DISABLED)
-            self.kerberosR.grid(row = 30, column = 0, sticky = W)
-            
-            
-            self.checkBoxKerberosActivitiI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti, state=DISABLED)
-            self.kerberosI.grid(row = 51, column = 0, sticky = W)
-
-
-            self.checkBoxKerberosActivitiR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti, state=DISABLED)
-            self.kerberosR.grid(row = 80, column = 0, sticky = W)
+            self.kerberosR.configure(state="disabled")
+            self.kerberosAI.configure(state="disabled")
+            self.kerberosAR.configure(state="disabled")
             
             
         
-        # if its unchecked, remove the additional alfresco kerberos options and enable the 3 other main checkboxes
+        # if its unchecked, disable the additional alfresco kerberos options and enable the 3 other main checkboxes
         else:
-            self.LabelDir.grid_forget()
-            self.dir.grid_forget()
+        
+            self.LabelDir.configure(state="disabled")
+            self.dir.configure(state="disabled")
             
-            self.LabelServerName.grid_forget()
-            self.serverName.grid_forget()
+            self.LabelServerName.configure(state="disabled")
+            self.serverName.configure(state="disabled")
             
-            self.LabelLdapFqdn.grid_forget()
-            self.ldapFqdn.grid_forget()
+            self.LabelLdapFqdn.configure(state="disabled")
+            self.ldapFqdn.configure(state="disabled")
             
-            self.LabelAdminName.grid_forget()
-            self.adminName.grid_forget()
+            self.LabelAdminName.configure(state="disabled")
+            self.adminName.configure(state="disabled")
             
-            self.LabelAdminPass.grid_forget()
-            self.adminPass.grid_forget()
+            self.LabelAdminPass.configure(state="disabled")
+            self.adminPass.configure(state="disabled")
             
-            self.LabelGroupBase.grid_forget()
-            self.groupBase.grid_forget()
+            self.LabelGroupBase.configure(state="disabled")
+            self.groupBase.configure(state="disabled")
             
-            self.LabelUserBase.grid_forget()
-            self.userBase.grid_forget()
+            self.LabelUserBase.configure(state="disabled")
+            self.userBase.configure(state="disabled")
             
-            self.LabelKeytabPath.grid_forget()
-            self.keytabPath.grid_forget()
+            self.LabelKeytabPath.configure(state="disabled")
+            self.keytabPath.configure(state="disabled")
             
-            self.LabelHTTPKeytab.grid_forget()
-            self.httpKeytab.grid_forget()
+            self.LabelHTTPKeytab.configure(state="disabled")
+            self.httpKeytab.configure(state="disabled")
             
-            self.LabelCifsKeytab.grid_forget()
-            self.cifsKeytab.grid_forget()
+            self.LabelCifsKeytab.configure(state="disabled")
+            self.cifsKeytab.configure(state="disabled")
             
-            self.LabelHTTPUserPass.grid_forget()
-            self.httpUserPass.grid_forget()
-
-
-            self.krb5.grid_forget()
+            self.LabelHTTPUserPass.configure(state="disabled")
+            self.httpUserPass.configure(state="disabled")
             
-            self.aD.grid_forget()
             
+            
+            self.krb5.configure(state="disabled")
+            self.aD.configure(state="disabled")
+            
+            if self.checkBoxKrb5.get():
+                self.krb5.deselect()
             
             if self.checkBoxAD.get():
-                self.LabelHTTPUserDN.grid_forget()
-                self.httpUserDN.grid_forget()
+                self.aD.deselect()
                 
-                self.LabelcifsUserDN.grid_forget()
-                self.cifsUserDN.grid_forget()
-                
-                self.LabelCifsUserPass.grid_forget()
-                self.cifsUserPass.grid_forget()
-                
-                self.LabelLdapAdminPS.grid_forget()
-                self.ldapAdminPS.grid_forget()
-                
-                self.LabelLdapPassPS.grid_forget()
-                self.ldapPassPS.grid_forget()
+                self.LabelHTTPUserDN.configure(state="disabled")
+                self.httpUserDN.configure(state="disabled")
+                        
+                self.LabelcifsUserDN.configure(state="disabled")
+                self.cifsUserDN.configure(state="disabled")
+   
+                self.LabelCifsUserPass.configure(state="disabled")
+                self.cifsUserPass.configure(state="disabled")
             
-            
-            
-            self.checkBoxKerberosR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original)
-            self.kerberosR.grid(row = 30, column = 0, sticky = W)
-            
-            
-            self.checkBoxKerberosActivitiI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti)
-            self.kerberosI.grid(row = 51, column = 0, sticky = W)
+                self.LabelLdapAdminPS.configure(state="disabled")
+                self.ldapAdminPS.configure(state="disabled")   
 
+                self.LabelLdapPassPS.configure(state="disabled")
+                self.ldapPassPS.configure(state="disabled")
+            
+            
 
-            self.checkBoxKerberosActivitiR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti)
-            self.kerberosR.grid(row = 80, column = 0, sticky = W)
+            self.kerberosR.configure(state="normal")
+            self.kerberosAI.configure(state="normal")
+            self.kerberosAR.configure(state="normal")
 
            
+
+
+
+
+
+
+
            
     #this is for the active directory button wihtin the alfresco kerberos option.        
     def Active_Directory(self):
             
         # if its checked, add additional fields    
         if self.checkBoxAD.get():
-        
-        
-            self.LabelHTTPUserDN= Label(self, text="HTTP User DistinguishedName: ")
-            self.LabelHTTPUserDN.grid(row = 21, column =0, sticky = W)
-            self.httpUserDN = Entry(self)
-            self.httpUserDN.grid(row=21, column=0)
+             
+            self.LabelHTTPUserDN.configure(state="normal")
+            self.httpUserDN.configure(state="normal")
+                        
+            self.LabelcifsUserDN.configure(state="normal")
+            self.cifsUserDN.configure(state="normal")
+   
+            self.LabelCifsUserPass.configure(state="normal")
+            self.cifsUserPass.configure(state="normal")
             
+            self.LabelLdapAdminPS.configure(state="normal")
+            self.ldapAdminPS.configure(state="normal")    
 
-            
-            self.LabelcifsUserDN= Label(self, text="cifs User DistinguishedName: ")
-            self.LabelcifsUserDN.grid(row = 22, column =0, sticky = W)
-            self.cifsUserDN = Entry(self)
-            self.cifsUserDN.grid(row=22, column=0)      
-
-            self.LabelCifsUserPass= Label(self, text="cifs User Password: ")
-            self.LabelCifsUserPass.grid(row = 23, column =0, sticky = W)
-            self.cifsUserPass = Entry(self)
-            self.cifsUserPass.grid(row=23, column=0) 
-            
-            self.LabelLdapAdminPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ")
-            self.LabelLdapAdminPS.grid(row = 24, column =0, sticky = W)
-            self.ldapAdminPS = Entry(self)
-            self.ldapAdminPS.grid(row=24, column=0)      
-
-            self.LabelLdapPassPS= Label(self, text="Enter LDAP Administrator Password: ")
-            self.LabelLdapPassPS.grid(row = 25, column =0, sticky = W)
-            self.ldapPassPS = Entry(self)
-            self.ldapPassPS.grid(row=25, column=0) 
+            self.LabelLdapPassPS.configure(state="normal")
+            self.ldapPassPS.configure(state="normal")
             
             
         #if its unchecked, remove those additional options    
         else:
         
-            self.LabelHTTPUserDN.grid_forget()
-            self.httpUserDN.grid_forget()
+            self.LabelHTTPUserDN.configure(state="disabled")
+            self.httpUserDN.configure(state="disabled")
+                        
+            self.LabelcifsUserDN.configure(state="disabled")
+            self.cifsUserDN.configure(state="disabled")
+   
+            self.LabelCifsUserPass.configure(state="disabled")
+            self.cifsUserPass.configure(state="disabled")
             
-            self.LabelcifsUserDN.grid_forget()
-            self.cifsUserDN.grid_forget()
-            
-            self.LabelCifsUserPass.grid_forget()
-            self.cifsUserPass.grid_forget()
-            
-            self.LabelLdapAdminPS.grid_forget()
-            self.ldapAdminPS.grid_forget()
-            
-            self.LabelLdapPassPS.grid_forget()
-            self.ldapPassPS.grid_forget()
+            self.LabelLdapAdminPS.configure(state="disabled")
+            self.ldapAdminPS.configure(state="disabled")   
+
+            self.LabelLdapPassPS.configure(state="disabled")
+            self.ldapPassPS.configure(state="disabled")
 
             
-    
+
+
+
+
+
+
+
+            
     #this is the function for the rollback alfresco kerberos changes. It greys out the three options and adds just one checkbox.
     def Rollback_Original(self):
     
@@ -366,160 +514,167 @@ class Application(Frame):
             self.kerberosR.grid(row = 80, column = 0, sticky = W)
 
             
+
+
+
+
+
+
+
             
     # this is the function for the Activiti kerberos configuration.        
     def Kerberos_Configuration_Activiti(self):
             
         # when checked, grey out other 3 main options and add additional inputs   
         if self.checkBoxKerberosActivitiI.get():
+        
+            self.LabelDirAPS.configure(state="normal")
+            self.dirAPS.configure(state="normal")
             
-            self.LabelDir= Label(self, text="Activiti (APS) Install Directory: ")
-            self.LabelDir.grid(row = 52, column =0, sticky = W)
-            self.dir = Entry(self)
-            self.dir.grid(row=52, column=0)
+            self.LabelServerNameAPS.configure(state="normal")
+            self.serverNameAPS.configure(state="normal")
             
-            self.LabelServerName= Label(self, text="Activiti Server Name: ")
-            self.LabelServerName.grid(row = 53, column =0, sticky = W)
-            self.serverName = Entry(self)
-            self.serverName.grid(row=53, column=0)
+            self.LabelLdapFqdnAPS.configure(state="normal")
+            self.ldapFqdnAPS.configure(state="normal")
             
-            self.LabelLdapFqdn= Label(self, text="LDAP Fully Qualified Domain Name: ")
-            self.LabelLdapFqdn.grid(row = 54, column =0, sticky = W)
-            self.ldapFqdn = Entry(self)
-            self.ldapFqdn.grid(row=54, column=0)
+            self.LabelAdminNameAPS.configure(state="normal")
+            self.adminNameAPS.configure(state="normal")
             
-            self.LabelAdminName= Label(self, text="LDAP Admin Name: ")
-            self.LabelAdminName.grid(row =55, column =0, sticky = W)
-            self.adminName = Entry(self)
-            self.adminName.grid(row=55, column=0)
+            self.LabelAdminPassAPS.configure(state="normal")
+            self.adminPassAPS.configure(state="normal")
             
-            self.LabelAdminPass= Label(self, text="LDAP Admin Password: ")
-            self.LabelAdminPass.grid(row = 56, column =0, sticky = W)
-            self.adminPass = Entry(self)
-            self.adminPass.grid(row=56, column=0)
+            self.LabelGroupBaseAPS.configure(state="normal")
+            self.groupBaseAPS.configure(state="normal")
             
-            self.LabelGroupBase= Label(self, text="LDAP Group Search Base: ")
-            self.LabelGroupBase.grid(row = 57, column =0, sticky = W)
-            self.groupBase = Entry(self)
-            self.groupBase.grid(row=57, column=0)
+            self.LabelUserBaseAPS.configure(state="normal")
+            self.userBaseAPS.configure(state="normal")
             
-            self.LabelUserBase= Label(self, text="LDAP User Search Base: ")
-            self.LabelUserBase.grid(row = 58, column =0, sticky = W)
-            self.userBase = Entry(self)
-            self.userBase.grid(row=58, column=0)
+            self.LabelKeytabPathAPS.configure(state="normal")
+            self.keytabPathAPS.configure(state="normal")
             
-            self.LabelKeytabPath= Label(self, text="Keytab Path: ")
-            self.LabelKeytabPath.grid(row = 59, column =0, sticky = W)
-            self.keytabPath = Entry(self)
-            self.keytabPath.grid(row=59, column=0)
-            
-            self.LabelHTTPKeytab= Label(self, text="HTTP Keytab Name: ")
-            self.LabelHTTPKeytab.grid(row = 60, column =0, sticky = W)
-            self.httpKeytab = Entry(self)
-            self.httpKeytab.grid(row=60, column=0)                     
-            
-            
-            
-            self.checkBoxKrb5 = BooleanVar()
-            self.krb5 = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5)
-            self.krb5.grid(row = 61, column = 0, sticky = W)
-            
-            
-            
-            
-            self.checkBoxActivitiAD = BooleanVar()
-            self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for APS?", variable = self.checkBoxActivitiAD,command = self.Active_Directory_Activiti)
-            self.aD.grid(row = 62, column = 0, sticky = W)
-            
-            
-            
-            self.checkBoxKerberosR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original, state=DISABLED)
-            self.kerberosR.grid(row = 30, column = 0, sticky = W)
-            
-            
-            self.checkBoxKerberosI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI,command = self.Kerberos_Configuration, state=DISABLED)
-            self.kerberosI.grid(row = 2, column = 0, sticky = W)
+            self.LabelHTTPKeytabAPS.configure(state="normal")
+            self.httpKeytabAPS.configure(state="normal")
 
 
-            self.checkBoxKerberosActivitiR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti, state=DISABLED)
-            self.kerberosR.grid(row = 80, column = 0, sticky = W)
+            self.aDAPS.configure(state="normal")
+            self.krb5APS.configure(state="normal")
+
+            
+            self.kerberosR.configure(state="disabled")
+            self.kerberosI.configure(state="disabled")
+            self.kerberosAR.configure(state="disabled")
             
             
             
         # if unchecked, enable 3 main options and hide activiti kerberos options
         else:
         
-            self.LabelDir.grid_forget()
-            self.dir.grid_forget()
+            self.LabelDirAPS.configure(state="disabled")
+            self.dirAPS.configure(state="disabled")
             
-            self.LabelServerName.grid_forget()
-            self.serverName.grid_forget()
+            self.LabelServerNameAPS.configure(state="disabled")
+            self.serverNameAPS.configure(state="disabled")
             
-            self.LabelLdapFqdn.grid_forget()
-            self.ldapFqdn.grid_forget()
+            self.LabelLdapFqdnAPS.configure(state="disabled")
+            self.ldapFqdnAPS.configure(state="disabled")
             
-            self.LabelAdminName.grid_forget()
-            self.adminName.grid_forget()
+            self.LabelAdminNameAPS.configure(state="disabled")
+            self.adminNameAPS.configure(state="disabled")
             
-            self.LabelAdminPass.grid_forget()
-            self.adminPass.grid_forget()
+            self.LabelAdminPassAPS.configure(state="disabled")
+            self.adminPassAPS.configure(state="disabled")
             
-            self.LabelGroupBase.grid_forget()
-            self.groupBase.grid_forget()
+            self.LabelGroupBaseAPS.configure(state="disabled")
+            self.groupBaseAPS.configure(state="disabled")
             
-            self.LabelUserBase.grid_forget()
-            self.userBase.grid_forget()
+            self.LabelUserBaseAPS.configure(state="disabled")
+            self.userBaseAPS.configure(state="disabled")
             
-            self.LabelKeytabPath.grid_forget()
-            self.keytabPath.grid_forget()
+            self.LabelKeytabPathAPS.configure(state="disabled")
+            self.keytabPathAPS.configure(state="disabled")
             
-            self.LabelHTTPKeytab.grid_forget()
-            self.httpKeytab.grid_forget()
-
-
-
-            self.krb5.grid_forget()
+            self.LabelHTTPKeytabAPS.configure(state="disabled")
+            self.httpKeytabAPS.configure(state="disabled")
             
-            self.aD.grid_forget()
-            
+            if self.checkBoxKrb5.get():
+                self.krb5APS.deselect()
             
             if self.checkBoxActivitiAD.get():
-                self.LabelHTTPUserDN.grid_forget()
-                self.httpUserDN.grid_forget()
+                self.aDAPS.deselect()
                 
-                self.LabelHTTPUserPass.grid_forget()
-                self.httpUserPass.grid_forget()
-                
-                self.LabelLdapAdminPS.grid_forget()
-                self.ldapAdminPS.grid_forget()
-                
-                self.LabelLdapPassPS.grid_forget()
-                self.ldapPassPS.grid_forget()
-                
-                
-            self.checkBoxKerberosI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI,command = self.Kerberos_Configuration)
-            self.kerberosI.grid(row = 2, column = 0, sticky = W)
+                self.LabelHTTPUserDNAPS.configure(state="disabled")
+                self.httpUserDNAPS.configure(state="disabled")
+   
+                self.LabelHTTPUserPassAPS.configure(state="disabled")
+                self.httpUserPassAPS.configure(state="disabled")
             
-            
-            
-            self.checkBoxKerberosR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original)
-            self.kerberosR.grid(row = 30, column = 0, sticky = W)
-            
-            
-            self.checkBoxKerberosActivitiI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti)
-            self.kerberosI.grid(row = 51, column = 0, sticky = W)
+                self.LabelLdapAdminPSAPS.configure(state="disabled")
+                self.ldapAdminPSAPS.configure(state="disabled")   
+
+                self.LabelLdapPassPSAPS.configure(state="disabled")
+                self.ldapPassPSAPS.configure(state="disabled")
 
 
-            self.checkBoxKerberosActivitiR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti)
-            self.kerberosR.grid(row = 80, column = 0, sticky = W)
+            self.aDAPS.configure(state="disabled")
+            self.krb5APS.configure(state="disabled")
+
             
+            self.kerberosR.configure(state="normal")
+            self.kerberosI.configure(state="normal")
+            self.kerberosAR.configure(state="normal")
+            
+    
+
+
+
+    
+    
+    
+    
+    
+    # this is for active directory options in the activiti kerberos configuration        
+    def Active_Directory_Activiti(self):    
+            
+        # if checked, add more options
+        if self.checkBoxActivitiAD.get():
+            
+            self.LabelHTTPUserDNAPS.configure(state="normal")
+            self.httpUserDNAPS.configure(state="normal")
+            
+            self.LabelHTTPUserPassAPS.configure(state="normal")
+            self.httpUserPassAPS.configure(state="normal")
+            
+            self.LabelLdapAdminPSAPS.configure(state="normal")
+            self.ldapAdminPSAPS.configure(state="normal")      
+
+            self.LabelLdapPassPSAPS.configure(state="normal")
+            self.ldapPassPSAPS.configure(state="normal")
+        
+        
+        #if unchecked, remove additional options
+        else:
+        
+            self.LabelHTTPUserDNAPS.configure(state="disabled")
+            self.httpUserDNAPS.configure(state="disabled")
+            
+            self.LabelHTTPUserPassAPS.configure(state="disabled")
+            self.httpUserPassAPS.configure(state="disabled")
+            
+            self.LabelLdapAdminPSAPS.configure(state="disabled")
+            self.ldapAdminPSAPS.configure(state="disabled")      
+
+            self.LabelLdapPassPSAPS.configure(state="disabled")
+            self.ldapPassPSAPS.configure(state="disabled")
+            
+            
+            
+           
+
+
+
+
+
+           
     # checkbox for rolling back activiti changes        
     def Rollback_Original_Activiti(self):
             
@@ -567,54 +722,16 @@ class Application(Frame):
             self.checkBoxKerberosR = BooleanVar()
             self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original)
             self.kerberosR.grid(row = 30, column = 0, sticky = W)          
+            
+            
 
 
 
-    # this is for active directory options in the activiti kerberos configuration        
-    def Active_Directory_Activiti(self):    
-            
-        # if checked, add more options
-        if self.checkBoxActivitiAD.get():
-        
-        
-            self.LabelHTTPUserDN= Label(self, text="HTTP User DistinguishedName: ")
-            self.LabelHTTPUserDN.grid(row = 63, column =0, sticky = W)
-            self.httpUserDN = Entry(self)
-            self.httpUserDN.grid(row=63, column=0)
-            
-            self.LabelHTTPUserPass= Label(self, text="HTTP User Password: ")
-            self.LabelHTTPUserPass.grid(row = 64, column =0, sticky = W)
-            self.httpUserPass = Entry(self)
-            self.httpUserPass.grid(row=64, column=0)
-            
-            self.LabelLdapAdminPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ")
-            self.LabelLdapAdminPS.grid(row = 65, column =0, sticky = W)
-            self.ldapAdminPS = Entry(self)
-            self.ldapAdminPS.grid(row=65, column=0)      
 
-            self.LabelLdapPassPS= Label(self, text="Enter LDAP Administrator Password: ")
-            self.LabelLdapPassPS.grid(row = 66, column =0, sticky = W)
-            self.ldapPassPS = Entry(self)
-            self.ldapPassPS.grid(row=66, column=0) 
+
+
+
             
-            
-        #if unchecked, remove additional options
-        else:
-        
-            self.LabelHTTPUserDN.grid_forget()
-            self.httpUserDN.grid_forget()
-            
-            self.LabelHTTPUserPass.grid_forget()
-            self.httpUserPass.grid_forget()
-            
-            self.LabelLdapAdminPS.grid_forget()
-            self.ldapAdminPS.grid_forget()
-            
-            self.LabelLdapPassPS.grid_forget()
-            self.ldapPassPS.grid_forget()
-            
-            
-    
     #the function for when run button is clicked
     def run(self):
 
@@ -1160,7 +1277,7 @@ class Application(Frame):
     
         #take the input and store it as variables
         #get set path
-        pathI = self.dir.get()
+        pathI = self.dirAPS.get()
         
         #if for if the activiti Kerberos checkbox is true, get values of other checkboxes within this section
         if (self.checkBoxKerberosActivitiI.get()==True):
@@ -1188,14 +1305,14 @@ class Application(Frame):
 
         #for if the kerberos activiti checkbox is checked, pull label values into variables
         if (kerberosActivitiI==True):
-            alfServerI = self.serverName.get()
-            ldapFQDN=self.ldapFqdn.get()
-            ldapAdmin=self.adminName.get()
-            ldapAdminPass=self.adminPass.get()
-            ldapGroupBase=self.groupBase.get()
-            ldapUserBase=self.userBase.get()
-            keytabPath=self.keytabPath.get()
-            httpKeytabName=self.httpKeytab.get()
+            alfServerI = self.serverNameAPS.get()
+            ldapFQDN=self.ldapFqdnAPS.get()
+            ldapAdmin=self.adminNameAPS.get()
+            ldapAdminPass=self.adminPassAPS.get()
+            ldapGroupBase=self.groupBaseAPS.get()
+            ldapUserBase=self.userBaseAPS.get()
+            keytabPath=self.keytabPathAPS.get()
+            httpKeytabName=self.httpKeytabAPS.get()
 
 
             #strip domain from ldapFQDN
@@ -1212,10 +1329,10 @@ class Application(Frame):
         #for if the kerberos activiti active directory checkbox is checked, pull label values into variables
         if (activeDirectoryActivitiI==True):
 
-            httpUserDN=self.httpUserDN.get()
-            httpPasswordI=self.httpUserPass.get()
-            psAdmin = self.ldapAdminPS.get()
-            psPass = self.ldapPassPS.get()
+            httpUserDN=self.httpUserDNAPS.get()
+            httpPasswordI=self.httpUserPassAPS.get()
+            psAdmin = self.ldapAdminPSAPS.get()
+            psPass = self.ldapPassPSAPS.get()
             
 
             #Strip the http username from the full httpUserDN
