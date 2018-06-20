@@ -1,3 +1,5 @@
+'''
+
 ##############################################
 #
 # Created by Grayson Cody Collins
@@ -33,9 +35,14 @@
 # Data persistence in the label fields if items are unchecked and later checked again.
 # Modifying GUI to show all data. Currently it cuts off text from long input
 # Automated kinit keytab checker. If it doesn't get a ticket, let the UI know.
+# Read from file, button to pull properties in from file and populate UI.
+# Find property files, don't just use hard coded values.
+# Change options to not hide and then display but to grey out options.
+# Random password generator button. Populates password fields.
 #
 ##############################################
 
+'''
 
 from tkinter import *
 import os, sys, shutil, fileinput, subprocess
