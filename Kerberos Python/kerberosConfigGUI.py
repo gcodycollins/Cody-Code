@@ -39,6 +39,7 @@
 # Find property files, don't just use hard coded values.
 # Change options to not hide and then display but to grey out options.
 # Random password generator button. Populates password fields.
+# Option to Hide ACS/APS options to save screen real-estate.
 #
 ##############################################
 
@@ -69,13 +70,16 @@ class Application(Frame):
         #Alfresco Content Services Implement
         Label(self, text = "Alfresco Content Services").grid(row = 1, column = 0, sticky = W)
         
+        self.toggleACS = Button(self, text = "Hide ACS", command = self.toggleACS)
+        self.toggleACS.grid(row = 1, column = 0)
+        
         self.checkBoxKerberosI = BooleanVar()
         self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI,command = self.Kerberos_Configuration)
         self.kerberosI.grid(row = 2, column = 0, sticky = W)
         
-        self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ", state=DISABLED)
+        self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ")
         self.LabelDir.grid(row = 3, column =0, sticky = W)
-        self.dir = Entry(self, state=DISABLED)
+        self.dir = Entry(self)
         self.dir.grid(row=3, column=0)
             
         self.LabelServerName= Label(self, text="Alfresco Server Name: ", state=DISABLED)
@@ -139,6 +143,10 @@ class Application(Frame):
         self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for ACS?", variable = self.checkBoxAD,command = self.Active_Directory, state=DISABLED)
         self.aD.grid(row = 20, column = 0, sticky = W)
         
+        
+        
+        
+        
         #Create ACS AD Stuff Options  
         self.LabelHTTPUserDN= Label(self, text="HTTP User DistinguishedName: ", state=DISABLED)
         self.LabelHTTPUserDN.grid(row = 21, column =0, sticky = W)
@@ -167,28 +175,40 @@ class Application(Frame):
 
 
         
+
         
-        
-        self.checkBoxKerberosR = BooleanVar()
-        self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original)
-        self.kerberosR.grid(row = 30, column = 0, sticky = W)
+        #Rollback ACS
+        Label(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?").grid(row = 30, column = 0, sticky = W)
+        self.kerberosAR = Button(self, text = "Rollback ACS", command = self.Rollback_Original)
+        self.kerberosAR.grid(row = 31, column = 0, sticky = W)
         
         
         Label(self, text = "").grid(row = 48, column = 0, sticky = W)
         Label(self, text = "").grid(row = 49, column = 0, sticky = W)
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        #Alfresco Process Services Implement
         Label(self, text = "Alfresco Process Services").grid(row = 50, column = 0, sticky = W)
+        
+        self.toggleAPS = Button(self, text = "Hide APS", command = self.toggleAPS)
+        self.toggleAPS.grid(row = 50, column = 0)
         
         self.checkBoxKerberosActivitiI = BooleanVar()
         self.kerberosAI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti)
         self.kerberosAI.grid(row = 51, column = 0, sticky = W)
         
-        
-        #Alfresco Process Services Implement
-        self.LabelDirAPS= Label(self, text="Activiti (APS) Install Directory: ", state=DISABLED)
+
+        self.LabelDirAPS= Label(self, text="Activiti (APS) Install Directory: ")
         self.LabelDirAPS.grid(row = 52, column =0, sticky = W)
-        self.dirAPS = Entry(self, state=DISABLED)
+        self.dirAPS = Entry(self)
         self.dirAPS.grid(row=52, column=0)
             
         self.LabelServerNameAPS= Label(self, text="Activiti Server Name: ", state=DISABLED)
@@ -244,6 +264,10 @@ class Application(Frame):
         self.aDAPS = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for APS?", variable = self.checkBoxActivitiAD,command = self.Active_Directory_Activiti, state=DISABLED)
         self.aDAPS.grid(row = 62, column = 0, sticky = W)
         
+        
+        
+        
+        
         # APS AD options        
         self.LabelHTTPUserDNAPS= Label(self, text="HTTP User DistinguishedName: ", state=DISABLED)
         self.LabelHTTPUserDNAPS.grid(row = 63, column =0, sticky = W)
@@ -265,19 +289,34 @@ class Application(Frame):
         self.ldapPassPSAPS = Entry(self, state=DISABLED)
         self.ldapPassPSAPS.grid(row=66, column=0) 
 
-
-        self.checkBoxKerberosActivitiR = BooleanVar()
-        self.kerberosAR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti)
-        self.kerberosAR.grid(row = 80, column = 0, sticky = W)
         
         
+        
+        
+        #Rollback Activiti
+        Label(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?").grid(row = 80, column = 0, sticky = W)
+        self.kerberosAR = Button(self, text = "Rollback APS", command = self.Rollback_Original_Activiti)
+        self.kerberosAR.grid(row = 81, column = 0, sticky = W)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        Label(self, text = "").grid(row = 100, column = 0, sticky = W)
+        Label(self, text = "").grid(row = 101, column = 0, sticky = W)
+        
+        #Run and Close Button
         self.close_button = Button(self, text="Run", command=self.run)
-        self.close_button.grid(row=100, column = 0, sticky =W)
+        self.close_button.grid(row=102, column = 0, sticky =W)
         
         
         
         self.close_button = Button(self, text="Close", command=self.quit)
-        self.close_button.grid(row=101, column =0, sticky =W)
+        self.close_button.grid(row=103, column =0, sticky =W)
 
         
 
@@ -294,8 +333,8 @@ class Application(Frame):
         # If its checked, grey out other 3 main checkbox options and add more options.
         if self.checkBoxKerberosI.get():
         
-            self.LabelDir.configure(state="normal")
-            self.dir.configure(state="normal")
+            #self.LabelDir.configure(state="normal")
+            #self.dir.configure(state="normal")
             
             self.LabelServerName.configure(state="normal")
             self.serverName.configure(state="normal")
@@ -334,17 +373,15 @@ class Application(Frame):
             
 
             
-            self.kerberosR.configure(state="disabled")
             self.kerberosAI.configure(state="disabled")
-            self.kerberosAR.configure(state="disabled")
             
             
         
         # if its unchecked, disable the additional alfresco kerberos options and enable the 3 other main checkboxes
         else:
         
-            self.LabelDir.configure(state="disabled")
-            self.dir.configure(state="disabled")
+            #self.LabelDir.configure(state="disabled")
+            #self.dir.configure(state="disabled")
             
             self.LabelServerName.configure(state="disabled")
             self.serverName.configure(state="disabled")
@@ -404,9 +441,7 @@ class Application(Frame):
             
             
 
-            self.kerberosR.configure(state="normal")
             self.kerberosAI.configure(state="normal")
-            self.kerberosAR.configure(state="normal")
 
            
 
@@ -468,50 +503,7 @@ class Application(Frame):
             
     #this is the function for the rollback alfresco kerberos changes. It greys out the three options and adds just one checkbox.
     def Rollback_Original(self):
-    
-        #if checked, grey out other options and prompt for install directory
-        if self.checkBoxKerberosR.get():   
-
-            self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ")
-            self.LabelDir.grid(row = 31, column =0, sticky = W)
-            self.dir = Entry(self)
-            self.dir.grid(row=31, column=0)      
-            
-            self.checkBoxKerberosI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI, command = self.Kerberos_Configuration, state=DISABLED)
-            self.kerberosI.grid(row = 2, column = 0, sticky = W)
-            
-            
-            self.checkBoxKerberosActivitiI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti, state=DISABLED)
-            self.kerberosI.grid(row = 51, column = 0, sticky = W)
-
-
-            self.checkBoxKerberosActivitiR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti, state=DISABLED)
-            self.kerberosR.grid(row = 80, column = 0, sticky = W)
-            
-            
-        #if unchecked, hide input and enable other 3 checkboxes.    
-        else:
-        
-            self.LabelDir.grid_forget()
-            self.dir.grid_forget()
-        
-            self.checkBoxKerberosI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI, command = self.Kerberos_Configuration)
-            self.kerberosI.grid(row = 2, column = 0, sticky = W)
-                        
-            
-            
-            self.checkBoxKerberosActivitiI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti)
-            self.kerberosI.grid(row = 51, column = 0, sticky = W)
-
-
-            self.checkBoxKerberosActivitiR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?", variable = self.checkBoxKerberosActivitiR,command = self.Rollback_Original_Activiti)
-            self.kerberosR.grid(row = 80, column = 0, sticky = W)
+        placeholder="placeholder"
 
             
 
@@ -528,8 +520,8 @@ class Application(Frame):
         # when checked, grey out other 3 main options and add additional inputs   
         if self.checkBoxKerberosActivitiI.get():
         
-            self.LabelDirAPS.configure(state="normal")
-            self.dirAPS.configure(state="normal")
+            #self.LabelDirAPS.configure(state="normal")
+            #self.dirAPS.configure(state="normal")
             
             self.LabelServerNameAPS.configure(state="normal")
             self.serverNameAPS.configure(state="normal")
@@ -560,17 +552,15 @@ class Application(Frame):
             self.krb5APS.configure(state="normal")
 
             
-            self.kerberosR.configure(state="disabled")
             self.kerberosI.configure(state="disabled")
-            self.kerberosAR.configure(state="disabled")
             
             
             
         # if unchecked, enable 3 main options and hide activiti kerberos options
         else:
         
-            self.LabelDirAPS.configure(state="disabled")
-            self.dirAPS.configure(state="disabled")
+            #self.LabelDirAPS.configure(state="disabled")
+            #self.dirAPS.configure(state="disabled")
             
             self.LabelServerNameAPS.configure(state="disabled")
             self.serverNameAPS.configure(state="disabled")
@@ -619,9 +609,7 @@ class Application(Frame):
             self.krb5APS.configure(state="disabled")
 
             
-            self.kerberosR.configure(state="normal")
             self.kerberosI.configure(state="normal")
-            self.kerberosAR.configure(state="normal")
             
     
 
@@ -675,53 +663,34 @@ class Application(Frame):
 
 
            
-    # checkbox for rolling back activiti changes        
+    # Button for rolling back activiti changes        
     def Rollback_Original_Activiti(self):
-            
-        #if checked, disable 3 main options and add input for install directory    
-        if (self.checkBoxKerberosActivitiR.get()): 
-
-            self.LabelDir= Label(self, text="Activiti (APS) Install Directory: ")
-            self.LabelDir.grid(row = 81, column =0, sticky = W)
-            self.dir = Entry(self)
-            self.dir.grid(row=81, column=0) 
-
-
-            self.checkBoxKerberosI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI, command = self.Kerberos_Configuration, state=DISABLED)
-            self.kerberosI.grid(row = 2, column = 0, sticky = W)
-            
-            
-            self.checkBoxKerberosActivitiI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti, state=DISABLED)
-            self.kerberosI.grid(row = 51, column = 0, sticky = W)
-
-
-            self.checkBoxKerberosR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original, state=DISABLED)
-            self.kerberosR.grid(row = 30, column = 0, sticky = W)
-            
-         
-        #if unchecked, enable 3 main options and hide install directory  
-        else:
+        placeholder="placeholder"
         
-            self.LabelDir.grid_forget()
-            self.dir.grid_forget()
         
-            self.checkBoxKerberosI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI, command = self.Kerberos_Configuration)
-            self.kerberosI.grid(row = 2, column = 0, sticky = W)
-            
-            
-            
-            self.checkBoxKerberosActivitiI = BooleanVar()
-            self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti)
-            self.kerberosI.grid(row = 51, column = 0, sticky = W)
-
-
-            self.checkBoxKerberosR = BooleanVar()
-            self.kerberosR = Checkbutton(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?", variable = self.checkBoxKerberosR,command = self.Rollback_Original)
-            self.kerberosR.grid(row = 30, column = 0, sticky = W)          
+        
+        
+        
+        
+        
+        
+        
+        
+    # Button for toggling ACS options       
+    def toggleACS(self):
+        self.kerberosI.grid_remove()
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    # Button for toggling APS options       
+    def toggleAPS(self):
+        self.kerberosI.grid()
             
             
 
