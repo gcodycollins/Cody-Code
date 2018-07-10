@@ -733,6 +733,67 @@ class Application(Frame):
         
     # Button for toggling ACS options       
     def toggleACS(self):
+            
+        
+        
+        
+        #add APS options
+        self.LabelAPS.grid()
+        self.toggleAPS.grid()
+        #self.kerberosAI.grid()
+        #Check APS box
+        self.kerberosAI.select()
+        self.LabelDirAPS.grid()
+        self.dirAPS.grid()
+        self.LabelServerNameAPS.grid()
+        self.serverNameAPS.grid()
+        self.LabelLdapFqdnAPS.grid()
+        self.ldapFqdnAPS.grid()
+        self.LabelAdminNameAPS.grid()
+        self.adminNameAPS.grid()
+        self.LabelAdminPassAPS.grid()
+        self.adminPassAPS.grid()
+        self.LabelGroupBaseAPS.grid()
+        self.groupBaseAPS.grid()
+        self.LabelUserBaseAPS.grid()
+        self.userBaseAPS.grid()
+        self.LabelKeytabPathAPS.grid()
+        self.keytabPathAPS.grid()
+        self.LabelHTTPKeytabAPS.grid()
+        self.httpKeytabAPS.grid()
+        self.LabelHTTPUserPassAPS.grid()
+        self.httpUserPassAPS.grid()
+        
+        #add APS krb5 and AD options
+        self.krb5APS.grid()
+        self.aDAPS.grid()
+        #deselect AD APS
+        self.aDAPS.deselect()
+        
+        self.LabelHTTPUserDNAPS.grid()
+        self.httpUserDNAPS.grid()
+        self.LabelLdapAdminPSAPS.grid()
+        self.ldapAdminPSAPS.grid()
+        self.LabelLdapPassPSAPS.grid()
+        self.ldapPassPSAPS.grid()
+        
+        self.LabelRollAPS.grid()
+        self.kerberosAPSR.grid()
+        
+        self.runAPS.grid()
+        
+        # disable the APS AD stuff by default
+        self.LabelHTTPUserDNAPS.configure(state="disabled")
+        self.httpUserDNAPS.configure(state="disabled")
+        self.LabelHTTPUserPassAPS.configure(state="disabled")
+        self.httpUserPassAPS.configure(state="disabled")
+        self.LabelLdapAdminPSAPS.configure(state="disabled")
+        self.ldapAdminPSAPS.configure(state="disabled")      
+        self.LabelLdapPassPSAPS.configure(state="disabled")
+        self.ldapPassPSAPS.configure(state="disabled")
+        
+        
+        
         
         #remove ACS options
         self.LabelACS.grid_remove()
@@ -781,61 +842,8 @@ class Application(Frame):
         self.LabelRollACS.grid_remove()
         self.kerberosAR.grid_remove()
         
-        
-        
-        
-        #add APS options
-        self.LabelAPS.grid()
-        self.toggleAPS.grid()
-        #self.kerberosAI.grid()
-        #Check APS box
-        self.kerberosAI.select()
-        self.LabelDirAPS.grid()
-        self.dirAPS.grid()
-        self.LabelServerNameAPS.grid()
-        self.serverNameAPS.grid()
-        self.LabelLdapFqdnAPS.grid()
-        self.ldapFqdnAPS.grid()
-        self.LabelAdminNameAPS.grid()
-        self.adminNameAPS.grid()
-        self.LabelAdminPassAPS.grid()
-        self.adminPassAPS.grid()
-        self.LabelGroupBaseAPS.grid()
-        self.groupBaseAPS.grid()
-        self.LabelUserBaseAPS.grid()
-        self.userBaseAPS.grid()
-        self.LabelKeytabPathAPS.grid()
-        self.keytabPathAPS.grid()
-        self.LabelHTTPKeytabAPS.grid()
-        self.httpKeytabAPS.grid()
-        self.LabelHTTPUserPassAPS.grid()
-        self.httpUserPassAPS.grid()
-        
-        #add APS krb5 and AD options
-        self.krb5APS.grid()
-        self.aDAPS.grid()
-        #deselect AD APS
-        self.aDAPS.deselect()
-        
-        self.LabelHTTPUserDNAPS.grid()
-        self.httpUserDNAPS.grid()
-        self.LabelLdapAdminPSAPS.grid()
-        self.ldapAdminPSAPS.grid()
-        self.LabelLdapPassPSAPS.grid()
-        self.ldapPassPSAPS.grid()
-        
-        self.LabelRollAPS.grid()
-        self.kerberosAPSR.grid()
-        
-        # disable the APS AD stuff by default
-        self.LabelHTTPUserDNAPS.configure(state="disabled")
-        self.httpUserDNAPS.configure(state="disabled")
-        self.LabelHTTPUserPassAPS.configure(state="disabled")
-        self.httpUserPassAPS.configure(state="disabled")
-        self.LabelLdapAdminPSAPS.configure(state="disabled")
-        self.ldapAdminPSAPS.configure(state="disabled")      
-        self.LabelLdapPassPSAPS.configure(state="disabled")
-        self.ldapPassPSAPS.configure(state="disabled")
+        self.runACS.grid_remove()
+
         
         
         
@@ -897,6 +905,8 @@ class Application(Frame):
         self.LabelRollACS.grid()
         self.kerberosAR.grid()
         
+        self.runACS.grid()
+        
         #disable the ACS AD stuff by default
         self.LabelHTTPUserDN.configure(state="disabled")
         self.httpUserDN.configure(state="disabled")
@@ -952,6 +962,8 @@ class Application(Frame):
         
         self.LabelRollAPS.grid_remove()
         self.kerberosAPSR.grid_remove()
+        
+        self.runAPS.grid_remove()
             
             
 
@@ -962,8 +974,8 @@ class Application(Frame):
 
 
             
-    #the function for when run button is clicked
-    def run(self):
+    #the function for when runACS button is clicked
+    def runACS(self):
 
         #Declare initial checkbox values
         kerberosI=False
@@ -1866,6 +1878,18 @@ class Application(Frame):
          
                 k5.close()
                 
+                
+                
+                
+                
+                
+                
+                
+                
+    #TODO           
+    #the function for when runACS button is clicked
+    def runAPS(self):
+        placeholder=placeholder     
                 
       
 
