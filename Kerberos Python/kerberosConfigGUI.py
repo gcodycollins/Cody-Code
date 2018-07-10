@@ -40,7 +40,7 @@
 # DONE 2.0- Change options to not hide and then display but to grey out options.
 # Random password generator button. Populates password fields.
 # DONE 2.0- Option to Hide ACS/APS options to save screen real-estate.
-# Separate run buttons for ACS and APS. No more confusing hidden checkboxes.
+# DONE 2.0- Separate run buttons for ACS and APS. No more confusing hidden checkboxes.
 #
 ##############################################
 
@@ -74,13 +74,6 @@ class Application(Frame):
         
         self.toggleACS = Button(self, text = "Toggle APS", command = self.toggleACS)
         self.toggleACS.grid(row = 1, column = 0)
-        
-        self.checkBoxKerberosI = BooleanVar()
-        self.kerberosI = Checkbutton(self,text = "Implement Kerberos Configurations in the Alfresco (ACS) Directory?",variable = self.checkBoxKerberosI,command = self.Kerberos_Configuration, state=DISABLED)
-        self.kerberosI.grid(row = 2, column = 0, sticky = W)
-        
-        self.kerberosI.select()
-        self.kerberosI.grid_remove()
         
         self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ")
         self.LabelDir.grid(row = 3, column =0, sticky = W)
@@ -202,12 +195,7 @@ class Application(Frame):
         self.LabelAPS.grid(row = 50, column = 0, sticky = W)
         
         self.toggleAPS = Button(self, text = "Toggle ACS", command = self.toggleAPS)
-        self.toggleAPS.grid(row = 50, column = 0)
-        
-        self.checkBoxKerberosActivitiI = BooleanVar()
-        self.kerberosAI = Checkbutton(self,text = "Implement Kerberos Configurations in the Activiti (APS) Directory?",variable = self.checkBoxKerberosActivitiI,command = self.Kerberos_Configuration_Activiti, state=DISABLED)
-        self.kerberosAI.grid(row = 51, column = 0, sticky = W)
-        
+        self.toggleAPS.grid(row = 50, column = 0)        
 
         self.LabelDirAPS= Label(self, text="Activiti (APS) Install Directory: ")
         self.LabelDirAPS.grid(row = 52, column =0, sticky = W)
@@ -336,7 +324,6 @@ class Application(Frame):
         #remove APS options by default
         self.LabelAPS.grid_remove()
         self.toggleAPS.grid_remove()
-        self.kerberosAI.grid_remove()
         self.LabelDirAPS.grid_remove()
         self.dirAPS.grid_remove()
         self.LabelServerNameAPS.grid_remove()
@@ -372,355 +359,6 @@ class Application(Frame):
         self.LabelRollAPS.grid_remove()
         self.kerberosAPSR.grid_remove()
         self.runAPS.grid_remove()
-
-        
-
-
-
-
-
-
-
-        
-    #function for if the Alfresco Kerberos checkbox is checked
-    def Kerberos_Configuration(self):
-        
-        # If its checked, enable the ACS options
-        if self.checkBoxKerberosI.get():
-        
-            #self.LabelDir.configure(state="normal")
-            #self.dir.configure(state="normal")
-            
-            self.LabelServerName.configure(state="normal")
-            self.serverName.configure(state="normal")
-            
-            self.LabelLdapFqdn.configure(state="normal")
-            self.ldapFqdn.configure(state="normal")
-            
-            self.LabelAdminName.configure(state="normal")
-            self.adminName.configure(state="normal")
-            
-            self.LabelAdminPass.configure(state="normal")
-            self.adminPass.configure(state="normal")
-            
-            self.LabelGroupBase.configure(state="normal")
-            self.groupBase.configure(state="normal")
-            
-            self.LabelUserBase.configure(state="normal")
-            self.userBase.configure(state="normal")
-            
-            self.LabelKeytabPath.configure(state="normal")
-            self.keytabPath.configure(state="normal")
-            
-            self.LabelHTTPKeytab.configure(state="normal")
-            self.httpKeytab.configure(state="normal")
-            
-            self.LabelCifsKeytab.configure(state="normal")
-            self.cifsKeytab.configure(state="normal")
-            
-            self.LabelHTTPUserPass.configure(state="normal")
-            self.httpUserPass.configure(state="normal")
-            
-            
-            
-            self.krb5.configure(state="normal")
-            self.aD.configure(state="normal")
-            
-
-            
-            self.kerberosAI.configure(state="disabled")
-            
-            
-        
-        # if its unchecked, disable all ACS options
-        else:
-        
-            #self.LabelDir.configure(state="disabled")
-            #self.dir.configure(state="disabled")
-            
-            self.LabelServerName.configure(state="disabled")
-            self.serverName.configure(state="disabled")
-            
-            self.LabelLdapFqdn.configure(state="disabled")
-            self.ldapFqdn.configure(state="disabled")
-            
-            self.LabelAdminName.configure(state="disabled")
-            self.adminName.configure(state="disabled")
-            
-            self.LabelAdminPass.configure(state="disabled")
-            self.adminPass.configure(state="disabled")
-            
-            self.LabelGroupBase.configure(state="disabled")
-            self.groupBase.configure(state="disabled")
-            
-            self.LabelUserBase.configure(state="disabled")
-            self.userBase.configure(state="disabled")
-            
-            self.LabelKeytabPath.configure(state="disabled")
-            self.keytabPath.configure(state="disabled")
-            
-            self.LabelHTTPKeytab.configure(state="disabled")
-            self.httpKeytab.configure(state="disabled")
-            
-            self.LabelCifsKeytab.configure(state="disabled")
-            self.cifsKeytab.configure(state="disabled")
-            
-            self.LabelHTTPUserPass.configure(state="disabled")
-            self.httpUserPass.configure(state="disabled")
-            
-            
-            
-            self.krb5.configure(state="disabled")
-            self.aD.configure(state="disabled")
-            
-            if self.checkBoxKrb5.get():
-                self.krb5.deselect()
-            
-            if self.checkBoxAD.get():
-                self.aD.deselect()
-                
-                self.LabelHTTPUserDN.configure(state="disabled")
-                self.httpUserDN.configure(state="disabled")
-                        
-                self.LabelcifsUserDN.configure(state="disabled")
-                self.cifsUserDN.configure(state="disabled")
-   
-                self.LabelCifsUserPass.configure(state="disabled")
-                self.cifsUserPass.configure(state="disabled")
-            
-                self.LabelLdapAdminPS.configure(state="disabled")
-                self.ldapAdminPS.configure(state="disabled")   
-
-                self.LabelLdapPassPS.configure(state="disabled")
-                self.ldapPassPS.configure(state="disabled")
-            
-            
-
-            self.kerberosAI.configure(state="normal")
-
-           
-
-
-
-
-
-
-
-           
-    #this is for the active directory button wihtin the alfresco kerberos option.        
-    def Active_Directory(self):
-            
-        # if its checked, enable additional fields    
-        if self.checkBoxAD.get():
-             
-            self.LabelHTTPUserDN.configure(state="normal")
-            self.httpUserDN.configure(state="normal")
-                        
-            self.LabelcifsUserDN.configure(state="normal")
-            self.cifsUserDN.configure(state="normal")
-   
-            self.LabelCifsUserPass.configure(state="normal")
-            self.cifsUserPass.configure(state="normal")
-            
-            self.LabelLdapAdminPS.configure(state="normal")
-            self.ldapAdminPS.configure(state="normal")    
-
-            self.LabelLdapPassPS.configure(state="normal")
-            self.ldapPassPS.configure(state="normal")
-            
-            
-        #if its unchecked, disable those additional options    
-        else:
-        
-            self.LabelHTTPUserDN.configure(state="disabled")
-            self.httpUserDN.configure(state="disabled")
-                        
-            self.LabelcifsUserDN.configure(state="disabled")
-            self.cifsUserDN.configure(state="disabled")
-   
-            self.LabelCifsUserPass.configure(state="disabled")
-            self.cifsUserPass.configure(state="disabled")
-            
-            self.LabelLdapAdminPS.configure(state="disabled")
-            self.ldapAdminPS.configure(state="disabled")   
-
-            self.LabelLdapPassPS.configure(state="disabled")
-            self.ldapPassPS.configure(state="disabled")
-
-            
-
-
-
-
-
-
-
-            
-    #TODO
-    def Rollback_Original(self):
-        placeholder="placeholder"
-
-            
-
-
-
-
-
-
-
-            
-    # this is the function for the Activiti kerberos configuration.        
-    def Kerberos_Configuration_Activiti(self):
-            
-        # when checked, enable APS options   
-        if self.checkBoxKerberosActivitiI.get():
-        
-            #self.LabelDirAPS.configure(state="normal")
-            #self.dirAPS.configure(state="normal")
-            
-            self.LabelServerNameAPS.configure(state="normal")
-            self.serverNameAPS.configure(state="normal")
-            
-            self.LabelLdapFqdnAPS.configure(state="normal")
-            self.ldapFqdnAPS.configure(state="normal")
-            
-            self.LabelAdminNameAPS.configure(state="normal")
-            self.adminNameAPS.configure(state="normal")
-            
-            self.LabelAdminPassAPS.configure(state="normal")
-            self.adminPassAPS.configure(state="normal")
-            
-            self.LabelGroupBaseAPS.configure(state="normal")
-            self.groupBaseAPS.configure(state="normal")
-            
-            self.LabelUserBaseAPS.configure(state="normal")
-            self.userBaseAPS.configure(state="normal")
-            
-            self.LabelKeytabPathAPS.configure(state="normal")
-            self.keytabPathAPS.configure(state="normal")
-            
-            self.LabelHTTPKeytabAPS.configure(state="normal")
-            self.httpKeytabAPS.configure(state="normal")
-
-
-            self.aDAPS.configure(state="normal")
-            self.krb5APS.configure(state="normal")
-
-            
-            self.kerberosI.configure(state="disabled")
-            
-            
-            
-        # if unchecked, disable APS options
-        else:
-        
-            #self.LabelDirAPS.configure(state="disabled")
-            #self.dirAPS.configure(state="disabled")
-            
-            self.LabelServerNameAPS.configure(state="disabled")
-            self.serverNameAPS.configure(state="disabled")
-            
-            self.LabelLdapFqdnAPS.configure(state="disabled")
-            self.ldapFqdnAPS.configure(state="disabled")
-            
-            self.LabelAdminNameAPS.configure(state="disabled")
-            self.adminNameAPS.configure(state="disabled")
-            
-            self.LabelAdminPassAPS.configure(state="disabled")
-            self.adminPassAPS.configure(state="disabled")
-            
-            self.LabelGroupBaseAPS.configure(state="disabled")
-            self.groupBaseAPS.configure(state="disabled")
-            
-            self.LabelUserBaseAPS.configure(state="disabled")
-            self.userBaseAPS.configure(state="disabled")
-            
-            self.LabelKeytabPathAPS.configure(state="disabled")
-            self.keytabPathAPS.configure(state="disabled")
-            
-            self.LabelHTTPKeytabAPS.configure(state="disabled")
-            self.httpKeytabAPS.configure(state="disabled")
-            
-            if self.checkBoxKrb5.get():
-                self.krb5APS.deselect()
-            
-            if self.checkBoxActivitiAD.get():
-                self.aDAPS.deselect()
-                
-                self.LabelHTTPUserDNAPS.configure(state="disabled")
-                self.httpUserDNAPS.configure(state="disabled")
-   
-                self.LabelHTTPUserPassAPS.configure(state="disabled")
-                self.httpUserPassAPS.configure(state="disabled")
-            
-                self.LabelLdapAdminPSAPS.configure(state="disabled")
-                self.ldapAdminPSAPS.configure(state="disabled")   
-
-                self.LabelLdapPassPSAPS.configure(state="disabled")
-                self.ldapPassPSAPS.configure(state="disabled")
-
-
-            self.aDAPS.configure(state="disabled")
-            self.krb5APS.configure(state="disabled")
-
-            
-            self.kerberosI.configure(state="normal")
-            
-    
-
-
-
-    
-    
-    
-    
-    
-    # this is for active directory options in the activiti kerberos configuration        
-    def Active_Directory_Activiti(self):    
-            
-        # if checked, enable more options
-        if self.checkBoxActivitiAD.get():
-            
-            self.LabelHTTPUserDNAPS.configure(state="normal")
-            self.httpUserDNAPS.configure(state="normal")
-            
-            self.LabelHTTPUserPassAPS.configure(state="normal")
-            self.httpUserPassAPS.configure(state="normal")
-            
-            self.LabelLdapAdminPSAPS.configure(state="normal")
-            self.ldapAdminPSAPS.configure(state="normal")      
-
-            self.LabelLdapPassPSAPS.configure(state="normal")
-            self.ldapPassPSAPS.configure(state="normal")
-        
-        
-        #if unchecked, diable additional options
-        else:
-        
-            self.LabelHTTPUserDNAPS.configure(state="disabled")
-            self.httpUserDNAPS.configure(state="disabled")
-            
-            self.LabelHTTPUserPassAPS.configure(state="disabled")
-            self.httpUserPassAPS.configure(state="disabled")
-            
-            self.LabelLdapAdminPSAPS.configure(state="disabled")
-            self.ldapAdminPSAPS.configure(state="disabled")      
-
-            self.LabelLdapPassPSAPS.configure(state="disabled")
-            self.ldapPassPSAPS.configure(state="disabled")
-            
-            
-            
-           
-
-
-
-
-
-           
-    # TODO        
-    def Rollback_Original_Activiti(self):
-        placeholder="placeholder"
         
         
         
@@ -740,9 +378,6 @@ class Application(Frame):
         #add APS options
         self.LabelAPS.grid()
         self.toggleAPS.grid()
-        #self.kerberosAI.grid()
-        #Check APS box
-        self.kerberosAI.select()
         self.LabelDirAPS.grid()
         self.dirAPS.grid()
         self.LabelServerNameAPS.grid()
@@ -798,9 +433,6 @@ class Application(Frame):
         #remove ACS options
         self.LabelACS.grid_remove()
         self.toggleACS.grid_remove()
-        self.kerberosI.grid_remove()
-        #uncheck ACS box
-        self.kerberosI.deselect()
         self.LabelDir.grid_remove()
         self.dir.grid_remove()
         self.LabelServerName.grid_remove()
@@ -859,9 +491,6 @@ class Application(Frame):
         #add ACS options
         self.LabelACS.grid()
         self.toggleACS.grid()
-        #self.kerberosI.grid()
-        #check ACS box
-        self.kerberosI.select()
         self.LabelDir.grid()
         self.dir.grid()
         self.LabelServerName.grid()
@@ -925,9 +554,6 @@ class Application(Frame):
         #remove APS options
         self.LabelAPS.grid_remove()
         self.toggleAPS.grid_remove()
-        self.kerberosAI.grid_remove()
-        #uncheck aps box
-        self.kerberosAI.deselect()
         self.LabelDirAPS.grid_remove()
         self.dirAPS.grid_remove()
         self.LabelServerNameAPS.grid_remove()
@@ -973,7 +599,120 @@ class Application(Frame):
 
 
 
+        
+    #this is for the active directory button wihtin the alfresco kerberos option.        
+    def Active_Directory(self):
             
+        # if its checked, enable additional fields    
+        if self.checkBoxAD.get():
+             
+            self.LabelHTTPUserDN.configure(state="normal")
+            self.httpUserDN.configure(state="normal")
+                        
+            self.LabelcifsUserDN.configure(state="normal")
+            self.cifsUserDN.configure(state="normal")
+   
+            self.LabelCifsUserPass.configure(state="normal")
+            self.cifsUserPass.configure(state="normal")
+            
+            self.LabelLdapAdminPS.configure(state="normal")
+            self.ldapAdminPS.configure(state="normal")    
+
+            self.LabelLdapPassPS.configure(state="normal")
+            self.ldapPassPS.configure(state="normal")
+            
+            
+        #if its unchecked, disable those additional options    
+        else:
+        
+            self.LabelHTTPUserDN.configure(state="disabled")
+            self.httpUserDN.configure(state="disabled")
+                        
+            self.LabelcifsUserDN.configure(state="disabled")
+            self.cifsUserDN.configure(state="disabled")
+   
+            self.LabelCifsUserPass.configure(state="disabled")
+            self.cifsUserPass.configure(state="disabled")
+            
+            self.LabelLdapAdminPS.configure(state="disabled")
+            self.ldapAdminPS.configure(state="disabled")   
+
+            self.LabelLdapPassPS.configure(state="disabled")
+            self.ldapPassPS.configure(state="disabled")
+
+            
+
+
+
+
+
+
+
+            
+    #TODO
+    def Rollback_Original(self):
+        placeholder="placeholder"
+
+            
+
+
+
+
+
+
+
+            
+   
+    # this is for active directory options in the activiti kerberos configuration        
+    def Active_Directory_Activiti(self):    
+            
+        # if checked, enable more options
+        if self.checkBoxActivitiAD.get():
+            
+            self.LabelHTTPUserDNAPS.configure(state="normal")
+            self.httpUserDNAPS.configure(state="normal")
+            
+            self.LabelHTTPUserPassAPS.configure(state="normal")
+            self.httpUserPassAPS.configure(state="normal")
+            
+            self.LabelLdapAdminPSAPS.configure(state="normal")
+            self.ldapAdminPSAPS.configure(state="normal")      
+
+            self.LabelLdapPassPSAPS.configure(state="normal")
+            self.ldapPassPSAPS.configure(state="normal")
+        
+        
+        #if unchecked, diable additional options
+        else:
+        
+            self.LabelHTTPUserDNAPS.configure(state="disabled")
+            self.httpUserDNAPS.configure(state="disabled")
+            
+            self.LabelHTTPUserPassAPS.configure(state="disabled")
+            self.httpUserPassAPS.configure(state="disabled")
+            
+            self.LabelLdapAdminPSAPS.configure(state="disabled")
+            self.ldapAdminPSAPS.configure(state="disabled")      
+
+            self.LabelLdapPassPSAPS.configure(state="disabled")
+            self.ldapPassPSAPS.configure(state="disabled")
+            
+            
+            
+           
+
+
+
+
+
+           
+    # TODO        
+    def Rollback_Original_Activiti(self):
+        placeholder="placeholder"
+        
+        
+        
+                   
     #the function for when runACS button is clicked
     def runACS(self):
 
@@ -1503,13 +1242,84 @@ class Application(Frame):
     ####################################
     #End Alfresco Kerberos run function#
     ####################################
-    
 
     
     
     
     
     
+    
+    
+        
+    
+        #KRB5 is common between APS and ACS which is why it is at the end of the file
+    
+        #create krb5.ini
+        if (krb5iniI==True):
+
+            krb5iniPath=r'C:\Windows'
+            krb5iniFile=r'krb5.ini'
+
+            #simply create the file line by line adding the pulled varaibles from earlier.
+            with open(os.path.join(krb5iniPath, krb5iniFile), 'w') as k5:
+            
+            
+                k5.write(r'[logging]')
+                k5.write('\n')
+                k5.write(r' default = FILE:C:\Windows\krb5libs.log')
+                k5.write('\n')        
+                k5.write(r' kdc = FILE:C:\Windows\krb5kdc.log')
+                k5.write('\n')        
+                k5.write(r' admin_server = FILE:C:\Windows\kadmind.log')
+                k5.write('\n\n')
+                
+                k5.write(r'[libdefaults]')
+                k5.write('\n')        
+                k5.write(r' default_realm = '+uDomainI+'')
+                k5.write('\n')        
+                k5.write(r' dns_lookup_realm = true')
+                k5.write('\n')        
+                k5.write(r' dns_lookup_kdc = true')
+                k5.write('\n') 
+                k5.write(r' ticket_lifetime = 24h')
+                k5.write('\n') 
+                k5.write(r' renew_lifetime = 7d')
+                k5.write('\n') 
+                k5.write(r' forwardable = true')
+                k5.write('\n') 
+                k5.write(r' default_tkt_enctypes = rc4-hmac')
+                k5.write('\n') 
+                k5.write(r' default_tgs_enctypes = rc4-hmac')
+                k5.write('\n\n') 
+
+                k5.write(r'[realms]')
+                k5.write('\n') 
+                k5.write(r' '+uDomainI+r' = {')
+                k5.write('\n') 
+                k5.write(r'  kdc = '+ldapFQDN)
+                k5.write('\n') 
+                k5.write(r'  admin_server = '+ldapFQDN)
+                k5.write('\n') 
+                k5.write(r' }')
+         
+                k5.close()
+                
+                
+        #call to create krb5.ini
+        if (krb5iniI==True):
+            createKRB5()
+                
+                
+                
+                
+                
+                
+                
+                
+                        
+    #the function for when runACS button is clicked
+    def runAPS(self):
+
     #############################################################################################
     #All below code is for when one of the two Activiti options are selected when run is clicked#
     #############################################################################################
@@ -1818,79 +1628,73 @@ class Application(Frame):
     #End Activiti Kerberos run function#
     ####################################
     
-    
-    
-    
-    
-    
-    
-        
-    
-        #KRB5 is common between APS and ACS which is why it is at the end of the file
-    
-        #create krb5.ini
+        #call to create krb5.ini
         if (krb5iniI==True):
+            createKRB5()
 
-            krb5iniPath=r'C:\Windows'
-            krb5iniFile=r'krb5.ini'
 
-            #simply create the file line by line adding the pulled varaibles from earlier.
-            with open(os.path.join(krb5iniPath, krb5iniFile), 'w') as k5:
+
+
+
+
+
+
+
+
+    def createKRB5(self):
+        
+    #KRB5 is common between APS and ACS which is why it is at the end of the file in its own function
+    
+    #create krb5.ini
+    
+
+        krb5iniPath=r'C:\Windows'
+        krb5iniFile=r'krb5.ini'
+
+        #simply create the file line by line adding the pulled varaibles from earlier.
+        with open(os.path.join(krb5iniPath, krb5iniFile), 'w') as k5:
+        
+        
+            k5.write(r'[logging]')
+            k5.write('\n')
+            k5.write(r' default = FILE:C:\Windows\krb5libs.log')
+            k5.write('\n')        
+            k5.write(r' kdc = FILE:C:\Windows\krb5kdc.log')
+            k5.write('\n')        
+            k5.write(r' admin_server = FILE:C:\Windows\kadmind.log')
+            k5.write('\n\n')
             
-            
-                k5.write(r'[logging]')
-                k5.write('\n')
-                k5.write(r' default = FILE:C:\Windows\krb5libs.log')
-                k5.write('\n')        
-                k5.write(r' kdc = FILE:C:\Windows\krb5kdc.log')
-                k5.write('\n')        
-                k5.write(r' admin_server = FILE:C:\Windows\kadmind.log')
-                k5.write('\n\n')
-                
-                k5.write(r'[libdefaults]')
-                k5.write('\n')        
-                k5.write(r' default_realm = '+uDomainI+'')
-                k5.write('\n')        
-                k5.write(r' dns_lookup_realm = true')
-                k5.write('\n')        
-                k5.write(r' dns_lookup_kdc = true')
-                k5.write('\n') 
-                k5.write(r' ticket_lifetime = 24h')
-                k5.write('\n') 
-                k5.write(r' renew_lifetime = 7d')
-                k5.write('\n') 
-                k5.write(r' forwardable = true')
-                k5.write('\n') 
-                k5.write(r' default_tkt_enctypes = rc4-hmac')
-                k5.write('\n') 
-                k5.write(r' default_tgs_enctypes = rc4-hmac')
-                k5.write('\n\n') 
+            k5.write(r'[libdefaults]')
+            k5.write('\n')        
+            k5.write(r' default_realm = '+uDomainI+'')
+            k5.write('\n')        
+            k5.write(r' dns_lookup_realm = true')
+            k5.write('\n')        
+            k5.write(r' dns_lookup_kdc = true')
+            k5.write('\n') 
+            k5.write(r' ticket_lifetime = 24h')
+            k5.write('\n') 
+            k5.write(r' renew_lifetime = 7d')
+            k5.write('\n') 
+            k5.write(r' forwardable = true')
+            k5.write('\n') 
+            k5.write(r' default_tkt_enctypes = rc4-hmac')
+            k5.write('\n') 
+            k5.write(r' default_tgs_enctypes = rc4-hmac')
+            k5.write('\n\n') 
 
-                k5.write(r'[realms]')
-                k5.write('\n') 
-                k5.write(r' '+uDomainI+r' = {')
-                k5.write('\n') 
-                k5.write(r'  kdc = '+ldapFQDN)
-                k5.write('\n') 
-                k5.write(r'  admin_server = '+ldapFQDN)
-                k5.write('\n') 
-                k5.write(r' }')
-         
-                k5.close()
-                
-                
-                
-                
-                
-                
-                
-                
-                
-    #TODO           
-    #the function for when runACS button is clicked
-    def runAPS(self):
-        placeholder=placeholder     
-                
+            k5.write(r'[realms]')
+            k5.write('\n') 
+            k5.write(r' '+uDomainI+r' = {')
+            k5.write('\n') 
+            k5.write(r'  kdc = '+ldapFQDN)
+            k5.write('\n') 
+            k5.write(r'  admin_server = '+ldapFQDN)
+            k5.write('\n') 
+            k5.write(r' }')
+     
+            k5.close()
+            
       
 
 root = Tk()
