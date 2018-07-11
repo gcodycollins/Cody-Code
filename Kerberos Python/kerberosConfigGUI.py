@@ -245,7 +245,7 @@ class Application(Frame):
             
             
         self.checkBoxKrb5APS = BooleanVar()
-        self.krb5APS = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5)
+        self.krb5APS = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5APS)
         self.krb5APS.grid(row = 61, column = 0, sticky = W)
             
             
@@ -402,8 +402,6 @@ class Application(Frame):
         #add APS krb5 and AD options
         self.krb5APS.grid()
         self.aDAPS.grid()
-        #deselect AD APS
-        self.aDAPS.deselect()
         
         self.LabelHTTPUserDNAPS.grid()
         self.httpUserDNAPS.grid()
@@ -416,16 +414,6 @@ class Application(Frame):
         self.kerberosAPSR.grid()
         
         self.runAPS.grid()
-        
-        # disable the APS AD stuff by default
-        self.LabelHTTPUserDNAPS.configure(state="disabled")
-        self.httpUserDNAPS.configure(state="disabled")
-        self.LabelHTTPUserPassAPS.configure(state="disabled")
-        self.httpUserPassAPS.configure(state="disabled")
-        self.LabelLdapAdminPSAPS.configure(state="disabled")
-        self.ldapAdminPSAPS.configure(state="disabled")      
-        self.LabelLdapPassPSAPS.configure(state="disabled")
-        self.ldapPassPSAPS.configure(state="disabled")
         
         
         
@@ -517,8 +505,6 @@ class Application(Frame):
         #add ACS krb5 and AD options
         self.krb5.grid()
         self.aD.grid()
-        #deselect AD ACS
-        self.aD.deselect()
         
         self.LabelHTTPUserDN.grid()
         self.httpUserDN.grid()
@@ -536,17 +522,6 @@ class Application(Frame):
         
         self.runACS.grid()
         
-        #disable the ACS AD stuff by default
-        self.LabelHTTPUserDN.configure(state="disabled")
-        self.httpUserDN.configure(state="disabled")
-        self.LabelcifsUserDN.configure(state="disabled")
-        self.cifsUserDN.configure(state="disabled")
-        self.LabelCifsUserPass.configure(state="disabled")
-        self.cifsUserPass.configure(state="disabled")
-        self.LabelLdapAdminPS.configure(state="disabled")
-        self.ldapAdminPS.configure(state="disabled")   
-        self.LabelLdapPassPS.configure(state="disabled")
-        self.ldapPassPS.configure(state="disabled")
         
         
         
@@ -640,21 +615,8 @@ class Application(Frame):
             self.LabelLdapPassPS.configure(state="disabled")
             self.ldapPassPS.configure(state="disabled")
 
-            
-
-
-
-
-
-
 
             
-    #TODO
-    def Rollback_Original(self):
-        placeholder="placeholder"
-
-            
-
 
 
 
@@ -706,9 +668,7 @@ class Application(Frame):
 
 
            
-    # TODO        
-    def Rollback_Original_Activiti(self):
-        placeholder="placeholder"
+
         
         
         
@@ -717,70 +677,50 @@ class Application(Frame):
     def runACS(self):
 
         #Declare initial checkbox values
-        kerberosI=False
-        kerberosR=False
-        kerberosActivitiI=False
-        kerberosActivitiR=False
         activeDirectoryI=False
-        activeDirectoryActivitiI=False
+
         
         
     #############################################################################################
-    #All below code is for when one of the two Alfresco options are selected when run is clicked#
+    #All below code is for when ACS is active#
     #############################################################################################
     
         #take the input and store it as variables
         #get set path
         pathI = self.dir.get()
-        
-        #if for if the Alfresco Kerberos checkbox is true, get values of other checkboxes within this section
-        if (self.checkBoxKerberosI.get()==True):
-            kerberosI=True
-            kerberosR=False
-            krb5iniI= self.checkBoxKrb5.get()
-            activeDirectoryI=self.checkBoxAD.get()
-            
-            #set two APS options to false
-            kerberosActivitiI=False
-            KerberosActivitiR=False
-            
-        # if alfresco kerberos rollback is selected, set everything else to false
-        elif (self.checkBoxKerberosR.get()==True):
-            kerberosR=True
-            kerberosI=False
-            krb5iniI=False
-            activeDirectoryI=False
-            
-            #set two APS options to false
-            kerberosActivitiI=False
-            KerberosActivitiR=False
 
-        #for if the kerberos alfresco checkbox is checked, pull label values into variables
-        if (kerberosI==True):
-            alfServerI = self.serverName.get()
-            ldapFQDN=self.ldapFqdn.get()
-            ldapAdmin=self.adminName.get()
-            ldapAdminPass=self.adminPass.get()
-            ldapGroupBase=self.groupBase.get()
-            ldapUserBase=self.userBase.get()
-            keytabPath=self.keytabPath.get()
-            httpKeytabName=self.httpKeytab.get()
-            cifsKeytabName=self.cifsKeytab.get()
-            httpPasswordI=self.httpUserPass.get()
+        #get checkbox values of KRB5 and Active Directory
+        krb5iniI= self.checkBoxKrb5.get()
+        activeDirectoryI=self.checkBoxAD.get()
+            
 
 
-            #strip domain from ldapFQDN
-            start=ldapFQDN.find('.')+1
-            domainI = ldapFQDN[start:]
-            #domain I to uppercase for realm
-            uDomainI = domainI.upper()
-            #string text after period in domain for domainnetbios
-            end=uDomainI.find('.')
-            realm=uDomainI[0:end]
+        #pull label values into variables
+        alfServerI = self.serverName.get()
+        ldapFQDN=self.ldapFqdn.get()
+        ldapAdmin=self.adminName.get()
+        ldapAdminPass=self.adminPass.get()
+        ldapGroupBase=self.groupBase.get()
+        ldapUserBase=self.userBase.get()
+        keytabPath=self.keytabPath.get()
+        httpKeytabName=self.httpKeytab.get()
+        cifsKeytabName=self.cifsKeytab.get()
+        httpPasswordI=self.httpUserPass.get()
+
+
+        #strip domain from ldapFQDN
+        start=ldapFQDN.find('.')+1
+        domainI = ldapFQDN[start:]
+        #domain I to uppercase for realm
+        uDomainI = domainI.upper()
+        #string text after period in domain for domainnetbios
+        end=uDomainI.find('.')
+        realm=uDomainI[0:end]
 
 
 
         #for if the kerberos alfresco active directory checkbox is checked, pull label values into variables
+        #then make powershell calls to create accounts, set spns, and generate keytabs
         if (activeDirectoryI==True):
 
             httpUserDN=self.httpUserDN.get()
@@ -870,374 +810,331 @@ class Application(Frame):
 
             p = subprocess.Popen(["powershell.exe", cwd+r"\powershellAD.ps1"], stdout=sys.stdout)
             p.communicate()
-            
-
 
             
             
 
-        if (kerberosI==True):
 
+        #copy the current global properties file and append the kerberos and LDAP properties to the end of the active configuraiton file
+        #also modify share.host and alfresco.host
 
-            #copy the current global properties file and append the kerberos and LDAP properties to the end of the active configuraiton file
-            #also modify share.host and alfresco.host
+        gloPropsSource=pathI+r'\tomcat\shared\classes\alfresco-global.properties'
+        gloPropsOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco-global.properties.original'
 
-            gloPropsSource=pathI+r'\tomcat\shared\classes\alfresco-global.properties'
-            gloPropsOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco-global.properties.original'
+        shutil.copy(gloPropsSource, gloPropsOriginalCopy)
 
-            shutil.copy(gloPropsSource, gloPropsOriginalCopy)
-
-            alfrescoHost = 'alfresco.host='+alfServerI+'.'+domainI+''
-            shareHost = 'share.host='+alfServerI+'.'+domainI+''
+        alfrescoHost = 'alfresco.host='+alfServerI+'.'+domainI+''
+        shareHost = 'share.host='+alfServerI+'.'+domainI+''
 
 
 
-            with open(gloPropsOriginalCopy) as inF0, open(gloPropsSource, 'w') as outF0:
-                for line in inF0:
-                
-                    if (r'alfresco.host=' in line):
-                        line = alfrescoHost
-                        outF0.write(line+'\n')
-                        
-                    elif (r'share.host=' in line):
-                        line = shareHost
-                        outF0.write(line+'\n')    
-                        
-                    else:
-                        outF0.write(line)
+        with open(gloPropsOriginalCopy) as inF0, open(gloPropsSource, 'w') as outF0:
+            for line in inF0:
+            
+                if (r'alfresco.host=' in line):
+                    line = alfrescoHost
+                    outF0.write(line+'\n')
                     
-                inF0.close()
-                outF0.close()
-
-
-
-
-            with open(gloPropsSource, 'a') as f0:
-                f0.write('\n\n\n\n\n###KERB###')
-                
-                f0.write('\n\nkerberos.authentication.realm='+uDomainI+'')
-                f0.write('\nkerberos.authentication.authenticateCIFS=false')
-                f0.write('\nkerberos.authentication.sso.enabled=true')
-                f0.write('\nkerberos.authentication.http.password='+httpPasswordI+'')
-                f0.write('\nkerberos.authentication.stripUsernameSuffix=true')
-                f0.write('\nkerberos.authentication.browser.ticketLogons=true')
-
-                f0.write('\n\n\n\n\n###LDAP###')
-                f0.write('\n\nauthentication.chain=kerberos1:kerberos,alfrescoNtlm1:alfrescoNtlm')
-                f0.write('\nldap.authentication.active=true')
-                f0.write('\nldap.authentication.allowGuestLogin=false')
-                f0.write('\nldap.authentication.userNameFormat=%s@'+domainI+'')
-                f0.write('\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
-                f0.write('\nldap.synchronization.java.naming.security.principal='+ldapAdmin+'@'+domainI+'')
-                f0.write('\nldap.synchronization.java.naming.security.credentials='+ldapAdminPass+'')
-                f0.write('\nldap.synchronization.groupSearchBase='+ldapGroupBase)
-                f0.write('\nldap.synchronization.userSearchBase='+ldapUserBase)
-                f0.write('\nsynchronization.syncOnStartup=true')
-                f0.write('\nsynchronization.allowDeletions=false')
-                f0.write('\nsynchronization.synchronizeChangesOnly=false')
-                f0.write('\nldap.synchronization.userIdAttributeName=sAMAccountName')
-                f0.write('\nldap.synchronization.personQuery=(objectClass\=user)')
-                f0.write('\nldap.synchronization.groupQuery=(objectClass\=group)')
-                
-                f0.close()
-
-
-
-
-            #copy the current share-config-custom.xml and modify the active cofiguration
-
-            shareConfigSource=pathI+r'\tomcat\shared\classes\alfresco\web-extension\share-config-custom.xml'
-            shareConfigOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco\web-extension\share-config-custom.xml.original'
-
-            shutil.copy(shareConfigSource, shareConfigOriginalCopy)
-
-            kerbPassword = r'         <password>'+httpPasswordI+r'</password>'
-            kerbRealm = r'         <realm>'+uDomainI+'</realm>'
-            kerbSpn=r'         <endpoint-spn>HTTP/'+alfServerI+'@'+uDomainI+'</endpoint-spn>'
-
-
-            with open(shareConfigOriginalCopy) as inF1, open(shareConfigSource, 'w') as outF1:
-                for line in inF1:
-                
-                    if (r'condition="KerberosDisabled"' in line):
-                        line = r'   <config evaluator="string-compare" condition="Kerberos" replace="true">'
-                        outF1.write(line+'\n')
-                        
-                    elif (r'<password>' in line):
-                        line = kerbPassword
-                        outF1.write(line+'\n') 
-
-                    elif (r'</realm>' in line):
-                        line = kerbRealm
-                        outF1.write(line+'\n')
-
-                    elif (r'<endpoint-spn>' in line):
-                        line = kerbSpn
-                        outF1.write(line+'\n')
-
-                    elif (r'<!-- For production environment set verify-hostname to true.-->' in line):
-                        line = r'   <!-- For production environment set verify-hostname to true.-->'
-                        outF1.write(line+'\n')
-                        outF1.write('\n')
-                        
-
-                        outF1.write(r'    <config evaluator="string-compare" condition="Remote">')
-                        outF1.write('\n')
-                        outF1.write(r'      <remote>')
-                        outF1.write('\n')
-                        outF1.write(r'         <ssl-config>')
-                        outF1.write('\n')
-                        outF1.write(r'            <keystore-path>alfresco/web-extension/alfresco-system.p12</keystore-path>')
-                        outF1.write('\n')
-                        outF1.write(r'            <keystore-type>pkcs12</keystore-type>')
-                        outF1.write('\n')
-                        outF1.write(r'            <keystore-password>alfresco-system</keystore-password>')
-                        outF1.write('\n')
-
-                        outF1.write('\n')
-
-                        outF1.write(r'            <truststore-path>alfresco/web-extension/ssl-truststore</truststore-path>')
-                        outF1.write('\n')
-                        outF1.write(r'            <truststore-type>JCEKS</truststore-type>')
-                        outF1.write('\n')
-                        outF1.write(r'            <truststore-password>password</truststore-password>')
-                        outF1.write('\n')
-
-                        outF1.write('\n')
-
-                        outF1.write(r'            <verify-hostname>true</verify-hostname>')
-                        outF1.write('\n')
-                        outF1.write(r'         </ssl-config>')
-                        outF1.write('\n')
-
-                        outF1.write('\n')
-
-                        outF1.write(r'         <connector>')
-                        outF1.write('\n')
-                        outF1.write(r'            <id>alfrescoCookie</id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <name>Alfresco Connector</name>')
-                        outF1.write('\n')
-                        outF1.write(r'            <description>Connects to an Alfresco instance using cookie-based authentication</description>')
-                        outF1.write('\n')
-                        outF1.write(r'            <class>org.alfresco.web.site.servlet.SlingshotAlfrescoConnector</class>')
-                        outF1.write('\n')
-                        outF1.write(r'         </connector>')
-                        outF1.write('\n')
-
-                        outF1.write('\n')
-                     
-                        outF1.write(r'         <connector>')
-                        outF1.write('\n')
-                        outF1.write(r'            <id>alfrescoHeader</id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <name>Alfresco Connector</name>')
-                        outF1.write('\n')
-                        outF1.write(r'            <description>Connects to an Alfresco instance using header and cookie-based authentication</description>')
-                        outF1.write('\n')
-                        outF1.write(r'            <class>org.alfresco.web.site.servlet.SlingshotAlfrescoConnector</class>')
-                        outF1.write('\n')
-                        outF1.write(r'            <userHeader>SsoUserHeader</userHeader>')
-                        outF1.write('\n')
-                        outF1.write(r'         </connector>')
-                        outF1.write('\n')
-
-                        outF1.write('\n')
-
-                        outF1.write(r'         <endpoint>')
-                        outF1.write('\n')
-                        outF1.write(r'            <id>alfresco</id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <name>Alfresco - user access</name>')
-                        outF1.write('\n')
-                        outF1.write(r'            <description>Access to Alfresco Repository WebScripts that require user authentication</description>')
-                        outF1.write('\n')
-                        outF1.write(r'            <connector-id>alfrescoCookie</connector-id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <endpoint-url>http://localhost:8080/alfresco/wcs</endpoint-url>')
-                        outF1.write('\n')
-                        outF1.write(r'            <identity>user</identity>')
-                        outF1.write('\n')
-                        outF1.write(r'            <external-auth>true</external-auth>')
-                        outF1.write('\n')
-                        outF1.write(r'         </endpoint>')
-                        outF1.write('\n')
-
-                        outF1.write('\n')
-                     
-                        outF1.write(r'         <endpoint>')
-                        outF1.write('\n')
-                        outF1.write(r'            <id>alfresco-feed</id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <parent-id>alfresco</parent-id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <name>Alfresco Feed</name>')
-                        outF1.write('\n')
-                        outF1.write(r'            <description>Alfresco Feed - supports basic HTTP authentication via the EndPointProxyServlet</description>') 
-                        outF1.write('\n')
-                        outF1.write(r'            <connector-id>alfrescoHeader</connector-id> ')
-                        outF1.write('\n')
-                        outF1.write(r'            <endpoint-url>http://localhost:8080/alfresco/wcs</endpoint-url>')
-                        outF1.write('\n')
-                        outF1.write(r'            <identity>user</identity>')
-                        outF1.write('\n')
-                        outF1.write(r'            <external-auth>true</external-auth>')
-                        outF1.write('\n')
-                        outF1.write(r'         </endpoint>')
-                        outF1.write('\n')
-
-                        outF1.write('\n')
-                     
-                        outF1.write(r'         <endpoint>')
-                        outF1.write('\n')
-                        outF1.write(r'            <id>alfresco-api</id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <parent-id>alfresco</parent-id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <name>Alfresco Public API - user access</name>')
-                        outF1.write('\n')
-                        outF1.write(r'            <description>Access to Alfresco Repository Public API that require user authentication.')
-                        outF1.write('\n')
-                        outF1.write(r'                         This makes use of the authentication that is provided by parent \'alfresco\' endpoint.</description>')
-                        outF1.write('\n')
-                        outF1.write(r'            <connector-id>alfrescoHeader</connector-id>')
-                        outF1.write('\n')
-                        outF1.write(r'            <endpoint-url>http://localhost:8080/alfresco/api</endpoint-url>')
-                        outF1.write('\n')
-                        outF1.write(r'            <identity>user</identity>')
-                        outF1.write('\n')
-                        outF1.write(r'            <external-auth>true</external-auth>')
-                        outF1.write('\n')
-                        outF1.write(r'         </endpoint>')
-                        outF1.write('\n')
-                        outF1.write(r'      </remote>')
-                        outF1.write('\n')
-                        outF1.write(r'   </config>')
-                        outF1.write('\n')
-                        
-                        
-                    else:
-                        outF1.write(line)
+                elif (r'share.host=' in line):
+                    line = shareHost
+                    outF0.write(line+'\n')    
                     
-                inF1.close()
-                outF1.close()
+                else:
+                    outF0.write(line)
                 
-                
-                
-
-            #modify the java.security to point to the java.login.config
+            inF0.close()
+            outF0.close()
 
 
-            originalLoginConfigUrl=r'#login.config.url.1=file:${user.home}/.java.login.config'
-            updatedLoginConfigUrl=r'login.config.url.1=file:${java.home}/lib/security/java.login.config'
 
 
-            javaSecuritySource=pathI+r'\java\lib\security\java.security'
-            javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
+        with open(gloPropsSource, 'a') as f0:
+            f0.write('\n\n\n\n\n###KERB###')
+            
+            f0.write('\n\nkerberos.authentication.realm='+uDomainI+'')
+            f0.write('\nkerberos.authentication.authenticateCIFS=false')
+            f0.write('\nkerberos.authentication.sso.enabled=true')
+            f0.write('\nkerberos.authentication.http.password='+httpPasswordI+'')
+            f0.write('\nkerberos.authentication.stripUsernameSuffix=true')
+            f0.write('\nkerberos.authentication.browser.ticketLogons=true')
 
-            shutil.copy(javaSecuritySource, javaSecurityOriginalCopy)
+            f0.write('\n\n\n\n\n###LDAP###')
+            f0.write('\n\nauthentication.chain=kerberos1:kerberos,alfrescoNtlm1:alfrescoNtlm')
+            f0.write('\nldap.authentication.active=true')
+            f0.write('\nldap.authentication.allowGuestLogin=false')
+            f0.write('\nldap.authentication.userNameFormat=%s@'+domainI+'')
+            f0.write('\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
+            f0.write('\nldap.synchronization.java.naming.security.principal='+ldapAdmin+'@'+domainI+'')
+            f0.write('\nldap.synchronization.java.naming.security.credentials='+ldapAdminPass+'')
+            f0.write('\nldap.synchronization.groupSearchBase='+ldapGroupBase)
+            f0.write('\nldap.synchronization.userSearchBase='+ldapUserBase)
+            f0.write('\nsynchronization.syncOnStartup=true')
+            f0.write('\nsynchronization.allowDeletions=false')
+            f0.write('\nsynchronization.synchronizeChangesOnly=false')
+            f0.write('\nldap.synchronization.userIdAttributeName=sAMAccountName')
+            f0.write('\nldap.synchronization.personQuery=(objectClass\=user)')
+            f0.write('\nldap.synchronization.groupQuery=(objectClass\=group)')
+            
+            f0.close()
 
 
-            with open(javaSecurityOriginalCopy) as inF2, open(javaSecuritySource, 'w') as outF2:
-                for line in inF2:
-                
-                    if (r'login.config.url.1' in line):
-                        line = updatedLoginConfigUrl
-                        outF2.write(line)
-                        
-                    else:
-                        outF2.write(line)
+
+
+        #copy the current share-config-custom.xml and modify the active cofiguration
+
+        shareConfigSource=pathI+r'\tomcat\shared\classes\alfresco\web-extension\share-config-custom.xml'
+        shareConfigOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco\web-extension\share-config-custom.xml.original'
+
+        shutil.copy(shareConfigSource, shareConfigOriginalCopy)
+
+        kerbPassword = r'         <password>'+httpPasswordI+r'</password>'
+        kerbRealm = r'         <realm>'+uDomainI+'</realm>'
+        kerbSpn=r'         <endpoint-spn>HTTP/'+alfServerI+'@'+uDomainI+'</endpoint-spn>'
+
+
+        with open(shareConfigOriginalCopy) as inF1, open(shareConfigSource, 'w') as outF1:
+            for line in inF1:
+            
+                if (r'condition="KerberosDisabled"' in line):
+                    line = r'   <config evaluator="string-compare" condition="Kerberos" replace="true">'
+                    outF1.write(line+'\n')
                     
-                inF2.close()
-                outF2.close()
-                
-                
-                
-                
-                
-            #Create the java.login.config and populate
+                elif (r'<password>' in line):
+                    line = kerbPassword
+                    outF1.write(line+'\n') 
 
-            javaLoginConfigPath=pathI+r'\java\lib\security'
-            javaLoginConfigFile=r'java.login.config'
+                elif (r'</realm>' in line):
+                    line = kerbRealm
+                    outF1.write(line+'\n')
 
-            with open(os.path.join(javaLoginConfigPath, javaLoginConfigFile), 'w') as f3:
+                elif (r'<endpoint-spn>' in line):
+                    line = kerbSpn
+                    outF1.write(line+'\n')
+
+                elif (r'<!-- For production environment set verify-hostname to true.-->' in line):
+                    line = r'   <!-- For production environment set verify-hostname to true.-->'
+                    outF1.write(line+'\n')
+                    outF1.write('\n')
+                    
+
+                    outF1.write(r'    <config evaluator="string-compare" condition="Remote">')
+                    outF1.write('\n')
+                    outF1.write(r'      <remote>')
+                    outF1.write('\n')
+                    outF1.write(r'         <ssl-config>')
+                    outF1.write('\n')
+                    outF1.write(r'            <keystore-path>alfresco/web-extension/alfresco-system.p12</keystore-path>')
+                    outF1.write('\n')
+                    outF1.write(r'            <keystore-type>pkcs12</keystore-type>')
+                    outF1.write('\n')
+                    outF1.write(r'            <keystore-password>alfresco-system</keystore-password>')
+                    outF1.write('\n')
+
+                    outF1.write('\n')
+
+                    outF1.write(r'            <truststore-path>alfresco/web-extension/ssl-truststore</truststore-path>')
+                    outF1.write('\n')
+                    outF1.write(r'            <truststore-type>JCEKS</truststore-type>')
+                    outF1.write('\n')
+                    outF1.write(r'            <truststore-password>password</truststore-password>')
+                    outF1.write('\n')
+
+                    outF1.write('\n')
+
+                    outF1.write(r'            <verify-hostname>true</verify-hostname>')
+                    outF1.write('\n')
+                    outF1.write(r'         </ssl-config>')
+                    outF1.write('\n')
+
+                    outF1.write('\n')
+
+                    outF1.write(r'         <connector>')
+                    outF1.write('\n')
+                    outF1.write(r'            <id>alfrescoCookie</id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <name>Alfresco Connector</name>')
+                    outF1.write('\n')
+                    outF1.write(r'            <description>Connects to an Alfresco instance using cookie-based authentication</description>')
+                    outF1.write('\n')
+                    outF1.write(r'            <class>org.alfresco.web.site.servlet.SlingshotAlfrescoConnector</class>')
+                    outF1.write('\n')
+                    outF1.write(r'         </connector>')
+                    outF1.write('\n')
+
+                    outF1.write('\n')
+                 
+                    outF1.write(r'         <connector>')
+                    outF1.write('\n')
+                    outF1.write(r'            <id>alfrescoHeader</id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <name>Alfresco Connector</name>')
+                    outF1.write('\n')
+                    outF1.write(r'            <description>Connects to an Alfresco instance using header and cookie-based authentication</description>')
+                    outF1.write('\n')
+                    outF1.write(r'            <class>org.alfresco.web.site.servlet.SlingshotAlfrescoConnector</class>')
+                    outF1.write('\n')
+                    outF1.write(r'            <userHeader>SsoUserHeader</userHeader>')
+                    outF1.write('\n')
+                    outF1.write(r'         </connector>')
+                    outF1.write('\n')
+
+                    outF1.write('\n')
+
+                    outF1.write(r'         <endpoint>')
+                    outF1.write('\n')
+                    outF1.write(r'            <id>alfresco</id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <name>Alfresco - user access</name>')
+                    outF1.write('\n')
+                    outF1.write(r'            <description>Access to Alfresco Repository WebScripts that require user authentication</description>')
+                    outF1.write('\n')
+                    outF1.write(r'            <connector-id>alfrescoCookie</connector-id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <endpoint-url>http://localhost:8080/alfresco/wcs</endpoint-url>')
+                    outF1.write('\n')
+                    outF1.write(r'            <identity>user</identity>')
+                    outF1.write('\n')
+                    outF1.write(r'            <external-auth>true</external-auth>')
+                    outF1.write('\n')
+                    outF1.write(r'         </endpoint>')
+                    outF1.write('\n')
+
+                    outF1.write('\n')
+                 
+                    outF1.write(r'         <endpoint>')
+                    outF1.write('\n')
+                    outF1.write(r'            <id>alfresco-feed</id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <parent-id>alfresco</parent-id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <name>Alfresco Feed</name>')
+                    outF1.write('\n')
+                    outF1.write(r'            <description>Alfresco Feed - supports basic HTTP authentication via the EndPointProxyServlet</description>') 
+                    outF1.write('\n')
+                    outF1.write(r'            <connector-id>alfrescoHeader</connector-id> ')
+                    outF1.write('\n')
+                    outF1.write(r'            <endpoint-url>http://localhost:8080/alfresco/wcs</endpoint-url>')
+                    outF1.write('\n')
+                    outF1.write(r'            <identity>user</identity>')
+                    outF1.write('\n')
+                    outF1.write(r'            <external-auth>true</external-auth>')
+                    outF1.write('\n')
+                    outF1.write(r'         </endpoint>')
+                    outF1.write('\n')
+
+                    outF1.write('\n')
+                 
+                    outF1.write(r'         <endpoint>')
+                    outF1.write('\n')
+                    outF1.write(r'            <id>alfresco-api</id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <parent-id>alfresco</parent-id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <name>Alfresco Public API - user access</name>')
+                    outF1.write('\n')
+                    outF1.write(r'            <description>Access to Alfresco Repository Public API that require user authentication.')
+                    outF1.write('\n')
+                    outF1.write(r'                         This makes use of the authentication that is provided by parent \'alfresco\' endpoint.</description>')
+                    outF1.write('\n')
+                    outF1.write(r'            <connector-id>alfrescoHeader</connector-id>')
+                    outF1.write('\n')
+                    outF1.write(r'            <endpoint-url>http://localhost:8080/alfresco/api</endpoint-url>')
+                    outF1.write('\n')
+                    outF1.write(r'            <identity>user</identity>')
+                    outF1.write('\n')
+                    outF1.write(r'            <external-auth>true</external-auth>')
+                    outF1.write('\n')
+                    outF1.write(r'         </endpoint>')
+                    outF1.write('\n')
+                    outF1.write(r'      </remote>')
+                    outF1.write('\n')
+                    outF1.write(r'   </config>')
+                    outF1.write('\n')
+                    
+                    
+                else:
+                    outF1.write(line)
                 
-                f3.write('Alfresco {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
-                f3.write('\n};')
+            inF1.close()
+            outF1.close()
+            
+            
+            
 
-                f3.write('\n\nAlfrescoCIFS {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
-                f3.write('\nstoreKey=true')
-                f3.write('\nuseKeyTab=true\n')
-                f3.write(r'keyTab="'+keytabPath+'\\'+cifsKeytabName+r'"')
-                f3.write('\nprincipal="cifs/'+alfServerI+'@'+uDomainI+'";')
-                f3.write('\n};')
+        #modify the java.security to point to the java.login.config
+        originalLoginConfigUrl=r'#login.config.url.1=file:${user.home}/.java.login.config'
+        updatedLoginConfigUrl=r'login.config.url.1=file:${java.home}/lib/security/java.login.config'
 
-                f3.write('\n\nAlfrescoHTTP {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
-                f3.write('\nstoreKey=true')
-                f3.write('\nuseKeyTab=true\n')
-                f3.write(r'keyTab="'+keytabPath+'\\'+httpKeytabName+r'"')
-                f3.write('\nprincipal="HTTP/'+alfServerI+'@'+uDomainI+'";')
-                f3.write('\n};')
 
-                f3.write('\n\nShareHTTP {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
-                f3.write('\nstoreKey=true')
-                f3.write('\nuseKeyTab=true\n')
-                f3.write(r'keyTab="'+keytabPath+'\\'+httpKeytabName+r'"')
-                f3.write('\nprincipal="HTTP/'+alfServerI+'@'+uDomainI+'";')
-                f3.write('\n};')
+        javaSecuritySource=pathI+r'\java\lib\security\java.security'
+        javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
 
-                f3.write('\n\ncom.sun.net.ssl.client {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
-                f3.write('\n};')
+        shutil.copy(javaSecuritySource, javaSecurityOriginalCopy)
 
-                f3.write('\n\nother {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
-                f3.write('\n};')
+
+        with open(javaSecurityOriginalCopy) as inF2, open(javaSecuritySource, 'w') as outF2:
+            for line in inF2:
+            
+                if (r'login.config.url.1' in line):
+                    line = updatedLoginConfigUrl
+                    outF2.write(line)
+                    
+                else:
+                    outF2.write(line)
                 
-                
-                f3.close()
-                
-                
-                
-                
-        elif (kerberosR==True):
+            inF2.close()
+            outF2.close()
+            
+            
+            
+            
+            
+        #Create the java.login.config and populate
 
-            gloPropsCurrent=pathI+r'\tomcat\shared\classes\alfresco-global.properties'
-            gloPropsOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco-global.properties.original'
+        javaLoginConfigPath=pathI+r'\java\lib\security'
+        javaLoginConfigFile=r'java.login.config'
 
+        with open(os.path.join(javaLoginConfigPath, javaLoginConfigFile), 'w') as f3:
             
-            shutil.copy(gloPropsOriginalCopy, gloPropsCurrent)
-            
-            os.remove(gloPropsOriginalCopy)
-            
-            
-            
-            shareConfigCurrent=pathI+r'\tomcat\shared\classes\alfresco\web-extension\share-config-custom.xml'
-            shareConfigOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco\web-extension\share-config-custom.xml.original'
+            f3.write('Alfresco {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+            f3.write('\n};')
 
+            f3.write('\n\nAlfrescoCIFS {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
+            f3.write('\nstoreKey=true')
+            f3.write('\nuseKeyTab=true\n')
+            f3.write(r'keyTab="'+keytabPath+'\\'+cifsKeytabName+r'"')
+            f3.write('\nprincipal="cifs/'+alfServerI+'@'+uDomainI+'";')
+            f3.write('\n};')
+
+            f3.write('\n\nAlfrescoHTTP {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
+            f3.write('\nstoreKey=true')
+            f3.write('\nuseKeyTab=true\n')
+            f3.write(r'keyTab="'+keytabPath+'\\'+httpKeytabName+r'"')
+            f3.write('\nprincipal="HTTP/'+alfServerI+'@'+uDomainI+'";')
+            f3.write('\n};')
+
+            f3.write('\n\nShareHTTP {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
+            f3.write('\nstoreKey=true')
+            f3.write('\nuseKeyTab=true\n')
+            f3.write(r'keyTab="'+keytabPath+'\\'+httpKeytabName+r'"')
+            f3.write('\nprincipal="HTTP/'+alfServerI+'@'+uDomainI+'";')
+            f3.write('\n};')
+
+            f3.write('\n\ncom.sun.net.ssl.client {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+            f3.write('\n};')
+
+            f3.write('\n\nother {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+            f3.write('\n};')
             
-            shutil.copy(shareConfigOriginalCopy, shareConfigCurrent)
             
-            os.remove(shareConfigOriginalCopy)
-            
-            
-            
-            javaSecurityCurrent=pathI+r'\java\lib\security\java.security'
-            javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
-            
-            shutil.copy(javaSecurityOriginalCopy, javaSecurityCurrent)
-            
-            os.remove(javaSecurityOriginalCopy)
-            
-            
-            
-            javaLoginConfigPath=pathI+r'\java\lib\security\java.login.config'
-            
-            os.remove(javaLoginConfigPath)
+            f3.close()
+
             
     ####################################
     #End Alfresco Kerberos run function#
@@ -1252,57 +1149,57 @@ class Application(Frame):
     
         
     
-        #KRB5 is common between APS and ACS which is why it is at the end of the file
+        # #KRB5 is common between APS and ACS which is why it is at the end of the file
     
-        #create krb5.ini
-        if (krb5iniI==True):
+        # #create krb5.ini
+        # if (krb5iniI==True):
 
-            krb5iniPath=r'C:\Windows'
-            krb5iniFile=r'krb5.ini'
+            # krb5iniPath=r'C:\Windows'
+            # krb5iniFile=r'krb5.ini'
 
-            #simply create the file line by line adding the pulled varaibles from earlier.
-            with open(os.path.join(krb5iniPath, krb5iniFile), 'w') as k5:
+            # #simply create the file line by line adding the pulled varaibles from earlier.
+            # with open(os.path.join(krb5iniPath, krb5iniFile), 'w') as k5:
             
             
-                k5.write(r'[logging]')
-                k5.write('\n')
-                k5.write(r' default = FILE:C:\Windows\krb5libs.log')
-                k5.write('\n')        
-                k5.write(r' kdc = FILE:C:\Windows\krb5kdc.log')
-                k5.write('\n')        
-                k5.write(r' admin_server = FILE:C:\Windows\kadmind.log')
-                k5.write('\n\n')
+                # k5.write(r'[logging]')
+                # k5.write('\n')
+                # k5.write(r' default = FILE:C:\Windows\krb5libs.log')
+                # k5.write('\n')        
+                # k5.write(r' kdc = FILE:C:\Windows\krb5kdc.log')
+                # k5.write('\n')        
+                # k5.write(r' admin_server = FILE:C:\Windows\kadmind.log')
+                # k5.write('\n\n')
                 
-                k5.write(r'[libdefaults]')
-                k5.write('\n')        
-                k5.write(r' default_realm = '+uDomainI+'')
-                k5.write('\n')        
-                k5.write(r' dns_lookup_realm = true')
-                k5.write('\n')        
-                k5.write(r' dns_lookup_kdc = true')
-                k5.write('\n') 
-                k5.write(r' ticket_lifetime = 24h')
-                k5.write('\n') 
-                k5.write(r' renew_lifetime = 7d')
-                k5.write('\n') 
-                k5.write(r' forwardable = true')
-                k5.write('\n') 
-                k5.write(r' default_tkt_enctypes = rc4-hmac')
-                k5.write('\n') 
-                k5.write(r' default_tgs_enctypes = rc4-hmac')
-                k5.write('\n\n') 
+                # k5.write(r'[libdefaults]')
+                # k5.write('\n')        
+                # k5.write(r' default_realm = '+uDomainI+'')
+                # k5.write('\n')        
+                # k5.write(r' dns_lookup_realm = true')
+                # k5.write('\n')        
+                # k5.write(r' dns_lookup_kdc = true')
+                # k5.write('\n') 
+                # k5.write(r' ticket_lifetime = 24h')
+                # k5.write('\n') 
+                # k5.write(r' renew_lifetime = 7d')
+                # k5.write('\n') 
+                # k5.write(r' forwardable = true')
+                # k5.write('\n') 
+                # k5.write(r' default_tkt_enctypes = rc4-hmac')
+                # k5.write('\n') 
+                # k5.write(r' default_tgs_enctypes = rc4-hmac')
+                # k5.write('\n\n') 
 
-                k5.write(r'[realms]')
-                k5.write('\n') 
-                k5.write(r' '+uDomainI+r' = {')
-                k5.write('\n') 
-                k5.write(r'  kdc = '+ldapFQDN)
-                k5.write('\n') 
-                k5.write(r'  admin_server = '+ldapFQDN)
-                k5.write('\n') 
-                k5.write(r' }')
+                # k5.write(r'[realms]')
+                # k5.write('\n') 
+                # k5.write(r' '+uDomainI+r' = {')
+                # k5.write('\n') 
+                # k5.write(r'  kdc = '+ldapFQDN)
+                # k5.write('\n') 
+                # k5.write(r'  admin_server = '+ldapFQDN)
+                # k5.write('\n') 
+                # k5.write(r' }')
          
-                k5.close()
+                # k5.close()
                 
                 
         #call to create krb5.ini
@@ -1321,7 +1218,7 @@ class Application(Frame):
     def runAPS(self):
 
     #############################################################################################
-    #All below code is for when one of the two Activiti options are selected when run is clicked#
+    #All below code is for when APS run is clicked#
     #############################################################################################
     
     
@@ -1331,50 +1228,34 @@ class Application(Frame):
         #get set path
         pathI = self.dirAPS.get()
         
-        #if for if the activiti Kerberos checkbox is true, get values of other checkboxes within this section
-        if (self.checkBoxKerberosActivitiI.get()==True):
-            kerberosActivitiI=True
-            KerberosActivitiR=False
 
-            krb5iniI= self.checkBoxKrb5.get()
-            activeDirectoryActivitiI=self.checkBoxActivitiAD.get()
+        #get APS checkbox values
+        krb5iniI= self.checkBoxKrb5APS.get()
+        activeDirectoryActivitiI=self.checkBoxActivitiAD.get()
             
-            #set two ACS options to False            
-            kerberosI=False
-            kerberosR=False
-            
-        # if activiti kerberos rollback is selected, set everything else to false
-        elif (self.checkBoxKerberosActivitiR.get()==True):
-            kerberosActivitiR=True
-            kerberosActivitiI=False
-            krb5iniI=False
-            activeDirectoryI=False
-            
-            #set two ACS options to False            
-            kerberosI=False
-            kerberosR=False
             
 
-        #for if the kerberos activiti checkbox is checked, pull label values into variables
-        if (kerberosActivitiI==True):
-            alfServerI = self.serverNameAPS.get()
-            ldapFQDN=self.ldapFqdnAPS.get()
-            ldapAdmin=self.adminNameAPS.get()
-            ldapAdminPass=self.adminPassAPS.get()
-            ldapGroupBase=self.groupBaseAPS.get()
-            ldapUserBase=self.userBaseAPS.get()
-            keytabPath=self.keytabPathAPS.get()
-            httpKeytabName=self.httpKeytabAPS.get()
+            
+
+        #pull label values into variables
+        alfServerI = self.serverNameAPS.get()
+        ldapFQDN=self.ldapFqdnAPS.get()
+        ldapAdmin=self.adminNameAPS.get()
+        ldapAdminPass=self.adminPassAPS.get()
+        ldapGroupBase=self.groupBaseAPS.get()
+        ldapUserBase=self.userBaseAPS.get()
+        keytabPath=self.keytabPathAPS.get()
+        httpKeytabName=self.httpKeytabAPS.get()
 
 
-            #strip domain from ldapFQDN
-            start=ldapFQDN.find('.')+1
-            domainI = ldapFQDN[start:]
-            #domain I to uppercase for realm
-            uDomainI = domainI.upper()
-            #string text after period in domain for domainnetbios
-            end=uDomainI.find('.')
-            realm=uDomainI[0:end]
+        #strip domain from ldapFQDN
+        start=ldapFQDN.find('.')+1
+        domainI = ldapFQDN[start:]
+        #domain I to uppercase for realm
+        uDomainI = domainI.upper()
+        #string text after period in domain for domainnetbios
+        end=uDomainI.find('.')
+        realm=uDomainI[0:end]
 
 
 
@@ -1458,171 +1339,147 @@ class Application(Frame):
             
             
 
-        if (kerberosActivitiI==True):
 
+    
+        #function to replace back slash ( \ ) with forward slash ( / ) in keytab path. Activiti Kerberos will not work with
+        #backslashes in the kerberos.authenticaiton.keytab property when activiti is on windows        
+        keytabPathSlash = keytabPath.replace("\\", "/")
+
+        #copy the current activiti-ldap.properties file and re-write it with only needed lines          
+        activitiLdapSource=pathI+r'\tomcat\lib\activiti-ldap.properties'
+        activitiLdapOriginalCopy=pathI+r'\tomcat\lib\activiti-ldap.properties.original'
+
+        shutil.copy(activitiLdapSource, activitiLdapOriginalCopy)
+
+
+
+        with open(activitiLdapSource, 'w') as f0:
+
+            f0.write('###Enable LDAP###')
+            f0.write('\nldap.authentication.enabled=true')
+            f0.write('\nldap.authentication.casesensitive=false')
+            f0.write('\nldap.allow.database.authenticaion.fallback=true\n')
+            
+            f0.write('\n###Enable Synchronization###')
+            f0.write('\nldap.synchronization.full.enabled=true')
+            f0.write('\nldap.synchronization.full.cronExpression=0 0/3 * 1/1 * ?')
+            f0.write('\nldap.synchronization.differential.enabled=false')
+            f0.write('\nldap.synchronization.differential.cronExpression=0 0/2 * 1/1 * ?\n')
+            
+            f0.write('\n###Connection Settings###')                
+            f0.write('\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
+            f0.write('\nldap.synchronization.java.naming.security.principal='+ldapAdmin+'@'+domainI+'')
+            f0.write('\nldap.synchronization.java.naming.security.credentials='+ldapAdminPass)                
+            f0.write('\nldap.synchronization.java.naming.security.authentication=simple')
+            f0.write('\nldap.authentication.java.naming.factory.initial=com.sun.jndi.ldap.LdapCtxFactory')
+            f0.write('\nldap.synchronization.java.naming.referral=follow\n')
+            
+            f0.write('\n###User Sync Settings###')                
+            f0.write('\nldap.synchronization.userSearchBase='+ldapUserBase)
+            f0.write('\nldap.synchronization.personQuery=(objectClass\=user)')   
+            f0.write('\nldap.synchronization.personDifferentialQuery=(&(objectclass\=user)(!(whenChanged<\={0})))')
+            f0.write('\nldap.synchronization.userIdAttributeName=sAMAccountName')
+            f0.write('\nldap.synchronization.userFirstNameAttributeName=givenName')
+            f0.write('\nldap.synchronization.userLastNameAttributeName=sn')
+            f0.write('\nldap.synchronization.userEmailAttributeName=mail')
+            f0.write('\nldap.synchronization.userType=user\n')
+            
+            f0.write('\n###Group Sync Settings###')
+            f0.write('\nldap.synchronization.groupSearchBase='+ldapGroupBase)
+            f0.write('\nldap.synchronization.groupQuery=(objectClass\=group)')
+            f0.write('\nldap.synchronization.groupDifferentialQuery=(&(objectclass\=group)(!(whenChanged<\={0})))')
+            f0.write('\nldap.synchronization.groupIdAttributeName=cn')
+            f0.write('\nldap.synchronization.groupMemberAttributeName=member')
+            f0.write('\nldap.synchronization.groupType=group\n')
+            
+            f0.write('\n###Generic Attribut Settings###')
+            f0.write('\nldap.synchronization.distinguishedNameAttributeName=dn')
+            f0.write('\nldap.synchronization.modifyTimestampAttributeName=whenChanged')
+            f0.write('\nldap.synchronization.createTimestampAttributeName=whenCreated')
+            f0.write('\nldap.synchronization.timestampFormat=yyyyMMddHHmmss\'.0Z\'')
+            f0.write('\nldap.synchronization.timestampFormat.locale.language=en')
+            f0.write('\nldap.synchronization.timestampFormat.locale.country=US')
+            f0.write('\nldap.synchronization.timestampFormat.timezone=GMT\n')
+            
+            f0.write('\n###Kerberos Settings###')
+            f0.write('\nkerberos.authentication.enabled=true')
+            f0.write('\nkerberos.authentication.principal=HTTP/'+alfServerI+'@'+uDomainI)
+            f0.write('\nkerberos.authentication.keytab='+keytabPathSlash+'/'+httpKeytabName)
+            f0.write('\n')
+            f0.write(r'kerberos.authentication.krb5.conf=C:/Windows/krb5.ini')
+            f0.write('\nkerberos.allow.ldap.authentication.fallback=true')
+            f0.write('\nkerberos.allow.database.authentication.fallback=true')
+            f0.write('\nkerberos.allow.samAccountName.authentication=true')
+            f0.write('\nsecurity.authentication.use-externalid=true')
+                
+            f0.close()
         
-            #function to replace back slash ( \ ) with forward slash ( / ) in keytab path. Activiti Kerberos will not work with
-            #backslashes in the kerberos.authenticaiton.keytab property when activiti is on windows        
-            keytabPathSlash = keytabPath.replace("\\", "/")
-
-            #copy the current activiti-ldap.properties file and re-write it with only needed lines          
-            activitiLdapSource=pathI+r'\tomcat\lib\activiti-ldap.properties'
-            activitiLdapOriginalCopy=pathI+r'\tomcat\lib\activiti-ldap.properties.original'
-
-            shutil.copy(activitiLdapSource, activitiLdapOriginalCopy)
-
-
-
-            with open(activitiLdapSource, 'w') as f0:
-
-                f0.write('###Enable LDAP###')
-                f0.write('\nldap.authentication.enabled=true')
-                f0.write('\nldap.authentication.casesensitive=false')
-                f0.write('\nldap.allow.database.authenticaion.fallback=true\n')
-                
-                f0.write('\n###Enable Synchronization###')
-                f0.write('\nldap.synchronization.full.enabled=true')
-                f0.write('\nldap.synchronization.full.cronExpression=0 0/3 * 1/1 * ?')
-                f0.write('\nldap.synchronization.differential.enabled=false')
-                f0.write('\nldap.synchronization.differential.cronExpression=0 0/2 * 1/1 * ?\n')
-                
-                f0.write('\n###Connection Settings###')                
-                f0.write('\nldap.authentication.java.naming.provider.url=ldap://'+ldapFQDN+':389')
-                f0.write('\nldap.synchronization.java.naming.security.principal='+ldapAdmin+'@'+domainI+'')
-                f0.write('\nldap.synchronization.java.naming.security.credentials='+ldapAdminPass)                
-                f0.write('\nldap.synchronization.java.naming.security.authentication=simple')
-                f0.write('\nldap.authentication.java.naming.factory.initial=com.sun.jndi.ldap.LdapCtxFactory')
-                f0.write('\nldap.synchronization.java.naming.referral=follow\n')
-                
-                f0.write('\n###User Sync Settings###')                
-                f0.write('\nldap.synchronization.userSearchBase='+ldapUserBase)
-                f0.write('\nldap.synchronization.personQuery=(objectClass\=user)')   
-                f0.write('\nldap.synchronization.personDifferentialQuery=(&(objectclass\=user)(!(whenChanged<\={0})))')
-                f0.write('\nldap.synchronization.userIdAttributeName=sAMAccountName')
-                f0.write('\nldap.synchronization.userFirstNameAttributeName=givenName')
-                f0.write('\nldap.synchronization.userLastNameAttributeName=sn')
-                f0.write('\nldap.synchronization.userEmailAttributeName=mail')
-                f0.write('\nldap.synchronization.userType=user\n')
-                
-                f0.write('\n###Group Sync Settings###')
-                f0.write('\nldap.synchronization.groupSearchBase='+ldapGroupBase)
-                f0.write('\nldap.synchronization.groupQuery=(objectClass\=group)')
-                f0.write('\nldap.synchronization.groupDifferentialQuery=(&(objectclass\=group)(!(whenChanged<\={0})))')
-                f0.write('\nldap.synchronization.groupIdAttributeName=cn')
-                f0.write('\nldap.synchronization.groupMemberAttributeName=member')
-                f0.write('\nldap.synchronization.groupType=group\n')
-                
-                f0.write('\n###Generic Attribut Settings###')
-                f0.write('\nldap.synchronization.distinguishedNameAttributeName=dn')
-                f0.write('\nldap.synchronization.modifyTimestampAttributeName=whenChanged')
-                f0.write('\nldap.synchronization.createTimestampAttributeName=whenCreated')
-                f0.write('\nldap.synchronization.timestampFormat=yyyyMMddHHmmss\'.0Z\'')
-                f0.write('\nldap.synchronization.timestampFormat.locale.language=en')
-                f0.write('\nldap.synchronization.timestampFormat.locale.country=US')
-                f0.write('\nldap.synchronization.timestampFormat.timezone=GMT\n')
-                
-                f0.write('\n###Kerberos Settings###')
-                f0.write('\nkerberos.authentication.enabled=true')
-                f0.write('\nkerberos.authentication.principal=HTTP/'+alfServerI+'@'+uDomainI)
-                f0.write('\nkerberos.authentication.keytab='+keytabPathSlash+'/'+httpKeytabName)
-                f0.write('\n')
-                f0.write(r'kerberos.authentication.krb5.conf=C:/Windows/krb5.ini')
-                f0.write('\nkerberos.allow.ldap.authentication.fallback=true')
-                f0.write('\nkerberos.allow.database.authentication.fallback=true')
-                f0.write('\nkerberos.allow.samAccountName.authentication=true')
-                f0.write('\nsecurity.authentication.use-externalid=true')
-                    
-                f0.close()
             
-                
-                
+            
 
-            #modify the java.security to point to the java.login.config
-
-
-            originalLoginConfigUrl=r'#login.config.url.1=file:${user.home}/.java.login.config'
-            updatedLoginConfigUrl=r'login.config.url.1=file:${java.home}/lib/security/java.login.config'
+        #modify the java.security to point to the java.login.config
 
 
-            javaSecuritySource=pathI+r'\java\lib\security\java.security'
-            javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
-
-            shutil.copy(javaSecuritySource, javaSecurityOriginalCopy)
+        originalLoginConfigUrl=r'#login.config.url.1=file:${user.home}/.java.login.config'
+        updatedLoginConfigUrl=r'login.config.url.1=file:${java.home}/lib/security/java.login.config'
 
 
-            with open(javaSecurityOriginalCopy) as inF2, open(javaSecuritySource, 'w') as outF2:
-                for line in inF2:
-                
-                    if (r'login.config.url.1' in line):
-                        line = updatedLoginConfigUrl
-                        outF2.write(line)
-                        
-                    else:
-                        outF2.write(line)
+        javaSecuritySource=pathI+r'\java\lib\security\java.security'
+        javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
+
+        shutil.copy(javaSecuritySource, javaSecurityOriginalCopy)
+
+
+        with open(javaSecurityOriginalCopy) as inF2, open(javaSecuritySource, 'w') as outF2:
+            for line in inF2:
+            
+                if (r'login.config.url.1' in line):
+                    line = updatedLoginConfigUrl
+                    outF2.write(line)
                     
-                inF2.close()
-                outF2.close()
+                else:
+                    outF2.write(line)
                 
-                
-                
-                
-                
-            #Create the java.login.config and populate
+            inF2.close()
+            outF2.close()
+            
+            
+            
+            
+            
+        #Create the java.login.config and populate
 
-            javaLoginConfigPath=pathI+r'\java\lib\security'
-            javaLoginConfigFile=r'java.login.config'
+        javaLoginConfigPath=pathI+r'\java\lib\security'
+        javaLoginConfigFile=r'java.login.config'
 
-            with open(os.path.join(javaLoginConfigPath, javaLoginConfigFile), 'w') as f3:
-                
-                f3.write('Alfresco {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
-                f3.write('\n};')
+        with open(os.path.join(javaLoginConfigPath, javaLoginConfigFile), 'w') as f3:
+            
+            f3.write('Alfresco {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+            f3.write('\n};')
 
-                f3.write('\n\nAlfrescoHTTP {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
-                f3.write('\nstoreKey=true')
-                f3.write('\nuseKeyTab=true\n')
-                f3.write(r'keyTab="'+keytabPath+'\\'+httpKeytabName+r'"')
-                f3.write('\nprincipal="HTTP/'+alfServerI+'@'+uDomainI+'";')
-                f3.write('\n};')
+            f3.write('\n\nAlfrescoHTTP {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule required')
+            f3.write('\nstoreKey=true')
+            f3.write('\nuseKeyTab=true\n')
+            f3.write(r'keyTab="'+keytabPath+'\\'+httpKeytabName+r'"')
+            f3.write('\nprincipal="HTTP/'+alfServerI+'@'+uDomainI+'";')
+            f3.write('\n};')
 
-                f3.write('\n\ncom.sun.net.ssl.client {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
-                f3.write('\n};')
+            f3.write('\n\ncom.sun.net.ssl.client {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+            f3.write('\n};')
 
-                f3.write('\n\nother {')
-                f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
-                f3.write('\n};')
-                
-                
-                f3.close()
+            f3.write('\n\nother {')
+            f3.write('\ncom.sun.security.auth.module.Krb5LoginModule sufficient;')
+            f3.write('\n};')
+            
+            
+            f3.close()
                 
                 
         
-        elif (kerberosActivitiR==True):
 
-            activitiLdapCurrent=pathI+r'\tomcat\lib\activiti-ldap.properties'
-            activitiLdapOriginalCopy=pathI+r'\tomcat\lib\activiti-ldap.properties.original'
-
-            
-            shutil.copy(activitiLdapOriginalCopy, activitiLdapCurrent)
-            
-            os.remove(activitiLdapOriginalCopy)
-            
-            
-
-            javaSecurityCurrent=pathI+r'\java\lib\security\java.security'
-            javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
-            
-            shutil.copy(javaSecurityOriginalCopy, javaSecurityCurrent)
-            
-            os.remove(javaSecurityOriginalCopy)
-            
-            
-            
-            javaLoginConfigPath=pathI+r'\java\lib\security\java.login.config'
-            
-            os.remove(javaLoginConfigPath)
             
     ####################################
     #End Activiti Kerberos run function#
@@ -1631,6 +1488,72 @@ class Application(Frame):
         #call to create krb5.ini
         if (krb5iniI==True):
             createKRB5()
+
+            
+
+
+
+
+
+
+
+            
+    #TODO
+    def Rollback_Original(self):
+        
+        #Rollback to the original configuration files in ACS
+        gloPropsCurrent=pathI+r'\tomcat\shared\classes\alfresco-global.properties'
+        gloPropsOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco-global.properties.original'
+        shutil.copy(gloPropsOriginalCopy, gloPropsCurrent)
+        os.remove(gloPropsOriginalCopy)
+        
+        
+        
+        shareConfigCurrent=pathI+r'\tomcat\shared\classes\alfresco\web-extension\share-config-custom.xml'
+        shareConfigOriginalCopy=pathI+r'\tomcat\shared\classes\alfresco\web-extension\share-config-custom.xml.original'
+        shutil.copy(shareConfigOriginalCopy, shareConfigCurrent)
+        os.remove(shareConfigOriginalCopy)
+        
+        
+        
+        javaSecurityCurrent=pathI+r'\java\lib\security\java.security'
+        javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
+        shutil.copy(javaSecurityOriginalCopy, javaSecurityCurrent)
+        os.remove(javaSecurityOriginalCopy)
+        
+        
+        
+        javaLoginConfigPath=pathI+r'\java\lib\security\java.login.config'
+        os.remove(javaLoginConfigPath)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    # TODO        
+    def Rollback_Original_Activiti(self):
+
+
+        activitiLdapCurrent=pathI+r'\tomcat\lib\activiti-ldap.properties'
+        activitiLdapOriginalCopy=pathI+r'\tomcat\lib\activiti-ldap.properties.original'       
+        shutil.copy(activitiLdapOriginalCopy, activitiLdapCurrent)
+        os.remove(activitiLdapOriginalCopy)
+        
+        
+
+        javaSecurityCurrent=pathI+r'\java\lib\security\java.security'
+        javaSecurityOriginalCopy=pathI+r'\java\lib\security\java.security.original'
+        shutil.copy(javaSecurityOriginalCopy, javaSecurityCurrent)
+        os.remove(javaSecurityOriginalCopy)
+        
+        
+        
+        javaLoginConfigPath=pathI+r'\java\lib\security\java.login.config'
+        os.remove(javaLoginConfigPath)
 
 
 
