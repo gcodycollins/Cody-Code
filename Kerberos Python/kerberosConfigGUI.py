@@ -29,18 +29,19 @@
 #
 #Wishlist/future feature tracker for my own personal memory:
 #
-# Noticiations in Python Gui when action is complete.
+# DONE 2.0- Option to Hide ACS/APS options to save screen real-estate.
+# DONE 2.0- Separate run buttons for ACS and APS. No more confusing hidden checkboxes.
 # DONE 2.0- Changing rollbacks from checkbox to its own separate button.
-#  - this is to avoid losing all typed in data if you need to revert
 # DONE 2.0- Data persistence in the label fields if items are unchecked and later checked again.
+# DONE 2.0- Change options to not hide and then display but to grey out options.
+#
+# Noticiations in Python Gui when action is complete.
 # Modifying GUI to show all data. Currently it cuts off text from long input
 # Automated kinit keytab checker. If it doesn't get a ticket, let the UI know.
 # Read from file, button to pull properties in from file and populate UI.
 # Find property files, don't just use hard coded values.
-# DONE 2.0- Change options to not hide and then display but to grey out options.
 # Random password generator button. Populates password fields.
-# DONE 2.0- Option to Hide ACS/APS options to save screen real-estate.
-# DONE 2.0- Separate run buttons for ACS and APS. No more confusing hidden checkboxes.
+# When clicking close, save all current fields to file. On next restart, pull those values.
 #
 ##############################################
 
@@ -311,7 +312,7 @@ class Application(Frame):
         
         
         self.close_button = Button(self, text="Close", command=self.quit)
-        self.close_button.grid(row=104, column =0, sticky =W)
+        self.close_button.grid(row=102, column =0, sticky =E)
         
         
         
@@ -1500,6 +1501,9 @@ class Application(Frame):
             
     #TODO
     def Rollback_Original(self):
+    
+        #get set path
+        pathI = self.dir.get()
         
         #Rollback to the original configuration files in ACS
         gloPropsCurrent=pathI+r'\tomcat\shared\classes\alfresco-global.properties'
@@ -1536,6 +1540,9 @@ class Application(Frame):
         
     # TODO        
     def Rollback_Original_Activiti(self):
+    
+        #get set path
+        pathI = self.dirAPS.get()
 
 
         activitiLdapCurrent=pathI+r'\tomcat\lib\activiti-ldap.properties'
