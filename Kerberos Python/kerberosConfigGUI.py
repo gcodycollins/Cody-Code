@@ -307,7 +307,7 @@ class Application(Frame):
         self.runACS.grid(row=102, column = 0, sticky =W)
         
         self.runAPS = Button(self, text="Run(APS)", command=self.runAPS)
-        self.runAPS.grid(row=103, column = 0, sticky =W)
+        self.runAPS.grid(row=102, column = 0, sticky =W)
         
         
         
@@ -1135,77 +1135,20 @@ class Application(Frame):
             
             
             f3.close()
+            
+            
+            
+                            
+                
+        #call to create krb5.ini
+        if (krb5iniI==True):
+            self.createKRB5("ACS")
 
             
     ####################################
     #End Alfresco Kerberos run function#
     ####################################
 
-    
-    
-    
-    
-    
-    
-    
-        
-    
-        # #KRB5 is common between APS and ACS which is why it is at the end of the file
-    
-        # #create krb5.ini
-        # if (krb5iniI==True):
-
-            # krb5iniPath=r'C:\Windows'
-            # krb5iniFile=r'krb5.ini'
-
-            # #simply create the file line by line adding the pulled varaibles from earlier.
-            # with open(os.path.join(krb5iniPath, krb5iniFile), 'w') as k5:
-            
-            
-                # k5.write(r'[logging]')
-                # k5.write('\n')
-                # k5.write(r' default = FILE:C:\Windows\krb5libs.log')
-                # k5.write('\n')        
-                # k5.write(r' kdc = FILE:C:\Windows\krb5kdc.log')
-                # k5.write('\n')        
-                # k5.write(r' admin_server = FILE:C:\Windows\kadmind.log')
-                # k5.write('\n\n')
-                
-                # k5.write(r'[libdefaults]')
-                # k5.write('\n')        
-                # k5.write(r' default_realm = '+uDomainI+'')
-                # k5.write('\n')        
-                # k5.write(r' dns_lookup_realm = true')
-                # k5.write('\n')        
-                # k5.write(r' dns_lookup_kdc = true')
-                # k5.write('\n') 
-                # k5.write(r' ticket_lifetime = 24h')
-                # k5.write('\n') 
-                # k5.write(r' renew_lifetime = 7d')
-                # k5.write('\n') 
-                # k5.write(r' forwardable = true')
-                # k5.write('\n') 
-                # k5.write(r' default_tkt_enctypes = rc4-hmac')
-                # k5.write('\n') 
-                # k5.write(r' default_tgs_enctypes = rc4-hmac')
-                # k5.write('\n\n') 
-
-                # k5.write(r'[realms]')
-                # k5.write('\n') 
-                # k5.write(r' '+uDomainI+r' = {')
-                # k5.write('\n') 
-                # k5.write(r'  kdc = '+ldapFQDN)
-                # k5.write('\n') 
-                # k5.write(r'  admin_server = '+ldapFQDN)
-                # k5.write('\n') 
-                # k5.write(r' }')
-         
-                # k5.close()
-                
-                
-        #call to create krb5.ini
-        if (krb5iniI==True):
-            createKRB5()
                 
                 
                 
@@ -1480,18 +1423,18 @@ class Application(Frame):
                 
                 
         
-
+                
+                
+        #call to create krb5.ini
+        if (krb5iniI==True):
+            self.createKRB5("APS")
             
     ####################################
     #End Activiti Kerberos run function#
     ####################################
-    
-        #call to create krb5.ini
-        if (krb5iniI==True):
-            createKRB5()
+
 
             
-
 
 
 
@@ -1499,7 +1442,7 @@ class Application(Frame):
 
 
             
-    #TODO
+    #Rollback Alfresco to original property files.
     def Rollback_Original(self):
     
         #get set path
@@ -1538,7 +1481,7 @@ class Application(Frame):
         
         
         
-    # TODO        
+    # Rollback Activiti to Original files        
     def Rollback_Original_Activiti(self):
     
         #get set path
@@ -1571,11 +1514,35 @@ class Application(Frame):
 
 
 
-    def createKRB5(self):
+    def createKRB5(self, product):
         
     #KRB5 is common between APS and ACS which is why it is at the end of the file in its own function
     
     #create krb5.ini
+    
+        if (product=="ACS"):
+        
+            ldapFQDN=self.ldapFqdn.get()
+            
+            
+            
+            
+        if (product=="APS"):
+        
+            ldapFQDN=self.ldapFqdnAPS.get()
+
+
+        #strip domain from ldapFQDN
+        start=ldapFQDN.find('.')+1
+        domainI = ldapFQDN[start:]
+        #domain I to uppercase for realm
+        uDomainI = domainI.upper()
+        #string text after period in domain for domainnetbios
+        end=uDomainI.find('.')
+        realm=uDomainI[0:end]
+
+        
+            
     
 
         krb5iniPath=r'C:\Windows'
