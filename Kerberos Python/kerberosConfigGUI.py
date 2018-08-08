@@ -34,21 +34,26 @@
 # DONE 2.0- Changing rollbacks from checkbox to its own separate button.
 # DONE 2.0- Data persistence in the label fields if items are unchecked and later checked again.
 # DONE 2.0- Change options to not hide and then display but to grey out options.
+# DONE 2.0- Modifying GUI to show all data. Currently it cuts off text from long input
+# DONE 2.0- Random password generator button. Populates password fields.
 #
 # Noticiations in Python Gui when action is complete.
-# Modifying GUI to show all data. Currently it cuts off text from long input
 # Automated kinit keytab checker. If it doesn't get a ticket, let the UI know.
 # Read from file, button to pull properties in from file and populate UI.
 # Find property files, don't just use hard coded values.
-# Random password generator button. Populates password fields.
 # When clicking close, save all current fields to file. On next restart, pull those values.
 #
 ##############################################
 
 '''
 
+#!/bin/python3
+
 from tkinter import *
 import os, sys, shutil, fileinput, subprocess
+import random
+
+
 
 class Application(Frame):
 
@@ -74,73 +79,76 @@ class Application(Frame):
         self.LabelACS.grid(row = 1, column = 0, sticky = W)
         
         self.toggleACS = Button(self, text = "Toggle APS", command = self.toggleACS)
-        self.toggleACS.grid(row = 1, column = 0)
+        self.toggleACS.grid(row = 1, column = 1, sticky = E)
         
         self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ")
         self.LabelDir.grid(row = 3, column =0, sticky = W)
-        self.dir = Entry(self)
-        self.dir.grid(row=3, column=0)
+        self.dir = Entry(self, width=100)
+        self.dir.grid(row=4, column=0, sticky =W)
             
         self.LabelServerName= Label(self, text="Alfresco Server Name: ")
-        self.LabelServerName.grid(row = 4, column =0, sticky = W)
-        self.serverName = Entry(self)
-        self.serverName.grid(row=4, column=0)
+        self.LabelServerName.grid(row = 5, column =0, sticky = W)
+        self.serverName = Entry(self, width=100)
+        self.serverName.grid(row=6, column=0, sticky=W)
             
         self.LabelLdapFqdn= Label(self, text="LDAP Fully Qualified Domain Name: ")
-        self.LabelLdapFqdn.grid(row = 5, column =0, sticky = W)
-        self.ldapFqdn = Entry(self)
-        self.ldapFqdn.grid(row=5, column=0)
+        self.LabelLdapFqdn.grid(row = 7, column =0, sticky = W)
+        self.ldapFqdn = Entry(self, width=100)
+        self.ldapFqdn.grid(row=8, column=0, sticky=W)
             
         self.LabelAdminName= Label(self, text="LDAP Admin Name: ")
-        self.LabelAdminName.grid(row = 6, column =0, sticky = W)
-        self.adminName = Entry(self)
-        self.adminName.grid(row=6, column=0)
+        self.LabelAdminName.grid(row = 9, column =0, sticky = W)
+        self.adminName = Entry(self, width=100)
+        self.adminName.grid(row=10, column=0, sticky=W)
             
         self.LabelAdminPass= Label(self, text="LDAP Admin Password: ")
-        self.LabelAdminPass.grid(row = 7, column =0, sticky = W)
-        self.adminPass = Entry(self)
-        self.adminPass.grid(row=7, column=0)
+        self.LabelAdminPass.grid(row = 11, column =0, sticky = W)
+        self.adminPass = Entry(self, width=100)
+        self.adminPass.grid(row=12, column=0, sticky=W)
             
         self.LabelGroupBase= Label(self, text="LDAP Group Search Base: ")
-        self.LabelGroupBase.grid(row = 8, column =0, sticky = W)
-        self.groupBase = Entry(self)
-        self.groupBase.grid(row=8, column=0)
+        self.LabelGroupBase.grid(row = 13, column =0, sticky = W)
+        self.groupBase = Entry(self, width=100)
+        self.groupBase.grid(row=14, column=0, sticky=W)
             
         self.LabelUserBase= Label(self, text="LDAP User Search Base: ")
-        self.LabelUserBase.grid(row = 9, column =0, sticky = W)
-        self.userBase = Entry(self)
-        self.userBase.grid(row=9, column=0)
+        self.LabelUserBase.grid(row = 15, column =0, sticky = W)
+        self.userBase = Entry(self,width=100)
+        self.userBase.grid(row=16, column=0, sticky=W)
             
         self.LabelKeytabPath= Label(self, text="Keytab Path: ")
-        self.LabelKeytabPath.grid(row = 10, column =0, sticky = W)
-        self.keytabPath = Entry(self)
-        self.keytabPath.grid(row=10, column=0)
+        self.LabelKeytabPath.grid(row = 17, column =0, sticky = W)
+        self.keytabPath = Entry(self, width=100)
+        self.keytabPath.grid(row=18, column=0, sticky=W)
            
         self.LabelHTTPKeytab= Label(self, text="HTTP Keytab Name: ")
-        self.LabelHTTPKeytab.grid(row = 11, column =0, sticky = W)
-        self.httpKeytab = Entry(self)
-        self.httpKeytab.grid(row=11, column=0)       
+        self.LabelHTTPKeytab.grid(row = 19, column =0, sticky = W)
+        self.httpKeytab = Entry(self, width=100)
+        self.httpKeytab.grid(row=20, column=0, sticky=W)       
 
         self.LabelCifsKeytab= Label(self, text="cifs Keytab Name: ")
-        self.LabelCifsKeytab.grid(row = 12, column =0, sticky = W)
-        self.cifsKeytab = Entry(self)
-        self.cifsKeytab.grid(row=12, column=0)  
+        self.LabelCifsKeytab.grid(row = 21, column =0, sticky = W)
+        self.cifsKeytab = Entry(self, width=100)
+        self.cifsKeytab.grid(row=22, column=0, sticky=W)  
 
         self.LabelHTTPUserPass= Label(self, text="HTTP User Password: ")
-        self.LabelHTTPUserPass.grid(row = 13, column =0, sticky = W)
-        self.httpUserPass = Entry(self)
-        self.httpUserPass.grid(row=13, column=0)            
+        self.LabelHTTPUserPass.grid(row = 23, column =0, sticky = W)
+        self.httpUserPass = Entry(self, width=100)
+        self.httpUserPass.grid(row=24, column=0, sticky=W)
+
+        self.alfHttpPasswordGen= Button(self, text="Create Password", command =self.acsHttpPasswordGen, state=DISABLED)
+        self.alfHttpPasswordGen.grid(row=24, column=1, sticky=E)        
             
             
             
         self.checkBoxKrb5 = BooleanVar()
         self.krb5 = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5)
-        self.krb5.grid(row = 19, column = 0, sticky = W)
+        self.krb5.grid(row = 30, column = 0, sticky = W)
             
                         
         self.checkBoxAD = BooleanVar()
         self.aD = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for ACS?", variable = self.checkBoxAD,command = self.Active_Directory)
-        self.aD.grid(row = 20, column = 0, sticky = W)
+        self.aD.grid(row = 31, column = 0, sticky = W)
         
         
         
@@ -148,39 +156,43 @@ class Application(Frame):
         
         #Create ACS AD Stuff Options  
         self.LabelHTTPUserDN= Label(self, text="HTTP User DistinguishedName: ", state=DISABLED)
-        self.LabelHTTPUserDN.grid(row = 21, column =0, sticky = W)
-        self.httpUserDN = Entry(self, state=DISABLED)
-        self.httpUserDN.grid(row=21, column=0)
+        self.LabelHTTPUserDN.grid(row = 32, column =0, sticky = W)
+        self.httpUserDN = Entry(self, state=DISABLED, width=100)
+        self.httpUserDN.grid(row=33, column=0, sticky=W)
             
         self.LabelcifsUserDN= Label(self, text="cifs User DistinguishedName: ", state=DISABLED)
-        self.LabelcifsUserDN.grid(row = 22, column =0, sticky = W)
-        self.cifsUserDN = Entry(self, state=DISABLED)
-        self.cifsUserDN.grid(row=22, column=0)      
+        self.LabelcifsUserDN.grid(row = 34, column =0, sticky = W)
+        self.cifsUserDN = Entry(self, state=DISABLED, width=100)
+        self.cifsUserDN.grid(row=35, column=0, sticky=W)      
 
         self.LabelCifsUserPass= Label(self, text="cifs User Password: ", state=DISABLED)
-        self.LabelCifsUserPass.grid(row = 23, column =0, sticky = W)
-        self.cifsUserPass = Entry(self, state=DISABLED)
-        self.cifsUserPass.grid(row=23, column=0) 
+        self.LabelCifsUserPass.grid(row = 36, column =0, sticky = W)
+        self.cifsUserPass = Entry(self, state=DISABLED, width=100)
+        self.cifsUserPass.grid(row=37, column=0, sticky=W) 
+        
+        self.cifsPasswordGen= Button(self, text="Create Password", command =self.cifsPasswordGen, state=DISABLED)
+        self.cifsPasswordGen.grid(row=37, column=1, sticky=E)
             
         self.LabelLdapAdminPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ", state=DISABLED)
-        self.LabelLdapAdminPS.grid(row = 24, column =0, sticky = W)
-        self.ldapAdminPS = Entry(self, state=DISABLED)
-        self.ldapAdminPS.grid(row=24, column=0)      
+        self.LabelLdapAdminPS.grid(row = 38, column =0, sticky = W)
+        self.ldapAdminPS = Entry(self, state=DISABLED, width=100)
+        self.ldapAdminPS.grid(row=39, column=0, sticky=W)      
 
         self.LabelLdapPassPS= Label(self, text="Enter LDAP Administrator Password: ", state=DISABLED)
-        self.LabelLdapPassPS.grid(row = 25, column =0, sticky = W)
-        self.ldapPassPS = Entry(self, state=DISABLED)
-        self.ldapPassPS.grid(row=25, column=0) 
+        self.LabelLdapPassPS.grid(row = 40, column =0, sticky = W)
+        self.ldapPassPS = Entry(self, state=DISABLED, width=100)
+        self.ldapPassPS.grid(row=41, column=0, sticky=W) 
 
 
         
-
+        
+        Label(self, text = "").grid(row = 80, column = 0, sticky = W)
         
         #Rollback ACS
         self.LabelRollACS= Label(self, text = "Rollback Alfresco (ACS) directory to original alfresco-global.properties and share-config-custom.xml?")
-        self.LabelRollACS.grid(row = 30, column = 0, sticky = W)
+        self.LabelRollACS.grid(row = 81, column = 0, sticky = W)
         self.kerberosAR = Button(self, text = "Rollback ACS", command = self.Rollback_Original)
-        self.kerberosAR.grid(row = 31, column = 0, sticky = W)
+        self.kerberosAR.grid(row = 82, column = 0, sticky = W)
 
         
         
@@ -196,65 +208,65 @@ class Application(Frame):
         self.LabelAPS.grid(row = 50, column = 0, sticky = W)
         
         self.toggleAPS = Button(self, text = "Toggle ACS", command = self.toggleAPS)
-        self.toggleAPS.grid(row = 50, column = 0)        
+        self.toggleAPS.grid(row = 50, column = 1, sticky =E)        
 
         self.LabelDirAPS= Label(self, text="Activiti (APS) Install Directory: ")
-        self.LabelDirAPS.grid(row = 52, column =0, sticky = W)
-        self.dirAPS = Entry(self)
-        self.dirAPS.grid(row=52, column=0)
+        self.LabelDirAPS.grid(row = 51, column =0, sticky = W)
+        self.dirAPS = Entry(self, width=100)
+        self.dirAPS.grid(row=52, column=0, sticky=W)
             
         self.LabelServerNameAPS= Label(self, text="Activiti Server Name: ")
         self.LabelServerNameAPS.grid(row = 53, column =0, sticky = W)
-        self.serverNameAPS = Entry(self)
-        self.serverNameAPS.grid(row=53, column=0)
+        self.serverNameAPS = Entry(self, width=100)
+        self.serverNameAPS.grid(row=54, column=0, sticky=W)
             
         self.LabelLdapFqdnAPS= Label(self, text="LDAP Fully Qualified Domain Name: ")
-        self.LabelLdapFqdnAPS.grid(row = 54, column =0, sticky = W)
-        self.ldapFqdnAPS = Entry(self)
-        self.ldapFqdnAPS.grid(row=54, column=0)
+        self.LabelLdapFqdnAPS.grid(row = 55, column =0, sticky = W)
+        self.ldapFqdnAPS = Entry(self, width=100)
+        self.ldapFqdnAPS.grid(row=56, column=0, sticky=W)
             
         self.LabelAdminNameAPS= Label(self, text="LDAP Admin Name: ")
-        self.LabelAdminNameAPS.grid(row =55, column =0, sticky = W)
-        self.adminNameAPS = Entry(self)
-        self.adminNameAPS.grid(row=55, column=0)
+        self.LabelAdminNameAPS.grid(row =57, column =0, sticky = W)
+        self.adminNameAPS = Entry(self, width=100)
+        self.adminNameAPS.grid(row=58, column=0, sticky=W)
             
         self.LabelAdminPassAPS= Label(self, text="LDAP Admin Password: ")
-        self.LabelAdminPassAPS.grid(row = 56, column =0, sticky = W)
-        self.adminPassAPS = Entry(self)
-        self.adminPassAPS.grid(row=56, column=0)
+        self.LabelAdminPassAPS.grid(row = 59, column =0, sticky = W)
+        self.adminPassAPS = Entry(self, width=100)
+        self.adminPassAPS.grid(row=60, column=0, sticky=W)
             
         self.LabelGroupBaseAPS= Label(self, text="LDAP Group Search Base: ")
-        self.LabelGroupBaseAPS.grid(row = 57, column =0, sticky = W)
-        self.groupBaseAPS = Entry(self)
-        self.groupBaseAPS.grid(row=57, column=0)
+        self.LabelGroupBaseAPS.grid(row = 61, column =0, sticky = W)
+        self.groupBaseAPS = Entry(self, width=100)
+        self.groupBaseAPS.grid(row=62, column=0, sticky=W)
             
         self.LabelUserBaseAPS= Label(self, text="LDAP User Search Base: ")
-        self.LabelUserBaseAPS.grid(row = 58, column =0, sticky = W)
-        self.userBaseAPS = Entry(self)
-        self.userBaseAPS.grid(row=58, column=0)
+        self.LabelUserBaseAPS.grid(row = 63, column =0, sticky = W)
+        self.userBaseAPS = Entry(self, width=100)
+        self.userBaseAPS.grid(row=64, column=0, sticky=W)
             
         self.LabelKeytabPathAPS= Label(self, text="Keytab Path: ")
-        self.LabelKeytabPathAPS.grid(row = 59, column =0, sticky = W)
-        self.keytabPathAPS = Entry(self)
-        self.keytabPathAPS.grid(row=59, column=0)
+        self.LabelKeytabPathAPS.grid(row = 65, column =0, sticky = W)
+        self.keytabPathAPS = Entry(self, width=100)
+        self.keytabPathAPS.grid(row=66, column=0, sticky=W)
             
         self.LabelHTTPKeytabAPS= Label(self, text="HTTP Keytab Name: ")
-        self.LabelHTTPKeytabAPS.grid(row = 60, column =0, sticky = W)
-        self.httpKeytabAPS = Entry(self)
-        self.httpKeytabAPS.grid(row=60, column=0)                     
+        self.LabelHTTPKeytabAPS.grid(row = 67, column =0, sticky = W)
+        self.httpKeytabAPS = Entry(self, width=100)
+        self.httpKeytabAPS.grid(row=68, column=0, sticky=W)                     
             
             
             
         self.checkBoxKrb5APS = BooleanVar()
         self.krb5APS = Checkbutton(self,text = "Create krb5.ini?",variable = self.checkBoxKrb5APS)
-        self.krb5APS.grid(row = 61, column = 0, sticky = W)
+        self.krb5APS.grid(row = 69, column = 0, sticky = W)
             
             
             
             
         self.checkBoxActivitiAD = BooleanVar()
         self.aDAPS = Checkbutton(self, text = "Create service accounts, set SPNs, and Generate Keytabs for APS?", variable = self.checkBoxActivitiAD,command = self.Active_Directory_Activiti)
-        self.aDAPS.grid(row = 62, column = 0, sticky = W)
+        self.aDAPS.grid(row = 70, column = 0, sticky = W)
         
         
         
@@ -262,34 +274,38 @@ class Application(Frame):
         
         # APS AD options        
         self.LabelHTTPUserDNAPS= Label(self, text="HTTP User DistinguishedName: ", state=DISABLED)
-        self.LabelHTTPUserDNAPS.grid(row = 63, column =0, sticky = W)
-        self.httpUserDNAPS = Entry(self, state=DISABLED)
-        self.httpUserDNAPS.grid(row=63, column=0)
+        self.LabelHTTPUserDNAPS.grid(row = 71, column =0, sticky = W)
+        self.httpUserDNAPS = Entry(self, state=DISABLED, width=100)
+        self.httpUserDNAPS.grid(row=72, column=0, sticky=W)
             
         self.LabelHTTPUserPassAPS= Label(self, text="HTTP User Password: ", state=DISABLED)
-        self.LabelHTTPUserPassAPS.grid(row = 64, column =0, sticky = W)
-        self.httpUserPassAPS = Entry(self, state=DISABLED)
-        self.httpUserPassAPS.grid(row=64, column=0)
+        self.LabelHTTPUserPassAPS.grid(row = 73, column =0, sticky = W)
+        self.httpUserPassAPS = Entry(self, state=DISABLED, width=100)
+        self.httpUserPassAPS.grid(row=74, column=0, sticky=W)
+        
+        self.actHttpPasswordGen= Button(self, text="Create Password", command =self.apsHttpPasswordGen, state=DISABLED)
+        self.actHttpPasswordGen.grid(row=74, column=1, sticky=E)        
             
         self.LabelLdapAdminPSAPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ", state=DISABLED)
-        self.LabelLdapAdminPSAPS.grid(row = 65, column =0, sticky = W)
-        self.ldapAdminPSAPS = Entry(self, state=DISABLED)
-        self.ldapAdminPSAPS.grid(row=65, column=0)      
+        self.LabelLdapAdminPSAPS.grid(row = 75, column =0, sticky = W)
+        self.ldapAdminPSAPS = Entry(self, state=DISABLED, width=100)
+        self.ldapAdminPSAPS.grid(row=76, column=0, sticky=W)      
 
         self.LabelLdapPassPSAPS= Label(self, text="Enter LDAP Administrator Password: ", state=DISABLED)
-        self.LabelLdapPassPSAPS.grid(row = 66, column =0, sticky = W)
-        self.ldapPassPSAPS = Entry(self, state=DISABLED)
-        self.ldapPassPSAPS.grid(row=66, column=0) 
+        self.LabelLdapPassPSAPS.grid(row = 77, column =0, sticky = W)
+        self.ldapPassPSAPS = Entry(self, state=DISABLED, width=100)
+        self.ldapPassPSAPS.grid(row=78, column=0, sticky=W) 
 
         
         
         
+        Label(self, text = "").grid(row = 80, column = 0, sticky = W)
         
         #Rollback Activiti
         self.LabelRollAPS= Label(self, text = "Rollback Activiti (APS) directory to original activiti-ldap.properties?                                                             ")
-        self.LabelRollAPS.grid(row = 80, column = 0, sticky = W)
+        self.LabelRollAPS.grid(row = 81, column = 0, sticky = W)
         self.kerberosAPSR = Button(self, text = "Rollback APS", command = self.Rollback_Original_Activiti)
-        self.kerberosAPSR.grid(row = 81, column = 0, sticky = W)
+        self.kerberosAPSR.grid(row = 82, column = 0, sticky = W)
         
         
         
@@ -312,7 +328,7 @@ class Application(Frame):
         
         
         self.close_button = Button(self, text="Close", command=self.quit)
-        self.close_button.grid(row=102, column =0, sticky =E)
+        self.close_button.grid(row=102, column =1, sticky =E)
         
         
         
@@ -343,8 +359,7 @@ class Application(Frame):
         self.keytabPathAPS.grid_remove()
         self.LabelHTTPKeytabAPS.grid_remove()
         self.httpKeytabAPS.grid_remove()
-        self.LabelHTTPUserPassAPS.grid_remove()
-        self.httpUserPassAPS.grid_remove()
+
         
         #remove APS krb5 and AD options
         self.krb5APS.grid_remove()
@@ -352,6 +367,11 @@ class Application(Frame):
         
         self.LabelHTTPUserDNAPS.grid_remove()
         self.httpUserDNAPS.grid_remove()
+        self.LabelHTTPUserPassAPS.grid_remove()
+        self.httpUserPassAPS.grid_remove()
+        
+        self.actHttpPasswordGen.grid_remove()
+        
         self.LabelLdapAdminPSAPS.grid_remove()
         self.ldapAdminPSAPS.grid_remove()
         self.LabelLdapPassPSAPS.grid_remove()
@@ -397,8 +417,7 @@ class Application(Frame):
         self.keytabPathAPS.grid()
         self.LabelHTTPKeytabAPS.grid()
         self.httpKeytabAPS.grid()
-        self.LabelHTTPUserPassAPS.grid()
-        self.httpUserPassAPS.grid()
+
         
         #add APS krb5 and AD options
         self.krb5APS.grid()
@@ -406,6 +425,11 @@ class Application(Frame):
         
         self.LabelHTTPUserDNAPS.grid()
         self.httpUserDNAPS.grid()
+        self.LabelHTTPUserPassAPS.grid()
+        self.httpUserPassAPS.grid()
+        
+        self.actHttpPasswordGen.grid()
+        
         self.LabelLdapAdminPSAPS.grid()
         self.ldapAdminPSAPS.grid()
         self.LabelLdapPassPSAPS.grid()
@@ -455,6 +479,10 @@ class Application(Frame):
         self.cifsUserDN.grid_remove()
         self.LabelCifsUserPass.grid_remove()
         self.cifsUserPass.grid_remove()
+        
+        self.cifsPasswordGen.grid_remove()
+        self.alfHttpPasswordGen.grid_remove()
+        
         self.LabelLdapAdminPS.grid_remove()
         self.ldapAdminPS.grid_remove()
         self.LabelLdapPassPS.grid_remove()
@@ -513,6 +541,10 @@ class Application(Frame):
         self.cifsUserDN.grid()
         self.LabelCifsUserPass.grid()
         self.cifsUserPass.grid()
+        
+        self.cifsPasswordGen.grid()
+        self.alfHttpPasswordGen.grid()
+        
         self.LabelLdapAdminPS.grid()
         self.ldapAdminPS.grid()
         self.LabelLdapPassPS.grid()
@@ -548,8 +580,7 @@ class Application(Frame):
         self.keytabPathAPS.grid_remove()
         self.LabelHTTPKeytabAPS.grid_remove()
         self.httpKeytabAPS.grid_remove()
-        self.LabelHTTPUserPassAPS.grid_remove()
-        self.httpUserPassAPS.grid_remove()
+
         
         #remove APS krb5 and AD options
         self.krb5APS.grid_remove()
@@ -557,6 +588,11 @@ class Application(Frame):
         
         self.LabelHTTPUserDNAPS.grid_remove()
         self.httpUserDNAPS.grid_remove()
+        self.LabelHTTPUserPassAPS.grid_remove()
+        self.httpUserPassAPS.grid_remove()
+        
+        self.actHttpPasswordGen.grid_remove()
+        
         self.LabelLdapAdminPSAPS.grid_remove()
         self.ldapAdminPSAPS.grid_remove()
         self.LabelLdapPassPSAPS.grid_remove()
@@ -591,6 +627,9 @@ class Application(Frame):
             self.LabelCifsUserPass.configure(state="normal")
             self.cifsUserPass.configure(state="normal")
             
+            self.cifsPasswordGen.configure(state="normal")
+            self.alfHttpPasswordGen.configure(state="normal")
+            
             self.LabelLdapAdminPS.configure(state="normal")
             self.ldapAdminPS.configure(state="normal")    
 
@@ -609,6 +648,9 @@ class Application(Frame):
    
             self.LabelCifsUserPass.configure(state="disabled")
             self.cifsUserPass.configure(state="disabled")
+            
+            self.cifsPasswordGen.configure(state="disabled")
+            self.alfHttpPasswordGen.configure(state="disabled")
             
             self.LabelLdapAdminPS.configure(state="disabled")
             self.ldapAdminPS.configure(state="disabled")   
@@ -638,6 +680,8 @@ class Application(Frame):
             self.LabelHTTPUserPassAPS.configure(state="normal")
             self.httpUserPassAPS.configure(state="normal")
             
+            self.actHttpPasswordGen.configure(state="normal")
+            
             self.LabelLdapAdminPSAPS.configure(state="normal")
             self.ldapAdminPSAPS.configure(state="normal")      
 
@@ -653,6 +697,8 @@ class Application(Frame):
             
             self.LabelHTTPUserPassAPS.configure(state="disabled")
             self.httpUserPassAPS.configure(state="disabled")
+            
+            self.actHttpPasswordGen.configure(state="disabled")
             
             self.LabelLdapAdminPSAPS.configure(state="disabled")
             self.ldapAdminPSAPS.configure(state="disabled")      
@@ -1591,6 +1637,67 @@ class Application(Frame):
             k5.write(r' }')
      
             k5.close()
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+    #ACS HTTP password generate
+    def acsHttpPasswordGen(self):
+    
+        password = self.passwordGen()
+        
+        self.httpUserPass.delete(0, END)
+        self.httpUserPass.insert(0, password)
+        
+        
+        
+        
+    
+    #ACS CIFS password generate
+    def cifsPasswordGen(self):
+    
+        password = self.passwordGen()
+        
+        self.cifsUserPass.delete(0, END)
+        self.cifsUserPass.insert(0, password)
+        
+        
+        
+        
+    #APS HTTP password generate    
+    def apsHttpPasswordGen(self):
+    
+        password = self.passwordGen()
+        
+        self.httpUserPassAPS.delete(0, END)
+        self.httpUserPassAPS.insert(0, password)
+        
+    
+    
+    
+    
+    # used for generating passwords to use when creating service accounts       
+    def passwordGen(self):
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()'
+        
+        password=''
+        
+        for c in range(10):
+            password = password + random.choice(chars)
+            
+        return password
+            
+
+            
+
+        
+        
             
       
 
