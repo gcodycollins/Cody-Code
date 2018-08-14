@@ -36,8 +36,8 @@
 # DONE 2.0- Change options to not hide and then display but to grey out options.
 # DONE 2.0- Modifying GUI to show all data. Currently it cuts off text from long input
 # DONE 2.0- Random password generator button. Populates password fields.
+# DONE 2.0- Noticiations in Python Gui when action is complete.
 #
-# Noticiations in Python Gui when action is complete.
 # Automated kinit keytab checker. If it doesn't get a ticket, let the UI know.
 # Read from file, button to pull properties in from file and populate UI.
 # Find property files, don't just use hard coded values.
@@ -79,7 +79,7 @@ class Application(Frame):
         self.LabelACS.grid(row = 1, column = 0, sticky = W)
         
         self.toggleACS = Button(self, text = "Toggle APS", command = self.toggleACS)
-        self.toggleACS.grid(row = 1, column = 1, sticky = E)
+        self.toggleACS.grid(row = 1, column = 0)
         
         self.LabelDir= Label(self, text="Alfreco (ACS) Install Directory: ")
         self.LabelDir.grid(row = 3, column =0, sticky = W)
@@ -205,10 +205,10 @@ class Application(Frame):
                 
         #Alfresco Process Services Implement
         self.LabelAPS= Label(self, text = "Alfresco Process Services")
-        self.LabelAPS.grid(row = 50, column = 0, sticky = W)
+        self.LabelAPS.grid(row = 1, column = 0, sticky = W)
         
         self.toggleAPS = Button(self, text = "Toggle ACS", command = self.toggleAPS)
-        self.toggleAPS.grid(row = 50, column = 1, sticky =E)        
+        self.toggleAPS.grid(row = 1, column = 0)        
 
         self.LabelDirAPS= Label(self, text="Activiti (APS) Install Directory: ")
         self.LabelDirAPS.grid(row = 51, column =0, sticky = W)
@@ -314,13 +314,23 @@ class Application(Frame):
         
         
         
-        
-        Label(self, text = "").grid(row = 100, column = 0, sticky = W)
+        Label(self, text = "").grid(row = 99, column = 0, sticky = W)
+        self.LabelMessage = Label(self, text = "")
+        self.LabelMessage.grid(row = 100, column = 0, sticky = W)
         Label(self, text = "").grid(row = 101, column = 0, sticky = W)
+        
+        
+        
+        #import config button
+        self.runACS = Button(self, text="Import Config", command=self.importConfig)
+        self.runACS.grid(row=1, column = 1, sticky=E)     
+        
+        
+        
         
         #Run and Close Button
         self.runACS = Button(self, text="Run(ACS)", command=self.runACS)
-        self.runACS.grid(row=102, column = 0, sticky =W)
+        self.runACS.grid(row=102, column = 0, sticky=W)
         
         self.runAPS = Button(self, text="Run(APS)", command=self.runAPS)
         self.runAPS.grid(row=102, column = 0, sticky =W)
@@ -380,7 +390,6 @@ class Application(Frame):
         self.LabelRollAPS.grid_remove()
         self.kerberosAPSR.grid_remove()
         self.runAPS.grid_remove()
-        
         
         
         
@@ -1189,6 +1198,10 @@ class Application(Frame):
         #call to create krb5.ini
         if (krb5iniI==True):
             self.createKRB5("ACS")
+            
+            
+            
+        self.LabelMessage.config(text="ACS configured for Kerberos")
 
             
     ####################################
@@ -1475,6 +1488,9 @@ class Application(Frame):
         if (krb5iniI==True):
             self.createKRB5("APS")
             
+            
+        self.LabelMessage.config(text="APS configured for Kerberos")
+            
     ####################################
     #End Activiti Kerberos run function#
     ####################################
@@ -1522,6 +1538,11 @@ class Application(Frame):
         
         
         
+        self.LabelMessage.config(text="ACS rolled back to original property files.")
+        
+        
+        
+        
         
         
         
@@ -1550,6 +1571,10 @@ class Application(Frame):
         
         javaLoginConfigPath=pathI+r'\java\lib\security\java.login.config'
         os.remove(javaLoginConfigPath)
+        
+        
+        
+        self.LabelMessage.config(text="APS rolled back to original property files.")
 
 
 
@@ -1655,6 +1680,9 @@ class Application(Frame):
         self.httpUserPass.delete(0, END)
         self.httpUserPass.insert(0, password)
         
+
+        
+        
         
         
         
@@ -1692,6 +1720,103 @@ class Application(Frame):
             password = password + random.choice(chars)
             
         return password
+        
+        
+        
+        
+        
+    def importConfig(self):
+        
+        # get the current working directory to find the config file
+        cwd = os.getcwd()
+        
+        configFile=r'kerberosConfig.config'
+
+        #read the config file.
+        with open(os.path.join(cwd, configFile), 'r') as config:
+        
+        
+            for line in config:
+            
+                if ('Alfreco (ACS) Install Directory:' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.dir.delete(0, END)
+                    self.dir.insert(0, rLine)
+                    
+                    
+                elif ('Alfresco Server Name:' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.serverName.delete(0, END)
+                    self.serverName.insert(0, rLine)
+                    
+
+                elif ('LDAP Fully Qualified Domain Name(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.ldapFqdn.delete(0, END)
+                    self.ldapFqdn.insert(0, rLine)
+
+                elif ('LDAP Admin Name(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.adminName.delete(0, END)
+                    self.adminName.insert(0, rLine)
+
+                elif ('LDAP Admin Password(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.adminPass.delete(0, END)
+                    self.adminPass.insert(0, rLine)
+                    
+                elif ('LDAP Group Search Base(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.groupBase.delete(0, END)
+                    self.groupBase.insert(0, rLine)
+                    
+                elif ('LDAP User Search Base(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.userBase.delete(0, END)
+                    self.userBase.insert(0, rLine)
+                    
+                elif ('Keytab Path(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.keytabPath.delete(0, END)
+                    self.keytabPath.insert(0, rLine)
+                    
+                elif ('HTTP Keytab Name(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.httpKeytab.delete(0, END)
+                    self.httpKeytab.insert(0, rLine)
+                    
+                elif ('cifs Keytab Name:' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.cifsKeytab.delete(0, END)
+                    self.cifsKeytab.insert(0, rLine)
+                    
+                elif ('HTTP User Password(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.httpUserPass.delete(0, END)
+                    self.httpUserPass.insert(0, rLine)
+                    
             
 
             
