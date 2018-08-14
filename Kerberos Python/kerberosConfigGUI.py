@@ -173,12 +173,12 @@ class Application(Frame):
         self.cifsPasswordGen= Button(self, text="Create Password", command =self.cifsPasswordGen, state=DISABLED)
         self.cifsPasswordGen.grid(row=37, column=1, sticky=E)
             
-        self.LabelLdapAdminPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ", state=DISABLED)
+        self.LabelLdapAdminPS= Label(self, text="LDAP Administrator Domain\\Username: ", state=DISABLED)
         self.LabelLdapAdminPS.grid(row = 38, column =0, sticky = W)
         self.ldapAdminPS = Entry(self, state=DISABLED, width=100)
         self.ldapAdminPS.grid(row=39, column=0, sticky=W)      
 
-        self.LabelLdapPassPS= Label(self, text="Enter LDAP Administrator Password: ", state=DISABLED)
+        self.LabelLdapPassPS= Label(self, text="LDAP Administrator Password: ", state=DISABLED)
         self.LabelLdapPassPS.grid(row = 40, column =0, sticky = W)
         self.ldapPassPS = Entry(self, state=DISABLED, width=100)
         self.ldapPassPS.grid(row=41, column=0, sticky=W) 
@@ -286,12 +286,12 @@ class Application(Frame):
         self.actHttpPasswordGen= Button(self, text="Create Password", command =self.apsHttpPasswordGen, state=DISABLED)
         self.actHttpPasswordGen.grid(row=74, column=1, sticky=E)        
             
-        self.LabelLdapAdminPSAPS= Label(self, text="Enter LDAP Administrator Domain\\Username: ", state=DISABLED)
+        self.LabelLdapAdminPSAPS= Label(self, text="LDAP Administrator Domain\\Username: ", state=DISABLED)
         self.LabelLdapAdminPSAPS.grid(row = 75, column =0, sticky = W)
         self.ldapAdminPSAPS = Entry(self, state=DISABLED, width=100)
         self.ldapAdminPSAPS.grid(row=76, column=0, sticky=W)      
 
-        self.LabelLdapPassPSAPS= Label(self, text="Enter LDAP Administrator Password: ", state=DISABLED)
+        self.LabelLdapPassPSAPS= Label(self, text="LDAP Administrator Password: ", state=DISABLED)
         self.LabelLdapPassPSAPS.grid(row = 77, column =0, sticky = W)
         self.ldapPassPSAPS = Entry(self, state=DISABLED, width=100)
         self.ldapPassPSAPS.grid(row=78, column=0, sticky=W) 
@@ -1816,6 +1816,57 @@ class Application(Frame):
                     
                     self.httpUserPass.delete(0, END)
                     self.httpUserPass.insert(0, rLine)
+                    
+                elif ('Create krb5.ini(ACS)?' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    if (rLine =='y' or rLine=='yes'):
+                        self.krb5.select()
+                    
+                elif ('Create service accounts, set SPNs, and Generate Keytabs for ACS?' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    if (rLine =='y' or rLine=='yes'):
+                        self.aD.select()
+                        self.Active_Directory()
+                        
+                elif ('HTTP User DistinguishedName(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.httpUserDN.delete(0, END)
+                    self.httpUserDN.insert(0, rLine)
+                    
+                elif ('cifs User DistinguishedName:' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.cifsUserDN.delete(0, END)
+                    self.cifsUserDN.insert(0, rLine)
+                    
+                elif ('cifs User Password:' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.cifsUserPass.delete(0, END)
+                    self.cifsUserPass.insert(0, rLine)
+                    
+                elif (r'LDAP Administrator Domain\Username(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.ldapAdminPS.delete(0, END)
+                    self.ldapAdminPS.insert(0, rLine)
+                    
+                elif ('LDAP Administrator Password(ACS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.ldapPassPS.delete(0, END)
+                    self.ldapPassPS.insert(0, rLine)
+
                     
             
 
