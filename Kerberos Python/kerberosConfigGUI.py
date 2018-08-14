@@ -1724,7 +1724,8 @@ class Application(Frame):
         
         
         
-        
+    
+    #definition to run when Import Config button is used. Read from kerberosConfig.config file in same directory
     def importConfig(self):
         
         # get the current working directory to find the config file
@@ -1735,9 +1736,10 @@ class Application(Frame):
         #read the config file.
         with open(os.path.join(cwd, configFile), 'r') as config:
         
-        
+            #Iterate through entire config file, when there is a matching entry, read the next line as the property and save to UI
             for line in config:
-            
+                
+                #ACS options
                 if ('Alfreco (ACS) Install Directory:' in line):
                     rLine = config.readline()
                     rLine = rLine.replace("\n", "").replace(" ", "")
@@ -1866,6 +1868,119 @@ class Application(Frame):
                     
                     self.ldapPassPS.delete(0, END)
                     self.ldapPassPS.insert(0, rLine)
+                    
+                    
+                    
+                    
+                    
+                #APS options
+                elif ('Activiti (APS) Install Directory:' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.dirAPS.delete(0, END)
+                    self.dirAPS.insert(0, rLine)
+                    
+                    
+                elif ('Activiti Server Name:' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.serverNameAPS.delete(0, END)
+                    self.serverNameAPS.insert(0, rLine)
+                    
+
+                elif ('LDAP Fully Qualified Domain Name(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.ldapFqdnAPS.delete(0, END)
+                    self.ldapFqdnAPS.insert(0, rLine)
+
+                elif ('LDAP Admin Name(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.adminNameAPS.delete(0, END)
+                    self.adminNameAPS.insert(0, rLine)
+
+                elif ('LDAP Admin Password(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.adminPassAPS.delete(0, END)
+                    self.adminPassAPS.insert(0, rLine)
+                    
+                elif ('LDAP Group Search Base(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.groupBaseAPS.delete(0, END)
+                    self.groupBaseAPS.insert(0, rLine)
+                    
+                elif ('LDAP User Search Base(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.userBaseAPS.delete(0, END)
+                    self.userBaseAPS.insert(0, rLine)
+                    
+                elif ('Keytab Path(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.keytabPathAPS.delete(0, END)
+                    self.keytabPathAPS.insert(0, rLine)
+                    
+                elif ('HTTP Keytab Name(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.httpKeytabAPS.delete(0, END)
+                    self.httpKeytabAPS.insert(0, rLine)
+                    
+                elif ('HTTP User Password(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.httpUserPassAPS.delete(0, END)
+                    self.httpUserPassAPS.insert(0, rLine)
+                    
+                elif ('Create krb5.ini(APS)?' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    if (rLine =='y' or rLine=='yes'):
+                        self.krb5APS.select()
+                    
+                elif ('Create service accounts, set SPNs, and Generate Keytabs for APS?' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    if (rLine =='y' or rLine=='yes'):
+                        self.aDAPS.select()
+                        self.Active_Directory_Activiti()
+                        
+                elif ('HTTP User DistinguishedName(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.httpUserDNAPS.delete(0, END)
+                    self.httpUserDNAPS.insert(0, rLine)
+                    
+                elif (r'LDAP Administrator Domain\Username(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.ldapAdminPSAPS.delete(0, END)
+                    self.ldapAdminPSAPS.insert(0, rLine)
+                    
+                elif ('LDAP Administrator Password(APS):' in line):
+                    rLine = config.readline()
+                    rLine = rLine.replace("\n", "").replace(" ", "")
+                    
+                    self.ldapPassPSAPS.delete(0, END)
+                    self.ldapPassPSAPS.insert(0, rLine)
 
                     
             
