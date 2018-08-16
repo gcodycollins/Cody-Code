@@ -1,15 +1,15 @@
 '''
 
-##############################################
+##########################################################################################################################################
 #
 # Created by Grayson Cody Collins
 #
 # Please reach out to cody.collins@alfresco.com or skypeId cody.collins_3
 # with any questions, improvements, or requests.
 #
-##############################################
+##########################################################################################################################################
 
-##############################################
+##########################################################################################################################################
 #
 # The function of this code is to provide a GUI tool that can be used to configure
 # Kerberos settings in both an APS and ACS directory. Currently, this is only supported
@@ -23,9 +23,9 @@
 # This code also assumes that you have correctly implemented the client level configuration on
 # the end user client machine.
 #
-##############################################
+##########################################################################################################################################
 
-##############################################
+##########################################################################################################################################
 #
 #Wishlist/future feature tracker for my own personal memory:
 #
@@ -37,13 +37,13 @@
 # DONE 2.0- Modifying GUI to show all data. Currently it cuts off text from long input
 # DONE 2.0- Random password generator button. Populates password fields.
 # DONE 2.0- Noticiations in Python Gui when action is complete.
+# DONE 2.0- Read from file, button to pull properties in from file and populate UI.
 #
 # Automated kinit keytab checker. If it doesn't get a ticket, let the UI know.
-# Read from file, button to pull properties in from file and populate UI.
 # Find property files, don't just use hard coded values.
 # When clicking close, save all current fields to file. On next restart, pull those values.
 #
-##############################################
+##########################################################################################################################################
 
 '''
 
@@ -317,28 +317,30 @@ class Application(Frame):
         Label(self, text = "").grid(row = 99, column = 0, sticky = W)
         self.LabelMessage = Label(self, text = "")
         self.LabelMessage.grid(row = 100, column = 0, sticky = W)
-        Label(self, text = "").grid(row = 101, column = 0, sticky = W)
+        self.LabelMessage2 = Label(self, text = "")
+        self.LabelMessage2.grid(row = 101, column = 0, sticky = W)
+        Label(self, text = "").grid(row = 102, column = 0, sticky = W)
         
         
         
         #import config button
-        self.runACS = Button(self, text="Import Config", command=self.importConfig)
-        self.runACS.grid(row=1, column = 1, sticky=E)     
+        self.importConfig = Button(self, text="Import Config", command=self.importConfig)
+        self.importConfig.grid(row=1, column = 1, sticky=E)     
         
         
         
         
         #Run and Close Button
         self.runACS = Button(self, text="Run(ACS)", command=self.runACS)
-        self.runACS.grid(row=102, column = 0, sticky=W)
+        self.runACS.grid(row=110, column = 0, sticky=W)
         
         self.runAPS = Button(self, text="Run(APS)", command=self.runAPS)
-        self.runAPS.grid(row=102, column = 0, sticky =W)
+        self.runAPS.grid(row=110, column = 0, sticky =W)
         
         
         
         self.close_button = Button(self, text="Close", command=self.quit)
-        self.close_button.grid(row=102, column =1, sticky =E)
+        self.close_button.grid(row=110, column =1, sticky =E)
         
         
         
@@ -866,11 +868,19 @@ class Application(Frame):
 
             p = subprocess.Popen(["powershell.exe", cwd+r"\powershellAD.ps1"], stdout=sys.stdout)
             p.communicate()
+            
+            
+            
+            
+            
+        #Keytab check definition call
+        self.keytabChecker("ACS", pathI, keytabPath, httpKeytabName, alfServerI, cifsKeytabName)
 
             
             
 
 
+            
         #copy the current global properties file and append the kerberos and LDAP properties to the end of the active configuraiton file
         #also modify share.host and alfresco.host
 
@@ -1201,7 +1211,7 @@ class Application(Frame):
             
             
             
-        self.LabelMessage.config(text="ACS configured for Kerberos")
+        self.LabelMessage2.config(text="ACS configured for Kerberos")
 
             
     ####################################
@@ -1217,7 +1227,7 @@ class Application(Frame):
                 
                 
                         
-    #the function for when runACS button is clicked
+    #the function for when runAPS button is clicked
     def runAPS(self):
 
     #############################################################################################
@@ -1337,12 +1347,16 @@ class Application(Frame):
             p = subprocess.Popen(["powershell.exe", cwd+r"\powershellAD.ps1"], stdout=sys.stdout)
             p.communicate()
             
-
-
-            
             
 
 
+            
+        #Keytab check definition call
+        self.keytabChecker("APS", pathI, keytabPath, httpKeytabName, alfServerI, "")
+            
+
+
+    
     
         #function to replace back slash ( \ ) with forward slash ( / ) in keytab path. Activiti Kerberos will not work with
         #backslashes in the kerberos.authenticaiton.keytab property when activiti is on windows        
@@ -1489,7 +1503,7 @@ class Application(Frame):
             self.createKRB5("APS")
             
             
-        self.LabelMessage.config(text="APS configured for Kerberos")
+        self.LabelMessage2.config(text="APS configured for Kerberos")
             
     ####################################
     #End Activiti Kerberos run function#
@@ -1679,14 +1693,11 @@ class Application(Frame):
         
         self.httpUserPass.delete(0, END)
         self.httpUserPass.insert(0, password)
-        
 
         
         
         
-        
-        
-    
+
     #ACS CIFS password generate
     def cifsPasswordGen(self):
     
@@ -1694,6 +1705,7 @@ class Application(Frame):
         
         self.cifsUserPass.delete(0, END)
         self.cifsUserPass.insert(0, password)
+        
         
         
         
@@ -1981,7 +1993,40 @@ class Application(Frame):
                     
                     self.ldapPassPSAPS.delete(0, END)
                     self.ldapPassPSAPS.insert(0, rLine)
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+    
+    #automated keytab checker
+    def keytabChecker(self, product, pathI, keytabPath, httpKeytabName, alfServerI, cifsKeytabName):
+        
+        if (product =='ACS'):
 
+            command=pathI+r'\java\bin\kinit.exe -k -t "'+keytabPath+'\\'+httpKeytabName+r'" "HTTP/'+alfServerI+r'"'
+            #print (command)
+            
+            p = subprocess.Popen(command, stdout=sys.stdout)
+            p.communicate()
+            
+            
+            command=pathI+r'\java\bin\kinit.exe -k -t "'+keytabPath+'\\'+cifsKeytabName+r'" "cifs/'+alfServerI+r'"'
+            #print (command)
+            
+            p = subprocess.Popen(command, stdout=sys.stdout)
+            p.communicate()
+            
+        elif (product=='APS'):
+        
+            command=pathI+r'\java\bin\kinit.exe -k -t "'+keytabPath+'\\'+httpKeytabName+r'" "HTTP/'+alfServerI+r'"'
+            #print (command)
+            
+            p = subprocess.Popen(command, stdout=sys.stdout)
+            p.communicate()
                     
             
 
