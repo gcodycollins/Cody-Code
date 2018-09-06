@@ -2,7 +2,7 @@
 
 ##########################################################################################################################################
 #
-# Created by Grayson Cody Collins
+# Created by Cody Collins
 #
 # Please reach out to cody.collins@alfresco.com or skypeId cody.collins_3
 # with any questions, improvements, or requests.
@@ -1724,12 +1724,22 @@ class Application(Frame):
     
     # used for generating passwords to use when creating service accounts       
     def passwordGen(self):
-        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()'
+    
+        capChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+        lowChars = 'abcdefghijklmnopqrstuvwxyz'
+        numChars = '0123456789'
+        speChars= r'!@#$%^&*()-_=+[{]}|\\:;"\',<.>?/~'
+        allChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+[{]}|\\:;"\',<.>?/~'
         
         password=''
         
-        for c in range(10):
-            password = password + random.choice(chars)
+        #to ensure that each password has Upper, Lower, Number, and Special characters
+        password = random.choice(capChars) + random.choice(lowChars) + random.choice(numChars) + random.choice(speChars)
+        
+        i = random.randint(6,16)
+        
+        for c in range(i):
+            password = password + random.choice(allChars)
             
         return password
         
