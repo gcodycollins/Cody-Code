@@ -1,3 +1,6 @@
+This is outdated as of 2.0 release
+
+
 # Kerberos Configurer
 
 ## Usage Manual
