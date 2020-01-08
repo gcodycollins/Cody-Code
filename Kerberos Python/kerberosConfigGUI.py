@@ -4,8 +4,7 @@
 #
 # Created by Cody Collins
 #
-# Please reach out to cody.collins@alfresco.com or skypeId cody.collins_3
-# with any questions, improvements, or requests.
+# Please reach out to cody.collins@alfresco.com
 #
 ##########################################################################################################################################
 
